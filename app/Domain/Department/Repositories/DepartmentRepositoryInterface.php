@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Domain\Departments\Repositories;
-use App\Domain\Departments\Entities\Department;
+namespace App\Domain\Department\Repositories;
+use App\Domain\Department\Entities\Department;
 
 interface DepartmentRepositoryInterface 
 {

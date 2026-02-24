@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Binding Interface with Implementation
         $this->app->bind(
-            \App\Domain\Departments\Repositories\DepartmentRepositoryInterface::class, 
+            \App\Domain\Department\Repositories\DepartmentRepositoryInterface::class, 
             \App\Infrastructure\Persistence\Eloquent\Repositories\DepartmentRepository::class
         );
     }

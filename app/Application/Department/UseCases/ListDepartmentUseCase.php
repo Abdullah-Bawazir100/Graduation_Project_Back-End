@@ -2,8 +2,7 @@
 
 namespace App\Application\Department\UseCases;
 
-use App\Domain\Departments\Repositories\DepartmentRepositoryInterface;
-use App\Domain\Departments\Entities\Department;
+use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 
 class ListDepartmentUseCase
 {

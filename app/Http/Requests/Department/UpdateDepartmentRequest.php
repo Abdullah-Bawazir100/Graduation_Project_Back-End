@@ -21,10 +21,9 @@ class UpdateDepartmentRequest extends FormRequest
      */
     public function rules(): array
     {
-        // الحصول على id القسم من الـ route
-        $departmentId = $this->route('department');
+        $departmentId = $this->route('id'); // Assuming the route parameter is named 'id'
         return [
-            'name' => 'sometimes|string|max:255|unique:departments,name,' . $departmentId,
+            'name' => 'required|string|max:255|unique:departments,name,' . $departmentId,
         ];
     }
 

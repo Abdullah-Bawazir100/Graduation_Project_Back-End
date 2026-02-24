@@ -2,9 +2,9 @@
 
 namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 
-use App\Domain\Departments\Entities\Department;
+use App\Domain\Department\Entities\Department;
 use App\Domain\Department\ValueObjects\DepartmentName;
-use App\Domain\Departments\Repositories\DepartmentRepositoryInterface;
+use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel;
 
 class DepartmentRepository implements DepartmentRepositoryInterface
@@ -29,7 +29,11 @@ class DepartmentRepository implements DepartmentRepositoryInterface
 
     public function update(Department $department): Department
     {
-        $departmentModel = DepartmentModel::findOrFail($department->id);
+        $departmentModel = DepartmentModel::find($department->id);
+
+        if(!$departmentModel) {
+            throw new \Exception("No department found with ID: [$department->id]");
+        }
 
         $departmentModel->update([
             'name' => $department->name->value(), // تحويل VO إلى string عند التحديث
@@ -46,13 +50,16 @@ class DepartmentRepository implements DepartmentRepositoryInterface
     public function findById(int $id)
     {
         $departmentModel = DepartmentModel::find($id);
-        return $departmentModel ? new Department($departmentModel->id, $departmentModel->name) : null;
+        if (!$departmentModel) {
+            return null;
+        }
+        return $departmentModel ? new Department($departmentModel->id, new DepartmentName($departmentModel->name)) : null;
     }
 
     public function getAll()
     {
         return DepartmentModel::all()
-        ->map(fn($departmentModel) => new Department($departmentModel->id, $departmentModel->name))
+        ->map(fn($departmentModel) => new Department($departmentModel->id, new DepartmentName($departmentModel->name)))
         ->toArray();
     }
 

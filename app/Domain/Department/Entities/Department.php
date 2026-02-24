@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Departments\Entities;
+namespace App\Domain\Department\Entities;
 
 use App\Domain\Department\ValueObjects\DepartmentName;
 

@@ -4,8 +4,8 @@ namespace App\Application\Department\UseCases;
 
 use App\Application\Department\DTOs\DepartmentDTO;
 use App\Domain\Department\ValueObjects\DepartmentName;
-use App\Domain\Departments\Entities\Department;
-use App\Domain\Departments\Repositories\DepartmentRepositoryInterface;
+use App\Domain\Department\Entities\Department;
+use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 
 class CreateDepartmentUseCase
 {
