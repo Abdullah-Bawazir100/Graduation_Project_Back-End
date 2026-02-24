@@ -29,17 +29,16 @@ class DepartmentRepository implements DepartmentRepositoryInterface
 
     public function update(Department $department): Department
     {
-        $departmentModel = DepartmentModel::find($department->id);
+        $departmentData = DepartmentModel::find($department->id);
 
-        if(!$departmentModel) {
+        if(!$departmentData) {
             throw new \Exception("No department found with ID: [$department->id]");
         }
 
-        $departmentModel->update([
-            'name' => $department->name->value(), // تحويل VO إلى string عند التحديث
-        ]);
+        $departmentData->name = $department->name instanceof DepartmentName ? $department->name->value() : $department->name;
+        $departmentData->save();
 
-        return new Department($departmentModel->id, new DepartmentName($departmentModel->name));
+        return new Department($departmentData->id, new DepartmentName($departmentData->name));
     }
 
     public function delete(int $id)
