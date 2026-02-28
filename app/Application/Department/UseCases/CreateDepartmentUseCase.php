@@ -3,7 +3,6 @@
 namespace App\Application\Department\UseCases;
 
 use App\Application\Department\DTOs\DepartmentDTO;
-use App\Domain\Department\ValueObjects\DepartmentName;
 use App\Domain\Department\Entities\Department;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 
@@ -18,15 +17,15 @@ class CreateDepartmentUseCase
 
     public function execute(DepartmentDTO $departmentDTO): Department
     {
-        // إنشاء Value Object من الاسم
-        $nameVO = new DepartmentName($departmentDTO->name);
+        $name = trim($departmentDTO->name);
 
-        // تحقق من وجود الاسم مسبقًا في قاعدة البيانات
-        if ($this->departmentRepository->existsByName($nameVO->value())) {
-            throw new \DomainException("Department with name '{$nameVO->value()}' already exists.");
+        // Business Rule: منع التكرار
+        if ($this->departmentRepository->existsByName($name)) {
+            throw new \DomainException("Department with name '{$name}' already exists.");
         }
 
-        // تمرير VO مباشرة إلى Entity
-        return $this->departmentRepository->create(new Department(null, $nameVO));
+        return $this->departmentRepository->create(
+            new Department(null, $name)
+        );
     }
 }
