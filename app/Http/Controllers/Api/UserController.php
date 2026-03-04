@@ -40,9 +40,10 @@ class UserController extends Controller
     public function show(int $id): ApiResponse
     {
         /** @var UserResponseDTO|null $user */
-        $user = $this->findUser->execute($id);
-        if (!$user) {
-            return ApiResponse::notFound([], 'User not found');
+
+        $userData = $this->findUser->execute($id);
+        if (!$userData) {
+            return ApiResponse::notFound([], 'User with ID [' . $id . '] not found');
         }
 
         return ApiResponse::ok($user, 'User fetched successfully');

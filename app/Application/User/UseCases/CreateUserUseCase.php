@@ -19,7 +19,7 @@ class CreateUserUseCase
     {
         // تحقق من وجود القسم
         $department = $this->departmentRepository->findById($dto->departmentId);
-        if (!$department) throw new \DomainException("Department not found.");
+        if (!$department) throw new \DomainException("Department with ID [' . $dto->departmentId . '] not found.");
 
         // إنشاء كائن Domain Entity
         $user = new User(

@@ -25,7 +25,7 @@ return new class extends Migration
             
             $table->enum('role', ['Admin', 'Manager', 'Employee', 'Tax Payer'])->default('Employee');
 
-            $table->foreignId('department_id')->constrained('departments')->cascadeOnDelete();
+            $table->foreignId('department_id')->constrained('departments');
             $table->foreignId('created_by')->nullable()->constrained('app_users')->nullOnDelete();
 
             $table->timestamps();
