@@ -84,7 +84,7 @@ class UserController extends Controller
         $existingUser = $this->findUser->execute($id);
 
         if (!$existingUser) {
-            return ApiResponse::notFound([], 'User not found');
+            return ApiResponse::notFound([], 'User with ID [' . $id . '] not found');
         }
 
         $firstName = $request->first_name ?? $existingUser->firstName;
