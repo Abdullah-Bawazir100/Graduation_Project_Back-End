@@ -27,7 +27,6 @@ class StoreUserRequest extends FormRequest
             'last_name'     => ['required', 'string', 'max:255'],
             'date_of_birth' => ['required', 'date', 'before:today'],
             'id_card'       => ['required', 'file', 'mimes:pdf', 'max:2048'],
-            'user_name'     => ['required', 'string', 'max:255', 'unique:users,user_name'],
             'phone'         => ['required', 'string', 'max:20'],
             'email'         => ['required', 'email', 'unique:users,email'],
             'password'      => ['required', 'string', 'min:8', 'confirmed'],

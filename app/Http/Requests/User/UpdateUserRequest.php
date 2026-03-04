@@ -29,12 +29,6 @@ class UpdateUserRequest extends FormRequest
             'last_name'     => ['sometimes', 'string', 'max:255'],
             'date_of_birth' => ['sometimes', 'date', 'before:today'],
             'id_card'       => ['sometimes', 'file', 'mimes:pdf', 'max:2048'],
-            'user_name'     => [
-                'sometimes',
-                'string',
-                'max:255',
-                Rule::unique('users', 'user_name')->ignore($userId)
-            ],
             'phone'         => ['sometimes', 'string', 'max:20'],
             'email'         => [
                 'sometimes',
