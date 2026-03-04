@@ -11,4 +11,4 @@ Route::get('/user', function (Request $request) {
 
 
 Route::apiResource('departments', DepartmentController::class);
-Route::apiResource('users', controller: UserController::class);
+Route::apiResource('app_users', controller: UserController::class);

@@ -18,6 +18,7 @@ use App\Domain\User\Enums\UserRole;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Domain\Department\Entities\Department;
+use Illuminate\Auth\AuthenticationException;
 
 class UserController extends Controller
 {
@@ -46,7 +47,7 @@ class UserController extends Controller
             return ApiResponse::notFound([], 'User with ID [' . $id . '] not found');
         }
 
-        return ApiResponse::ok($user, 'User fetched successfully');
+        return ApiResponse::ok($userData, 'User fetched successfully');
     }
 
     // POST /users
@@ -122,11 +123,11 @@ class UserController extends Controller
     // تحويل المستخدم المصادق عليه إلى Domain Entity
     private function getActor(): DomainUser
     {
-        $authUser = Auth::user();
+        $authUser = Auth::user() ?? throw new AuthenticationException();
 
         $department = new Department(
             id: $authUser->department_id,
-            name: $authUser->department->name ?? ''
+            name: $authUser->department?->name ?? ''
         );
 
         return new DomainUser(
