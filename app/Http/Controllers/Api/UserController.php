@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Application\User\UseCases\CreateUserUseCase;
 use App\Application\User\UseCases\UpdateUserUseCase;
 use App\Application\User\UseCases\DeleteUserUseCase;

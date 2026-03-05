@@ -2,19 +2,22 @@
 
 namespace App\Application\User\DTOs;
 
+use DateTime;
 class UserDTO
 {
-    public function __construct(
+        public function __construct(
         public ?int $id = null,
         public string $firstName,
         public string $lastName,
-        public string $dateOfBirth,
-        public string $idCard,
+        public ?DateTime $dateOfBirth = null,
+        public ?string $idCard = null,
         public string $userName,
-        public string $phone,
-        public string $email,
+        public ?string $phone = null,
+        public ?string $email = null,
         public string $password,
-        public int $departmentId,
-        public string $role
+        public int $createdBy,
+        public int $departmentID,
+        public ?string $role = null,
+        public bool $mustChangePassword = true
     ) {}
 }

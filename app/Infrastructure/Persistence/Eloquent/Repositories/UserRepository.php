@@ -68,6 +68,15 @@ class UserRepository implements UserRepositoryInterface
         return $this->mapToDomain($userData);
     }
 
+    public function findByUserName(string $userName): ?User
+    {
+        $userData = UserModel::with('department')->where('user_name', $userName)->first();
+
+        if (!$userData) return null;
+
+        return $this->mapToDomain($userData);
+    }
+
     public function getAll(): array
     {
         $models = UserModel::with('department')->get();
