@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\User\UseCases;
+namespace App\Application\User\UseCases;
 
 use App\Application\User\DTOs\LoginDTO;
 use App\Domain\User\Repositories\UserRepositoryInterface;

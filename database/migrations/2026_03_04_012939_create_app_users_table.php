@@ -19,15 +19,14 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->string('id_card')->nullable(); // مسار ملف PDF
             $table->string('user_name')->unique();
-            $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('password');
+            $table->boolean('must_change_password')->default(true);
             
             $table->enum('role', ['Admin', 'Manager', 'Employee', 'Tax Payer'])->default('Employee');
 
             $table->foreignId('department_id')->constrained('departments');
             $table->foreignId('created_by')->nullable()->constrained('app_users')->nullOnDelete();
-
             $table->timestamps();
             $table->rememberToken();
         });

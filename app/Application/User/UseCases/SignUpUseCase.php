@@ -23,14 +23,7 @@ class SignUpUseCase {
         if (!in_array($actor->role, [UserRole::Admin, UserRole::Manager])) {
             throw new \DomainException('Unauthorized: Only Admin or Manager can create users.');
         }
-
-        // Check if department exists
-        $department = $this->departmentRepository->findById($signUpDTO->departmentID);
-        if(!$department) 
-        {
-            throw new \DomainException('Department with ID [' . $signUpDTO->departmentID . '] not found.' );
-        }
-
+        
         // Generate username
         $baseUserName = strtolower(
             trim($signUpDTO->firstName) . '.' . trim($signUpDTO->lastName)
@@ -40,7 +33,14 @@ class SignUpUseCase {
         // Generate default password
         $defaultPassword = '12345678';
 
-        // Create User entity
+        // Check if department exists
+        $department = $this->departmentRepository->findById($signUpDTO->departmentID);
+        if(!$department) 
+        {
+            throw new \DomainException('Department with ID [' . $signUpDTO->departmentID . '] not found.' );
+        }
+
+        // Create User 
         $user = new User(
             id: null,
             firstName: $signUpDTO->firstName,

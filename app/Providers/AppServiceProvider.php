@@ -21,6 +21,16 @@ class AppServiceProvider extends ServiceProvider
             \App\Domain\User\Repositories\UserRepositoryInterface::class, 
             \App\Infrastructure\Persistence\Eloquent\Repositories\UserRepository::class
         );
+
+        $this->app->bind(
+            \App\Domain\User\Interfaces\TokenServiceInterface::class, 
+            \App\Infrastructure\Persistence\Eloquent\Repositories\TokenServiceRepository::class
+        );
+
+        $this->app->bind(
+            \App\Domain\User\Interfaces\PasswordHashInterface::class, 
+            \App\Infrastructure\Persistence\Eloquent\Repositories\PasswordHashRepository::class
+        );
     }
 
     /**

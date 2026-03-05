@@ -20,11 +20,11 @@ class UserModel extends Authenticatable
         'id_card',
         'user_name',
         'phone',
-        'email',
         'password',
         'created_by',
         'department_id',
         'role',
+        'must_change_password',
     ];
 
     protected $casts = [

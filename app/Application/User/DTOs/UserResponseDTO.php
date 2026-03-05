@@ -15,7 +15,7 @@ class UserResponseDTO
         public string $email,
         public string $password,
         public int $createdBy,
-        public int $departmentId,
+        public int $departmentID,
         public string $departmentName,
         public string $role
     ) {}

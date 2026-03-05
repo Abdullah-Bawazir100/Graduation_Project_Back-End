@@ -11,6 +11,11 @@ class TokenServiceRepository implements TokenServiceInterface {
     public function generateToken(DomainUser $user): string
     {
         $user = UserModel::findOrFail($user->id);
+
+        if(!$user) {
+            throw new \DomainException('User not found for token generation.');
+        }
+        
         return $user->createToken('auth_token')->plainTextToken;
     }
 

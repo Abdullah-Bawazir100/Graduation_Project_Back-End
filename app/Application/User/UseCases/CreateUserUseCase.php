@@ -23,6 +23,7 @@ class CreateUserUseCase
      * @param UserDTO $dto جميع بيانات المستخدم التي أدخلها Admin / Manager
      * @return array معلومات المستخدم وكلمة المرور المؤقتة
      */
+    
     public function execute(User $actor, UserDTO $dto): array
     {
         // 1️⃣ Authorization

@@ -20,7 +20,6 @@ class CompleteProfileUseCase {
             return new DomainException('Unauthorized: User must change password before completing profile.');
         }
 
-
         // Check if profile is already completed
         if($user->isProfileCompleted) {
             throw new DomainException('Profile is already completed.');

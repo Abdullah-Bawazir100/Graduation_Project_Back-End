@@ -16,7 +16,7 @@ class ChangePasswordUseCase {
     )
     {}
 
-    public function execute(User $user , $newPassword){
+    public function execute(User $user , $newPassword) : array{
 
         if(!$user->mustChangePassword) {
             throw new \DomainException('Password change is not required for this user.');
