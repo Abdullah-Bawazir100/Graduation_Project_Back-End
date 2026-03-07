@@ -22,7 +22,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'userName' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255',
             'password' => 'required|string',
         ];
 
@@ -30,9 +30,9 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'userName.required' => 'The userName field is required.',
-            'userName.string' => 'The userName must be a string.',
-            'userName.max' => 'The userName may not be greater than 255 characters.',
+            'user_name.required' => 'The user name field is required.',
+            'user_name.string' => 'The user name must be a string.',
+            'user_name.max' => 'The user name may not be greater than 255 characters.',
             'password.required' => 'The password field is required.',
             'password.string' => 'The password must be a string.',
         ];

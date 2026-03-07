@@ -69,7 +69,7 @@ class AuthController extends Controller
         try {
             
             $dto = new LoginDTO(
-                userName: $request->user_name,
+                userName: $request->userName,
                 password: $request->password
             );
 

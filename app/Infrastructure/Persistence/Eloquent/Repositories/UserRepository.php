@@ -19,7 +19,6 @@ class UserRepository implements UserRepositoryInterface
             'date_of_birth' => $user->dateOfBirth->format('Y-m-d'),
             'id_card'       => $user->idCard,
             'user_name'     => $user->userName,
-            'email'         => $user->email,
             'phone'         => $user->phone,
             'password'      => bcrypt($user->password),
             'role'          => $user->role->value,
@@ -42,7 +41,6 @@ class UserRepository implements UserRepositoryInterface
             'date_of_birth' => $user->dateOfBirth->format('Y-m-d'),
             'id_card'       => $user->idCard,
             'user_name'     => $user->userName,
-            'email'         => $user->email,
             'phone'         => $user->phone,
             'password'      => $user->password, // افتراضي: لا تغير إذا فارغ
             'role'          => $user->role->value,
@@ -99,11 +97,11 @@ class UserRepository implements UserRepositoryInterface
             idCard: $userData->id_card,
             userName: $userData->user_name,
             phone: $userData->phone,
-            email: $userData->email,
             password: $userData->password,
             createdBy: $userData->created_by,
             department: $department,
             role: UserRole::from($userData->role),
+            mustChangePassword: $userData->must_change_password
         );
     }
 }

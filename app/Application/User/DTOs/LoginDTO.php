@@ -10,6 +10,7 @@ class LoginDTO
         public string $userName,
         public string $password
     ) {}
+    
 
     public static function fromRequest(LoginRequest $loginRequest): self
     {

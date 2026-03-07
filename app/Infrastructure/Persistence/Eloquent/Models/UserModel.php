@@ -4,12 +4,13 @@ namespace App\Infrastructure\Persistence\Eloquent\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel;
 
 class UserModel extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens , Notifiable;
 
     protected $table = 'app_users';
 
