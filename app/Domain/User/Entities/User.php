@@ -19,7 +19,7 @@ class User {
         public ?int $createdBy,
         public Department $department,
         public UserRole $role,
-        public bool $mustChangePassword = false,
+        public bool $mustChangePassword = true,
         public bool $isProfileCompleted = false
     ) {}
 
@@ -28,10 +28,11 @@ class User {
         return $this->mustChangePassword;
     }
 
+    /*
     public function changePassword(string $newPassword): void
     {
         $this->password = $newPassword;
         $this->mustChangePassword = false;
     }
-
+    */
 }

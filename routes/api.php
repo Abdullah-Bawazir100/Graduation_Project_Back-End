@@ -7,11 +7,10 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\ManagerMiddleware;
 use Illuminate\Support\Facades\Route;
 
-
+Route::post('login' , [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('signup' , [AuthController::class, 'signUp']);
-    Route::post('login' , [AuthController::class, 'login']);
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
     Route::post('complete-profile', [AuthController::class, 'completeProfile']);
 

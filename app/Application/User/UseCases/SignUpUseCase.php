@@ -24,6 +24,15 @@ class SignUpUseCase {
             throw new \DomainException('Unauthorized: Only Admin or Manager can create users.');
         }
 
+        // Check if user already exits
+        $existingUser = $this->userRepository->findByUserName(
+            strtolower(trim($signUpDTO->firstName) . '.' . trim($signUpDTO->lastName))
+        );
+        if($existingUser)
+        {
+            throw new \DomainException('User with the same name already exists. Please choose a different name.');
+        }
+
         // Generate username
         $baseUserName = strtolower(
             trim($signUpDTO->firstName) . '.' . trim($signUpDTO->lastName)
@@ -54,7 +63,7 @@ class SignUpUseCase {
             createdBy: $actor->id,
             department: $department,
             role: UserRole::Employee, // Default role for new users
-            mustChangePassword: true
+            mustChangePassword: true,
         );
 
         $createdUser = $this->userRepository->create($user);
