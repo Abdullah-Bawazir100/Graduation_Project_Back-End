@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        // Binding Interface with Implementation
+        $this->app->bind(
+            \App\Domain\Department\Repositories\DepartmentRepositoryInterface::class, 
+            \App\Infrastructure\Persistence\Eloquent\Repositories\DepartmentRepository::class
+        );
+
+        $this->app->bind(
+            \App\Domain\User\Repositories\UserRepositoryInterface::class, 
+            \App\Infrastructure\Persistence\Eloquent\Repositories\UserRepository::class
+        );
+
+        $this->app->bind(
+            \App\Domain\User\Interfaces\TokenServiceInterface::class, 
+            \App\Infrastructure\Persistence\Eloquent\Repositories\TokenServiceRepository::class
+        );
+
+        $this->app->bind(
+            \App\Domain\User\Interfaces\PasswordHashInterface::class, 
+            \App\Infrastructure\Persistence\Eloquent\Repositories\PasswordHashRepository::class
+        );
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
+    }
+}
