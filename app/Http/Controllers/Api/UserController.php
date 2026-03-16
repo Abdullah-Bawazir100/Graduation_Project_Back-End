@@ -60,14 +60,13 @@ class UserController extends Controller
 
         $firstName = $request->first_name ?? $existingUser->firstName;
         $lastName = $request->last_name ?? $existingUser->lastName;
-        $userName = $this->generateUserName($firstName, $lastName);
 
         $dto = new UserDTO(
             firstName: $firstName,
             lastName: $lastName,
             dateOfBirth: $request->date_of_birth ?? $existingUser->dateOfBirth,
             idCard: $request->file('id_card')?->store('id_cards') ?? $existingUser->idCard,
-            userName: $userName,
+            userName: $request->userName,
             phone: $request->phone ?? $existingUser->phone,
             departmentID: (int)($request->department_id ?? $existingUser->departmentID),
             role: $request->role ?? $existingUser->role
@@ -88,7 +87,6 @@ class UserController extends Controller
         return ApiResponse::ok([], 'User deleted successfully');
     }
 
-    // تحويل المستخدم المصادق عليه إلى Domain Entity
     private function getActor(): DomainUser
     {
         $authUser = Auth::user() ?? throw new AuthenticationException();
@@ -111,11 +109,5 @@ class UserController extends Controller
             department: $department,
             role: UserRole::from($authUser->role)
         );
-    }
-
-    // توليد userName تلقائيًا من الاسم الأول و الأخير
-    private function generateUserName(string $firstName, string $lastName): string
-    {
-        return strtolower(trim($firstName . '.' . $lastName));
     }
 }

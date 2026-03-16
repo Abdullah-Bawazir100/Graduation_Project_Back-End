@@ -25,6 +25,7 @@ class UserRepository implements UserRepositoryInterface
             'role'          => $user->role->value,
             'department_id' => $user->department->id,
             'created_by'    => $user->createdBy,
+            'must_change_password' => $user->mustChangePassword
         ]);
 
         $userData->load('department');
@@ -49,7 +50,6 @@ class UserRepository implements UserRepositoryInterface
         ]);
 
         $userData->load('department');
-
         return $this->mapToDomain($userData);
     }
 
@@ -83,6 +83,20 @@ class UserRepository implements UserRepositoryInterface
         return $models->map(fn(UserModel $model) => $this->mapToDomain($model))->toArray();
     }
 
+    public function updatePassword(int $id, string $password, bool $mustChangePassword)
+    {
+        $userDate = UserModel::findOrFail($id);
+        $userDate->update([
+            'password' => $password,
+            'must_change_password' => $mustChangePassword
+        ]);
+
+        $userDate->load('department');
+
+        return $this->mapToDomain($userDate);
+
+    }
+
     private function mapToDomain(UserModel $userData): User
     {
         $department = new Department(
@@ -95,7 +109,7 @@ class UserRepository implements UserRepositoryInterface
             try {
                 $dateOfBirth = new \DateTime($userData->date_of_birth);
             } catch (\Exception $e) {
-                $dateOfBirth = null; // إذا كان هناك خطأ في الصيغة
+                $dateOfBirth = null;
             }
         }
 

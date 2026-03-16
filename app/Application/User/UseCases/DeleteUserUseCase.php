@@ -5,20 +5,26 @@ namespace App\Application\User\UseCases;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\Entities\User;
 use App\Application\User\Services\UserAuthorizationService;
+use DomainException;
 
 class DeleteUserUseCase
 {
     public function __construct(
-        private UserRepositoryInterface $repository,
+        private UserRepositoryInterface $userRepository,
         private UserAuthorizationService $userAuthorizationService
     ) {}
 
     public function execute(User $actor, int $userId): void
     {
-        if(!$this->userAuthorizationService->ensureCanDelete($actor)) {
-            throw new \DomainException("Unauthorized action [Only admin can delete users].");
+        $this->userAuthorizationService->ensureCanDelete($actor);
 
+        $userToDelete = $this->userRepository->findById($userId);
+        if(!$userToDelete)
+        {
+            throw new DomainException('User with ID [' . $userId . '] Not found.');
         }
-        $this->repository->delete($userId);
+
+        $this->userRepository->delete($userId);
+
     }
 }

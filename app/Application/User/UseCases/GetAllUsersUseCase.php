@@ -18,14 +18,12 @@ class GetAllUsersUseCase
             id: $user->id,
             firstName: $user->firstName,
             lastName: $user->lastName,
-            dateOfBirth: $user->dateOfBirth->format('Y-m-d'),
-            idCard: $user->idCard,
+            dateOfBirth: $user->dateOfBirth ?? null,            idCard: $user->idCard,
             userName: $user->userName,
             phone: $user->phone,
-            email: $user->email,
             password: $user->password,
             createdBy: $user->createdBy ?? 0,
-            departmentId: $user->department->id,
+            departmentID: $user->department->id,
             departmentName: $user->department->name,
             role: $user->role->value
         ), $users);

@@ -6,6 +6,9 @@ use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\Interfaces\PasswordHashInterface;
 use App\Domain\User\Interfaces\TokenServiceInterface;
+use DomainException;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 class ChangePasswordUseCase {
 
@@ -18,11 +21,24 @@ class ChangePasswordUseCase {
 
     public function execute(User $user , $newPassword) : array{
 
+
+        if(!$user->mustChangePassword)
+        {
+            throw new DomainException("Password change is not required.");
+        }
+
+
+        if(Hash::make($newPassword) == $user->password)
+        {
+            throw new DomainException("You must choose a new password different from the default one.");
+        }
+
         // Reset the new password
-        $user->password = $this->passwordHash->hashPassword($newPassword);
+        $newPasswordHashed = $this->passwordHash->hashPassword($newPassword);
+        $user->password = $newPasswordHashed;
         $user->mustChangePassword = false;
 
-        $updateUser = $this->userRepository->update($user);
+        $updateUser = $this->userRepository->updatePassword($user->id , $newPasswordHashed , false);
 
         // Create new token after update the password
         $token = $this->tokenService->generateToken($updateUser);
@@ -32,4 +48,5 @@ class ChangePasswordUseCase {
             'token' => $token
         ];
     }
+
 }

@@ -27,7 +27,7 @@ use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\CompleteProfileRequest;
 
 use App\Http\Responses\ApiResponse;
-
+use DateTime;
 
 class AuthController extends Controller
 {
@@ -101,8 +101,8 @@ class AuthController extends Controller
         try {
             $authUser = Auth::user();
             if (!$authUser) return ApiResponse::unauthorized();
-
             $domainUser = $this->convertToDomainUser($authUser);
+            echo 'Here';
 
             $dto = new ResetPasswordDTO(
                 newPassword: $request->new_password
@@ -111,8 +111,8 @@ class AuthController extends Controller
             $this->resetPasswordUseCase->execute($domainUser, $dto->newPassword);
 
             return ApiResponse::ok([], 'Password updated successfully');
-        } catch (\Throwable $e) {
-            return ApiResponse::unprocessable([], $e->getMessage());
+        } catch(\Throwable $e) {
+            throw $e;
         }
     }
 
@@ -141,8 +141,8 @@ class AuthController extends Controller
 
             return ApiResponse::ok($updatedUser, 'Profile completed successfully');
 
-        } catch (\Throwable $e) {
-            return ApiResponse::unprocessable([], $e->getMessage());
+        } catch(\Throwable $e) {
+            throw $e;
         }
     }
 
@@ -151,27 +151,35 @@ class AuthController extends Controller
     {
         try {
             $authUser = Auth::user();
-            if (!$authUser) return ApiResponse::unauthorized();
+            if(!$authUser) {
+                return ApiResponse::unauthorized();
+            }
 
             $actor = $this->convertToDomainUser($authUser);
 
             $dto = new UserDTO(
-                firstName: $request->first_name,
-                lastName: $request->last_name,
-                dateOfBirth: isset($request->date_of_birth) ? new \DateTime($request->date_of_birth) : null,
-                idCard: $request->id_card ?? null,
-                userName: $request->user_name ?? null,
-                phone: $request->phone ?? null,
-                departmentID: $request->department_id,
-                role: $request->role ?? null
+                 id: null,
+                firstName: $request->firstName,
+                lastName: $request->lastName,
+                dateOfBirth: $request->dateOfBirth ? new DateTime($request->dateOfBirth) : null,
+                idCard: $request->idCard,
+                userName: null,
+                password: null,
+                phone: $request->phone,
+                departmentID: $request->departmentID,
+                createdBy: $actor->id,
+                role: $request->role,
+                mustChangePassword: false
             );
 
-            $result = $this->createUserUseCase->execute($actor, $dto);
+            $result = $this->createUserUseCase->execute($actor , $dto);
 
-            return ApiResponse::created($result, 'User created successfully');
-        } catch (\Throwable $e) {
-            return ApiResponse::unprocessable([], $e->getMessage());
+            return ApiResponse::created($result , 'User Created Successfully.');
         }
+        catch(\Throwable $e) {
+            throw $e;
+        }
+
     }
 
     /** Helper: Convert Laravel Auth user to Domain User */
@@ -179,17 +187,17 @@ class AuthController extends Controller
     {
         return new DomainUser(
             id: $authUser->id,
-            firstName: $authUser->first_name,
-            lastName: $authUser->last_name,
-            dateOfBirth: $authUser->date_of_birth ? new \DateTime($authUser->date_of_birth) : null,
-            idCard: $authUser->id_card ?? '',
-            userName: $authUser->user_name,
+            firstName: $authUser->firstName ?? '',
+            lastName: $authUser->lastName ?? '',
+            dateOfBirth: $authUser->dateOfBirth ? new DateTime($authUser->dateOfBirth) : null,
+            idCard: $authUser->idCard ?? '',
+            userName: $authUser->userName ?? '',
             phone: $authUser->phone ?? '',
             password: $authUser->password,
-            createdBy: $authUser->created_by ?? 0,
-            department: new Department($authUser->department_id ?? 0, ''),
+            createdBy: $authUser->createdBy ?? 0,
+            department: new Department($authUser->departmentID ?? 0, ''),
             role: UserRole::from($authUser->role),
-            mustChangePassword: $authUser->must_change_password ?? true
+            mustChangePassword: $authUser->mustChangePassword ?? true
         );
     }
 }

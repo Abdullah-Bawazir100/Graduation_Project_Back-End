@@ -19,7 +19,6 @@ class CreateDepartmentUseCase
     {
         $name = trim($departmentDTO->name);
 
-        // Business Rule: منع التكرار
         if ($this->departmentRepository->existsByName($name)) {
             throw new \DomainException("Department with name '{$name}' already exists.");
         }

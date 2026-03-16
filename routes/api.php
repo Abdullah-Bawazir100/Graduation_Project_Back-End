@@ -16,21 +16,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-Route::middleware([AdminMiddleware::class])->group(function () {
+Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () {
 
     Route::post('create-user' , [AuthController::class, 'createUser']);
-    Route::apiResource('app_users', controller: UserController::class)->only(['index', 'show', 'destroy']);
+    Route::apiResource('app_users', controller: UserController::class);
+    Route::apiResource('departments', DepartmentController::class);
 
 });
 
 Route::middleware([ManagerMiddleware::class])->group(function () {
 
-    Route::apiResource('app_users', controller: UserController::class)->only(['index', 'show']);
     Route::apiResource('departments' , DepartmentController::class)->except(['destroy']);
 
 });
 
-Route::apiResource('departments', DepartmentController::class);
 
 
 

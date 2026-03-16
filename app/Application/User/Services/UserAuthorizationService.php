@@ -9,7 +9,7 @@ class UserAuthorizationService
 {
     public function ensureCanManageUsers(User $actor): void
     {
-        if (!in_array($actor->role, [UserRole::Admin, UserRole::Manager])) {
+        if (!in_array($actor->role, [UserRole::Admin, UserRole::Manager] , true)) {
             throw new \DomainException("Unauthorized action.");
         }
     }

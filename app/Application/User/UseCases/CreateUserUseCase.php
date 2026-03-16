@@ -19,51 +19,48 @@ class CreateUserUseCase
     ) {}
 
     /**
-     * @param User $actor Admin / Manager
-     * @param UserDTO $dto جميع بيانات المستخدم التي أدخلها Admin / Manager
-     * @return array معلومات المستخدم وكلمة المرور المؤقتة
+     * @param User $actor
+     * @param UserDTO $dto
+     * @return array
      */
-    
-    public function execute(User $actor, UserDTO $dto): array
+
+    public function execute(User $actor, UserDTO $userDTO)
     {
-        // 1️⃣ Authorization
         if (!in_array($actor->role, [UserRole::Admin, UserRole::Manager])) {
             throw new DomainException('Unauthorized: Only Admin or Manager can create users.');
         }
 
-        // 2️⃣ التحقق من وجود القسم
-        $department = $this->departmentRepository->findById($dto->departmentID);
+        $department = $this->departmentRepository->findById($userDTO->departmentID);
         if (!$department) {
-            throw new DomainException("Department with ID [{$dto->departmentID}] not found.");
+            throw new DomainException("Department with ID [{$userDTO->departmentID}] not found.");
         }
 
-        // 3️⃣ توليد اسم المستخدم (userName) من الاسم الأول والاسم الأخير إذا لم يُعطَ
-        $baseUserName = strtolower(trim($dto->firstName) . '.' . trim($dto->lastName));
-        $userName = $dto->userName ?? $this->generateUniqueUserName($baseUserName);
+        // Generate username
+        $baseUserName = strtolower(
+            trim($userDTO->firstName) . '.' . trim($userDTO->lastName)
+        );
+        $userName = $this->generateUniqueUserName($baseUserName);
 
-        // 4️⃣ توليد كلمة مرور افتراضية
+        // Generate default password
         $defaultPassword = '12345678';
 
-        // 5️⃣ إنشاء كائن User كامل
         $user = new User(
             id: null,
-            firstName: $dto->firstName,
-            lastName: $dto->lastName,
-            dateOfBirth: $dto->dateOfBirth,
-            idCard: $dto->idCard ?? '',
+            firstName: $userDTO->firstName,
+            lastName: $userDTO->lastName,
+            dateOfBirth: $userDTO->dateOfBirth,
+            idCard: $userDTO->idCard ?? '',
             userName: $userName,
-            phone: $dto->phone ?? '',
+            phone: $userDTO->phone ?? '',
             password: $this->passwordHash->hashPassword($defaultPassword),
             createdBy: $actor->id,
             department: $department,
-            role: $dto->role ? UserRole::from($dto->role) : UserRole::Employee,
+            role: $userDTO->role ? UserRole::from($userDTO->role) : UserRole::Employee,
             mustChangePassword: true
         );
 
-        // 6️⃣ حفظ المستخدم في Repository
         $createdUser = $this->userRepository->create($user);
 
-        // 7️⃣ إرجاع معلومات المستخدم وكلمة المرور المؤقتة
         return [
             'user_id' => $createdUser->id,
             'userName' => $userName,
@@ -73,9 +70,7 @@ class CreateUserUseCase
         ];
     }
 
-    /**
-     * توليد userName فريد
-     */
+
     private function generateUniqueUserName(string $baseUserName): string
     {
         $userName = $baseUserName;
@@ -88,4 +83,5 @@ class CreateUserUseCase
 
         return $userName;
     }
+
 }
