@@ -30,6 +30,7 @@ class CreateUserUseCase
             throw new DomainException('Unauthorized: Only Admin or Manager can create users.');
         }
 
+        // Check if department exists
         $department = $this->departmentRepository->findById($userDTO->departmentID);
         if (!$department) {
             throw new DomainException("Department with ID [{$userDTO->departmentID}] not found.");

@@ -19,11 +19,9 @@ class StoreUserRequest extends FormRequest
         return [
             'firstName'    => ['required', 'string', 'max:255'],
             'lastName'     => ['required', 'string', 'max:255'],
-            'dateOfBirth' => ['nullable', 'date', 'before:today'],
-            //'idCard'       => ['required', 'file', 'mimes:pdf'],
+            'dateOfBirth' => ['required', 'date', 'before:today'],
+            'idCard'       => ['required', 'file', 'mimes:pdf'],
             'phone'         => ['required', 'string', 'max:20'],
-            //'password'      => ['required', 'string', 'min:8', 'confirmed'],
-            //'role'          => ['required', Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
             'departmentID' => ['required', 'integer', 'exists:departments,id'],
         ];
     }

@@ -30,7 +30,7 @@ class LoginUseCase
         }
 
         // Check if must change password
-        if($user->mustChangePassword) {
+        if($user->mustChangePassword || $user->password == '12345678') {
             $token = $this->tokenService->generateToken($user);
             return [
                 'user' => $user,
@@ -39,7 +39,7 @@ class LoginUseCase
             ];
         }
 
-        // Create Token
+        // User already change his password & login
         $token = $this->tokenService->generateToken($user);
         return [
             'user' => $user,

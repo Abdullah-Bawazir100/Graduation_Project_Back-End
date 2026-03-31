@@ -38,7 +38,7 @@ class SignUpUseCase {
             trim($signUpDTO->firstName) . '.' . trim($signUpDTO->lastName)
         );
 
-        $userName = $baseUserName;
+        $userName = $this->generateUniqueUserName($baseUserName);
 
         // Generate default password
         $defaultPassword = '12345678';
@@ -75,7 +75,7 @@ class SignUpUseCase {
         ];
     }
 
-    /*
+
     private function generateUniqueUserName(string $baseUserName): string
     {
         $userName = $baseUserName;
@@ -88,5 +88,5 @@ class SignUpUseCase {
 
         return $userName;
     }
-    */
+
 }

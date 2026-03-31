@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 use App\Application\User\DTOs\SignUpDTO;
 use App\Application\User\DTOs\LoginDTO;
@@ -56,9 +58,10 @@ class AuthController extends Controller
             );
 
             $result = $this->signUpUseCase->execute($actor, $dto);
-
             return ApiResponse::created($result, 'User signed up successfully');
-        } catch (\Throwable $e) {
+
+        }
+        catch (\Throwable $e) {
             return response()->json([
                 'error' => $e->getMessage()
             ], 422);
@@ -150,6 +153,7 @@ class AuthController extends Controller
     public function createUser(StoreUserRequest $request)
     {
         try {
+
             $authUser = Auth::user();
             if(!$authUser) {
                 return ApiResponse::unauthorized();
@@ -157,12 +161,17 @@ class AuthController extends Controller
 
             $actor = $this->convertToDomainUser($authUser);
 
+            $file = $request->file('idCard');
+            $fileName = Str::uuid() . '.pdf';
+            $path = $file->storeAs('id-cards' , $fileName , 'public');
+            $fileUrl = asset(Storage::url($path));
+
             $dto = new UserDTO(
-                 id: null,
+                id: null,
                 firstName: $request->firstName,
                 lastName: $request->lastName,
                 dateOfBirth: $request->dateOfBirth ? new DateTime($request->dateOfBirth) : null,
-                idCard: $request->idCard,
+                idCard: $fileUrl,
                 userName: null,
                 password: null,
                 phone: $request->phone,
