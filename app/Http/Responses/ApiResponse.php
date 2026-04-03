@@ -103,7 +103,7 @@ class ApiResponse implements Responsable
 
     public static function notFound(mixed $data = [], string $message = 'Resource not found', array $meta = []): self
     {
-        return new static(404, $data, $message, $meta);
+        return new static(404, $data, '', $meta, $message);
     }
 
     public static function conflict(mixed $data = [], string $message = 'Conflict occurred', array $meta = []): self

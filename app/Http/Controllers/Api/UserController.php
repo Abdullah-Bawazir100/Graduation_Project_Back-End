@@ -29,7 +29,7 @@ class UserController extends Controller
    // GET /users
     public function index(): ApiResponse
     {
-        $users = $this->getUsers->execute(); // يجب أن يرجع array of UserResponseDTO
+        $users = $this->getUsers->execute();
         return ApiResponse::ok($users, 'Users fetched successfully');
     }
 
@@ -39,8 +39,8 @@ class UserController extends Controller
         /** @var UserResponseDTO|null $user */
 
         $userData = $this->findUser->execute($id);
-        if (!$userData) {
-            return ApiResponse::notFound([], 'User with ID [' . $id . '] not found');
+        if(!$userData) {
+            return ApiResponse::notFound([] , 'User with id [' . $id . '] not found');
         }
 
         return ApiResponse::ok($userData, 'User fetched successfully');
@@ -62,13 +62,15 @@ class UserController extends Controller
         $lastName = $request->last_name ?? $existingUser->lastName;
 
         $dto = new UserDTO(
+            id: null,
             firstName: $firstName,
             lastName: $lastName,
-            dateOfBirth: $request->date_of_birth ?? $existingUser->dateOfBirth,
+            dateOfBirth: $request->dateOfBirth ?? $existingUser->dateOfBirth->format('Y-m-d'),
             idCard: $request->file('id_card')?->store('id_cards') ?? $existingUser->idCard,
             userName: $request->userName,
             phone: $request->phone ?? $existingUser->phone,
-            departmentID: (int)($request->department_id ?? $existingUser->departmentID),
+            departmentID: (int)($request->departmentID ?? $existingUser->departmentID),
+            createdBy: $actor->id,
             role: $request->role ?? $existingUser->role
         );
 

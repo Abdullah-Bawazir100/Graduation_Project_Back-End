@@ -7,8 +7,8 @@ class UserDTO
 {
         public function __construct (
             public ?int $id,
-            public string $firstName,
-            public string $lastName,
+            public ?string $firstName,
+            public ?string $lastName,
             public ?DateTime $dateOfBirth = null,
             public ?string $idCard = null,
             public ?string $userName = null,
@@ -17,6 +17,5 @@ class UserDTO
             public int $departmentID,
             public int $createdBy,
             public ?string $role = null,
-            public bool $mustChangePassword = false
     ) {}
 }

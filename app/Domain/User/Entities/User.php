@@ -11,7 +11,7 @@ class User {
         public readonly ?int $id,
         public string $firstName,
         public string $lastName,
-        public ?\DateTime $dateOfBirth,
+        public \DateTime $dateOfBirth,
         public ?string $idCard,
         public string $userName,
         public ?string $phone,

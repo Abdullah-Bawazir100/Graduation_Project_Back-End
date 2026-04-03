@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () {
 
     Route::post('create-user' , [AuthController::class, 'createUser']);
-    Route::apiResource('app_users', controller: UserController::class);
+    Route::apiResource('app_users', UserController::class);
     Route::apiResource('departments', DepartmentController::class);
 
 });

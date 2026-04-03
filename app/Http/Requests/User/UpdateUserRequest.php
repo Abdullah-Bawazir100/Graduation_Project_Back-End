@@ -40,22 +40,4 @@ class UpdateUserRequest extends FormRequest
         ];
     }
 
-    public function toDTO(): UserDTO
-    {
-        return new UserDTO(
-            id: $this->route('id'),
-            firstName: $this->input('first_name'),
-            lastName: $this->input('last_name'),
-            dateOfBirth: $this->input('date_of_birth')
-                ? new DateTime($this->input('date_of_birth'))
-                : null,
-            idCard: null,
-            userName: null,
-            phone: $this->input('phone'),
-            createdBy: Auth::id(),
-            departmentID: $this->input('department_id'),
-            role: $this->input('role'),
-            mustChangePassword: false
-        );
-    }
 }

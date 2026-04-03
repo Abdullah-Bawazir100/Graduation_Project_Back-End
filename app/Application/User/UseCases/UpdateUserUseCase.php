@@ -7,6 +7,7 @@ use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Enums\UserRole;
 use App\Application\User\DTOs\UserDTO;
+use DateTime;
 
 class UpdateUserUseCase
 {
@@ -17,23 +18,22 @@ class UpdateUserUseCase
 
     public function execute(User $actor, int $userId, UserDTO $dto): User
     {
-        $existing = $this->userRepository->findById($userId);
-        if (!$existing) throw new \DomainException("User not found.");
+        $existingUser = $this->userRepository->findById($userId);
+        if (!$existingUser) throw new \DomainException("User not found.");
 
-        $department = $this->departmentRepository->findById($dto->departmentId);
+        $department = $this->departmentRepository->findById($dto->departmentID);
         if (!$department) throw new \DomainException("Department not found.");
 
         $updatedUser = new User(
-            id: $existing->id,
+            id: $existingUser->id,
             firstName: $dto->firstName,
             lastName: $dto->lastName,
-            dateOfBirth: new \DateTime($dto->dateOfBirth),
+            dateOfBirth: $dto->dateOfBirth,
             idCard: $dto->idCard,
             userName: $dto->userName,
             phone: $dto->phone,
-            email: $dto->email,
-            password: $existing->password, // لا نغير الباسورد هنا
-            createdBy: $existing->createdBy,
+            password: $existingUser->password,
+            createdBy: $existingUser->createdBy,
             department: $department,
             role: UserRole::from($dto->role)
         );

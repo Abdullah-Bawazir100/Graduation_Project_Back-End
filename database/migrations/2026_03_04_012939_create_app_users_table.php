@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->date('date_of_birth')->nullable();
-            $table->string('id_card')->nullable(); // مسار ملف PDF
+            $table->string('id_card')->nullable(); 
             $table->string('user_name')->unique();
             $table->string('phone')->nullable();
             $table->string('password');
