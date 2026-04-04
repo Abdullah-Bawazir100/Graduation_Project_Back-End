@@ -37,7 +37,6 @@ class AuthController extends Controller
         private SignUpUseCase $signUpUseCase,
         private LoginUseCase $loginUseCase,
         private ChangePasswordUseCase $resetPasswordUseCase,
-        private CompleteProfileUseCase $completeProfileUseCase,
         private CreateUserUseCase $createUserUseCase
     ) {}
 
@@ -86,9 +85,9 @@ class AuthController extends Controller
 
                 'access_token' => $token,
                 'must_change_password' => $result['must_change_password'],
-                'user' => $result['user']
+                'user' => $result['user'] ?? null
 
-            ], 'Login successful');
+            ], 'Login successfully');
 
         } catch (\Throwable $e) {
 
@@ -105,7 +104,6 @@ class AuthController extends Controller
             $authUser = Auth::user();
             if (!$authUser) return ApiResponse::unauthorized();
             $domainUser = $this->convertToDomainUser($authUser);
-            echo 'Here';
 
             $dto = new ResetPasswordDTO(
                 newPassword: $request->new_password
@@ -113,12 +111,15 @@ class AuthController extends Controller
 
             $this->resetPasswordUseCase->execute($domainUser, $dto->newPassword);
 
-            return ApiResponse::ok([], 'Password updated successfully');
+            return ApiResponse::ok([
+                'user_id' => $authUser->id
+            ], 'Password updated successfully');
         } catch(\Throwable $e) {
             throw $e;
         }
     }
 
+    /*
     public function completeProfile(CompleteProfileRequest $request)
     {
         try {
@@ -148,6 +149,8 @@ class AuthController extends Controller
             throw $e;
         }
     }
+    */
+
 
     /** Admin / Manager creates user with full info */
     public function createUser(StoreUserRequest $request)
@@ -178,7 +181,6 @@ class AuthController extends Controller
                 departmentID: $request->departmentID,
                 createdBy: $actor->id,
                 role: $request->role,
-                mustChangePassword: false
             );
 
             $result = $this->createUserUseCase->execute($actor , $dto);
@@ -205,7 +207,7 @@ class AuthController extends Controller
             password: $authUser->password,
             createdBy: $authUser->createdBy ?? 0,
             department: new Department($authUser->departmentID ?? 0, ''),
-            role: UserRole::from($authUser->role),
+            role: $authUser->role,
             mustChangePassword: $authUser->mustChangePassword ?? true
         );
     }

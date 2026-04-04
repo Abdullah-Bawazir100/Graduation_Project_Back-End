@@ -21,22 +21,38 @@ class UpdateUserRequest extends FormRequest
     {
 
         return [
-            'first_name'    => ['sometimes', 'string', 'max:255'],
-            'last_name'     => ['sometimes', 'string', 'max:255'],
-            'date_of_birth' => ['sometimes', 'date', 'before:today'],
-            'id_card'       => ['sometimes', 'file', 'mimes:pdf', 'max:2048'],
+            'firstName'    => ['sometimes', 'string', 'max:255'],
+            'lastName'     => ['sometimes', 'string', 'max:255'],
+            'dateOfBirth' => ['sometimes', 'date', 'before:today'],
+            'idCard'       => ['sometimes', 'file', 'mimes:pdf'],
             'phone'         => ['sometimes', 'string', 'max:20'],
-            'password'      => ['nullable', 'string', 'min:8', 'confirmed'],
             'role'          => ['sometimes', Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
-            'department_id' => ['sometimes', 'integer', 'exists:departments,id'],
+            'departmentID' => ['sometimes', 'integer', 'exists:departments,id'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id_card.mimes' => 'The ID Card must be a PDF file.',
-            'password.confirmed' => 'Password confirmation does not match.',
+            'firstName.string' => 'الأسم الأول يجب أن يكون نص.',
+            'firstName.max'    => 'الأسم الأول يجب ألا يتجاوز 255 حرفًا.',
+
+            'lastName.string' => 'الأسم الأخير يجب أن يكون نص.',
+            'lastName.max'    => 'الأسم الأخير يجب ألا يتجاوز 255 حرفًا.',
+
+            'dateOfBirth.date'   => 'تاريخ الميلاد يجب أن يكون تاريخًا صحيحًا.',
+            'dateOfBirth.before' => 'تاريخ الميلاد يجب أن يكون قبل اليوم.',
+
+            'idCard.file'  => 'يجب أن يكون الملف المرفوع صحيحًا.',
+            'idCard.mimes' => 'يجب أن يكون الملف بصيغة PDF فقط.',
+
+            'phone.string' => 'رقم الهاتف يجب أن يكون نصًا.',
+            'phone.max'    => 'رقم الهاتف يجب ألا يتجاوز 20 رقمًا.',
+
+            'role.in' => 'الدور المحدد غير صالح.',
+
+            'departmentID.integer' => 'القسم يجب أن يكون رقمًا صحيحًا.',
+            'departmentID.exists'  => 'القسم المحدد غير موجود.',
         ];
     }
 

@@ -17,13 +17,13 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->date('date_of_birth')->nullable();
-            $table->string('id_card')->nullable(); 
+            $table->string('id_card')->nullable();
             $table->string('user_name')->unique();
             $table->string('phone')->nullable();
             $table->string('password');
             $table->boolean('must_change_password')->default(true);
 
-            $table->enum('role', ['Admin', 'Manager', 'Employee', 'Tax Payer'])->default('Employee');
+            $table->enum('role', ['Admin', 'Manager', 'Employee', 'Tax_Payer'])->default('Employee');
 
             $table->foreignId('department_id')->constrained('departments');
             $table->foreignId('created_by')->nullable()->constrained('app_users')->nullOnDelete();

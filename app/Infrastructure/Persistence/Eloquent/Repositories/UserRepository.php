@@ -7,8 +7,7 @@ use App\Domain\User\Entities\User;
 use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\Department\Entities\Department;
-use App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel;
-use function PHPUnit\Framework\isFalse;
+
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -124,7 +123,7 @@ class UserRepository implements UserRepositoryInterface
             password: $userData->password,
             createdBy: $userData->created_by,
             department: $department,
-            role: UserRole::from($userData->role),
+            role: $userData->role,
             mustChangePassword: $userData->must_change_password ?? false
         );
     }

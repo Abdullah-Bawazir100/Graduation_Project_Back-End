@@ -56,7 +56,7 @@ class CreateUserUseCase
             password: $this->passwordHash->hashPassword($defaultPassword),
             createdBy: $actor->id,
             department: $department,
-            role: $userDTO->role ? UserRole::from($userDTO->role) : UserRole::Employee,
+            role: $userDTO->getRole(),
             mustChangePassword: true
         );
 

@@ -9,14 +9,14 @@ class UserAuthorizationService
 {
     public function ensureCanManageUsers(User $actor): void
     {
-        if (!in_array($actor->role, [UserRole::Admin, UserRole::Manager] , true)) {
+        if (!in_array($actor->role, [UserRole::Admin->value, UserRole::Manager->value] , true)) {
             throw new \DomainException("Unauthorized action.");
         }
     }
 
     public function ensureCanDelete(User $actor): void
     {
-        if ($actor->role !== UserRole::Admin) {
+        if ($actor->role !== UserRole::Admin->value) {
             throw new \DomainException("Only admin can delete users.");
         }
     }

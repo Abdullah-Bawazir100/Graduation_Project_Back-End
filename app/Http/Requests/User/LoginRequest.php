@@ -30,12 +30,13 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'userName.required' => 'The user name field is required.',
-            'userName.string' => 'The user name must be a string.',
-            'userName.max' => 'The user name may not be greater than 255 characters.',
-            'password.required' => 'The password field is required.',
-            'password.string' => 'The password must be a string.',
-            'password.min' => 'password must be at least 8.'
+            'userName.required' => 'اسم المستخدم مطلوب.',
+            'userName.string'   => 'اسم المستخدم يجب أن يكون نصًا.',
+            'userName.max'      => 'اسم المستخدم يجب ألا يزيد عن 255 حرفًا.',
+
+            'password.required' => 'كلمة المرور مطلوبة.',
+            'password.string'   => 'كلمة المرور يجب أن تكون نصًا.',
+            'password.min'      => 'كلمة المرور يجب أن تكون على الأقل 8 أحرف.',
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Application\User\DTOs;
 
+use App\Domain\User\Enums\UserRole;
 use DateTime;
 class UserDTO
 {
@@ -16,6 +17,19 @@ class UserDTO
             public ?string $phone = null,
             public int $departmentID,
             public int $createdBy,
-            public ?string $role = null,
+            public $role = null,
     ) {}
+
+    public function getRole(): UserRole
+    {
+        if ($this->role instanceof UserRole) {
+            return $this->role;
+        }
+
+        if ($this->role !== null) {
+            return UserRole::from($this->role);
+        }
+
+        return UserRole::Employee;
+    }
 }

@@ -11,7 +11,7 @@ class User {
         public readonly ?int $id,
         public string $firstName,
         public string $lastName,
-        public \DateTime $dateOfBirth,
+        public ?\DateTime $dateOfBirth,
         public ?string $idCard,
         public string $userName,
         public ?string $phone,
@@ -20,7 +20,6 @@ class User {
         public Department $department,
         public UserRole $role,
         public bool $mustChangePassword = true,
-        public bool $isProfileCompleted = false
     ) {}
 
     public function mustChangePassword(): bool

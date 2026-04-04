@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Domain\User\Enums\UserRole;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +20,7 @@ class AdminSeeder extends Seeder
             'phone' => '777777777',
             'password' => Hash::make('12345678'),
             'must_change_password' => false,
-            'role' => 'Admin',
+            'role' => UserRole::Admin->value,
             'department_id' => 1,
             'created_by' => null,
             'created_at' => now(),

@@ -29,22 +29,23 @@ class LoginUseCase
             throw new \DomainException('Invalid credentials: Incorrect password.');
         }
 
+        $token = $this->tokenService->generateToken($user);
+
+        $mustChangePassword = $user->mustChangePassword || $user->password === '12345678';
         // Check if must change password
-        if($user->mustChangePassword || $user->password == '12345678') {
-            $token = $this->tokenService->generateToken($user);
+        if($mustChangePassword) {
+
             return [
-                'user' => $user,
                 'token' => $token,
                 'must_change_password' => true
             ];
         }
 
         // User already change his password & login
-        $token = $this->tokenService->generateToken($user);
         return [
             'user' => $user,
             'token' => $token,
-            'must_change_password' => false
+            'must_change_password' => true
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Persistence\Eloquent\Models;
 
+use App\Domain\User\Enums\UserRole;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -30,6 +31,7 @@ class UserModel extends Authenticatable
 
     protected $casts = [
         'date_of_birth' => 'date',
+        'role' => UserRole::class
     ];
 
     public function department()

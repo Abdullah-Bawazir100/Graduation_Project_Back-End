@@ -29,10 +29,10 @@ class ResetPasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'new_password.required' => 'New password is required.',
-            'new_password.string' => 'New password must be a string.',
-            'new_password.min' => 'New password must be at least 8 characters.',
-            'new_password.confirmed' => 'New password confirmation does not match.',
+            'new_password.required'  => 'كلمة المرور الجديدة مطلوبة.',
+            'new_password.string'    => 'كلمة المرور الجديدة يجب أن تكون نصًا.',
+            'new_password.min'       => 'كلمة المرور الجديدة يجب أن تكون على الأقل 8 أحرف.',
+            'new_password.confirmed' => 'تأكيد كلمة المرور الجديدة غير متطابق.',
         ];
     }
 }
