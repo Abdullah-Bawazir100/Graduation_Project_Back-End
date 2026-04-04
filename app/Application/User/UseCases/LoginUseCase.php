@@ -45,7 +45,7 @@ class LoginUseCase
         return [
             'user' => $user,
             'token' => $token,
-            'must_change_password' => true
+            'must_change_password' => false
         ];
     }
 }

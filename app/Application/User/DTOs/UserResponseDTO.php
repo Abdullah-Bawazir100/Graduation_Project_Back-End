@@ -12,7 +12,6 @@ class UserResponseDTO
         public ?string $idCard,
         public string $userName,
         public ?string $phone,
-        public string $password,
         public int $createdBy,
         public int $departmentID,
         public string $departmentName,

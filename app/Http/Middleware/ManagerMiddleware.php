@@ -19,10 +19,12 @@ class ManagerMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
+
         if(!$user || $user->role !== UserRole::Manager->value) {
             return ApiResponse::forbidden([] , 'Access denied. Managers only.')->toResponse($request);
 
         }
+        
         return $next($request);
     }
 }

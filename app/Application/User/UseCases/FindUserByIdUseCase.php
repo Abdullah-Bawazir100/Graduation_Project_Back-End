@@ -23,11 +23,10 @@ class FindUserByIdUseCase
             idCard: $user->idCard,
             userName: $user->userName,
             phone: $user->phone,
-            password: $user->password,
             createdBy: $user->createdBy ?? 0,
             departmentID: $user->department->id,
             departmentName: $user->department->name,
-            role: $user->role->value
+            role: $user->role->value,
         );
     }
 }

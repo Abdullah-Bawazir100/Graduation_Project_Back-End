@@ -26,7 +26,6 @@ use App\Http\Requests\User\SignUpRequest;
 use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\ResetPasswordRequest;
 use App\Http\Requests\User\StoreUserRequest;
-use App\Http\Requests\User\CompleteProfileRequest;
 
 use App\Http\Responses\ApiResponse;
 use DateTime;

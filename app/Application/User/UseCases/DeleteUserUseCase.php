@@ -21,7 +21,7 @@ class DeleteUserUseCase
         $userToDelete = $this->userRepository->findById($userId);
         if(!$userToDelete)
         {
-            throw new DomainException('User with ID [' . $userId . '] Not found.');
+            return;
         }
 
         $this->userRepository->delete($userId);

@@ -21,7 +21,6 @@ class GetAllUsersUseCase
             dateOfBirth: $user->dateOfBirth ?? null,            idCard: $user->idCard,
             userName: $user->userName,
             phone: $user->phone,
-            password: $user->password,
             createdBy: $user->createdBy ?? 0,
             departmentID: $user->department->id,
             departmentName: $user->department->name,

@@ -28,7 +28,7 @@ class DepartmentController extends Controller
     public function store(StoreDepartmentRequest $request, CreateDepartmentUseCase $useCase)
     {
         $dto = new DepartmentDTO(
-            name: $request->validated('name')
+            name: $request->name
         );
 
         $department = $useCase->execute($dto);

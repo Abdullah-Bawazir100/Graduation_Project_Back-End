@@ -51,7 +51,6 @@ class UserController extends Controller
     {
         $actor = $this->getActor();
 
-        /** @var UserResponseDTO|null $existingUser */
         $existingUser = $this->findUser->execute($id);
 
         if (!$existingUser) {
@@ -62,15 +61,16 @@ class UserController extends Controller
         $lastName = $request->last_name ?? $existingUser->lastName;
 
         $dto = new UserDTO(
-            id: null,
+            id: $id,
             firstName: $firstName,
             lastName: $lastName,
-            dateOfBirth: $request->dateOfBirth ?? $existingUser->dateOfBirth->format('Y-m-d'),
+            dateOfBirth: $request->dateOfBirth ?? $existingUser->dateOfBirth,
             idCard: $request->file('id_card')?->store('id_cards') ?? $existingUser->idCard,
-            userName: $request->userName,
+            userName: $request->userName ?? $existingUser->userName,
+            password: $request->password ?? null,
             phone: $request->phone ?? $existingUser->phone,
             departmentID: (int)($request->departmentID ?? $existingUser->departmentID),
-            createdBy: $actor->id,
+            createdBy: $existingUser->createdBy,
             role: $request->role ?? $existingUser->role
         );
 
@@ -84,8 +84,15 @@ class UserController extends Controller
     public function destroy(int $id): ApiResponse
     {
         $actor = $this->getActor();
-        $this->deleteUser->execute($actor, $id);
 
+        $existingUser = $this->findUser->execute($id);
+        if(!$existingUser)
+        {
+            return ApiResponse::notFound([] , 'User with id [' . $id . '] not found');
+
+        }
+
+        $this->deleteUser->execute($actor, $id);
         return ApiResponse::ok([], 'User deleted successfully');
     }
 
@@ -109,7 +116,7 @@ class UserController extends Controller
             password: $authUser->password,
             createdBy: $authUser->created_by,
             department: $department,
-            role: UserRole::from($authUser->role)
+            role: $authUser->role
         );
     }
 }
