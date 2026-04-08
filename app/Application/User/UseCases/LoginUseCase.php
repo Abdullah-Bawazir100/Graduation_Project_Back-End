@@ -6,7 +6,6 @@ use App\Application\User\DTOs\LoginDTO;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\Interfaces\TokenServiceInterface;
 use App\Domain\User\Interfaces\PasswordHashInterface;
-use Illuminate\Support\Facades\Hash;
 
 class LoginUseCase
 {
