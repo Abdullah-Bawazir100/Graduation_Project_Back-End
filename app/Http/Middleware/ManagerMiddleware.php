@@ -20,11 +20,20 @@ class ManagerMiddleware
     {
         $user = Auth::user();
 
-        if(!$user || $user->role !== UserRole::Manager->value) {
-            return ApiResponse::forbidden([] , 'Access denied. Managers only.')->toResponse($request);
-
+        if(!$user || $user->role !== UserRole::Manager) {
+            return response()->json([
+                'message' => 'Access denied. Manager only.',
+                'status' => 403,
+            ], 403);
         }
-        
+
+        if ($request->isMethod('delete')) {
+            return response()->json([
+                'message' => 'Managers cannot delete departments.',
+                'status' => 403,
+            ], 403);
+        }
+
         return $next($request);
     }
 }

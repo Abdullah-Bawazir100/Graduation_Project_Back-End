@@ -18,10 +18,24 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
-        if (!$user || $user->role !== UserRole::Admin->value) {
-            return ApiResponse::forbidden([] , 'Access denied. Admins only.')->toResponse($request);
+        // return response()->json([
+        //     'auth_check' => Auth::check(),
+        //     'user' => $user,
+        //     'role_value' => $user?->role,
+        //     'role_type' => gettype($user?->role),
+        //     'is_enum' => $user?->role instanceof UserRole,
+        //     'expected_role' => UserRole::Admin,
+        //     'comparison_result' => $user?->role === UserRole::Admin,
+        // ]);
+
+        if (!$user || $user->role !== UserRole::Admin) {
+            return response()->json([
+                'message' => 'Access denied. Admins only.',
+                'status' => 403,
+            ], 403);
         }
 
         return $next($request);
+
     }
 }
