@@ -26,6 +26,7 @@ class UpdateUserRequest extends FormRequest
             'dateOfBirth' => ['sometimes', 'date', 'before:today'],
             'idCard'       => ['sometimes', 'file', 'mimes:pdf'],
             'phone'         => ['sometimes', 'string', 'max:20'],
+            'image'         => ['sometimes', 'string', 'mimes:png,jpg,jpeg,gif' , 'max:2048'],
             'role'          => ['sometimes', Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
             'departmentID' => ['sometimes', 'integer', 'exists:departments,id'],
         ];
@@ -48,6 +49,8 @@ class UpdateUserRequest extends FormRequest
 
             'phone.string' => 'رقم الهاتف يجب أن يكون نصًا.',
             'phone.max'    => 'رقم الهاتف يجب ألا يتجاوز 20 رقمًا.',
+
+            'image.max' => 'حجم الصورة يجب ألا يتجاوز 2 MB .',
 
             'role.in' => 'الدور المحدد غير صالح.',
 

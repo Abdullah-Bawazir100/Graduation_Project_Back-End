@@ -120,6 +120,7 @@ class UserRepository implements UserRepositoryInterface
             idCard: $userData->id_card ?? '',
             userName: $userData->user_name,
             phone: $userData->phone,
+            image: $userData->image ?? '',
             password: $userData->password,
             createdBy: $userData->created_by,
             department: $department,

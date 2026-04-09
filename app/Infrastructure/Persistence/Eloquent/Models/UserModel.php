@@ -23,6 +23,7 @@ class UserModel extends Authenticatable
         'user_name',
         'phone',
         'password',
+        'image',
         'created_by',
         'department_id',
         'role',

@@ -18,6 +18,7 @@ class AdminSeeder extends Seeder
             'id_card' => null,
             'user_name' => 'AbdullahBawazir',
             'phone' => '735940751',
+            'image' => null,
             'password' => Hash::make('12345678'),
             'must_change_password' => false,
             'role' => UserRole::Admin->value,

@@ -22,6 +22,7 @@ Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () 
     Route::post('create-user' , [AuthController::class, 'createUser']);
     Route::apiResource('app_users', UserController::class);
     Route::apiResource('departments', DepartmentController::class);
+    Route::get('activity-log' , [ActivityLogController::class , 'index']);
 
 });
 
@@ -29,8 +30,6 @@ Route::middleware(['auth:sanctum' , ManagerMiddleware::class])->group(function()
     Route::apiResource('manager-departments' , DepartmentController::class);
 });
 
-Route::get('activity-log' , [ActivityLogController::class , 'index'])
-                ->middleware('auth:sanctum');
 
 
 

@@ -15,6 +15,7 @@ class User {
         public ?string $idCard,
         public string $userName,
         public ?string $phone,
+        public ?string $image,
         public string $password,
         public ?int $createdBy,
         public Department $department,

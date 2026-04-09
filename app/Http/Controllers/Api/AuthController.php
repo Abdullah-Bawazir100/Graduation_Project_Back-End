@@ -168,6 +168,13 @@ class AuthController extends Controller
             $path = $file->storeAs('id-cards' , $fileName , 'public');
             $fileUrl = asset(Storage::url($path));
 
+            if($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('profile-images' , $imageName , 'public');
+                $imageUrl = asset(Storage::url($imagePath));
+            }
+
             $dto = new UserDTO(
                 id: null,
                 firstName: $request->firstName,
@@ -177,11 +184,12 @@ class AuthController extends Controller
                 userName: null,
                 password: null,
                 phone: $request->phone,
+                image: $imageUrl,
                 departmentID: $request->departmentID,
                 createdBy: $actor->id,
                 role: $request->role,
             );
-
+            
             $result = $this->createUserUseCase->execute($actor , $dto);
 
             return ApiResponse::created($result , 'User Created Successfully.');
@@ -203,6 +211,7 @@ class AuthController extends Controller
             idCard: $authUser->idCard ?? '',
             userName: $authUser->userName ?? '',
             phone: $authUser->phone ?? '',
+            image: $authUser->image ?? '',
             password: $authUser->password,
             createdBy: $authUser->createdBy ?? 0,
             department: new Department($authUser->departmentID ?? 0, ''),

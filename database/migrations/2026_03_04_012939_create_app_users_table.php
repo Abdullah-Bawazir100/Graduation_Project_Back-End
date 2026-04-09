@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('user_name')->unique();
             $table->string('phone')->nullable();
             $table->string('password');
+            $table->string('image')->nullable();
             $table->boolean('must_change_password')->default(true);
 
             $table->enum('role', ['Admin', 'Manager', 'Employee', 'Tax_Payer'])->default('Employee');

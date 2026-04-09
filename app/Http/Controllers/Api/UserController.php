@@ -69,6 +69,7 @@ class UserController extends Controller
             userName: $request->userName ?? $existingUser->userName,
             password: $request->password ?? null,
             phone: $request->phone ?? $existingUser->phone,
+            image: $request->file('image')->store('profile-images') ?? $existingUser->image,
             departmentID: (int)($request->departmentID ?? $existingUser->departmentID),
             createdBy: $existingUser->createdBy,
             role: $request->role ?? $existingUser->role
@@ -113,6 +114,7 @@ class UserController extends Controller
             idCard: $authUser->id_card,
             userName: $authUser->user_name,
             phone: $authUser->phone,
+            image: $authUser->image,
             password: $authUser->password,
             createdBy: $authUser->created_by,
             department: $department,

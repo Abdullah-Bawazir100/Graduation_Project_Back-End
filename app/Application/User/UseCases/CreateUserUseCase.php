@@ -20,7 +20,6 @@ class CreateUserUseCase
 
     /**
      * @param User $actor
-     * @param UserDTO $dto
      * @return array
      */
 
@@ -53,6 +52,7 @@ class CreateUserUseCase
             idCard: $userDTO->idCard ?? '',
             userName: $userName,
             phone: $userDTO->phone ?? '',
+            image: $userDTO->image ?? '',
             password: $this->passwordHash->hashPassword($defaultPassword),
             createdBy: $actor->id,
             department: $department,

@@ -15,6 +15,7 @@ class UserDTO
             public ?string $userName = null,
             public ?string $password = null,
             public ?string $phone = null,
+            public ?string $image = null,
             public int $departmentID,
             public int $createdBy,
             public $role = null,

@@ -22,6 +22,7 @@ class StoreUserRequest extends FormRequest
             'dateOfBirth' => ['required', 'date', 'before:today'],
             'idCard'       => ['required', 'file', 'mimes:pdf'],
             'phone'         => ['required', 'string', 'max:20'],
+            'image' => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:2048'],
             'role' => ['required' , Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
             'departmentID' => ['required', 'integer', 'exists:departments,id'],
         ];
@@ -49,6 +50,9 @@ class StoreUserRequest extends FormRequest
             'phone.required' => 'رقم الهاتف مطلوب.',
             'phone.string'   => 'رقم الهاتف يجب أن يكون نصًا.',
             'phone.max'      => 'رقم الهاتف يجب ألا يتجاوز 20 رقمًا.',
+
+            'image.required' => 'صورة الشخص مطلوبة.',
+            'image.max' => 'حجم الصورة يجب ألا يتجاوز 2 MB .',
 
             'role.required' => 'الدور مطلوب.',
             'role.in' => 'الدور المحدد غير صالح.',
