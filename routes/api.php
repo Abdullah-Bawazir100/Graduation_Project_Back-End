@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ActivityLogController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
@@ -27,6 +28,9 @@ Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () 
 Route::middleware(['auth:sanctum' , ManagerMiddleware::class])->group(function() {
     Route::apiResource('manager-departments' , DepartmentController::class);
 });
+
+Route::get('activity-log' , [ActivityLogController::class , 'index'])
+                ->middleware('auth:sanctum');
 
 
 

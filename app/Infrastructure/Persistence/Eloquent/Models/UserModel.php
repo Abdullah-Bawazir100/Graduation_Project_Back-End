@@ -6,12 +6,12 @@ use App\Domain\User\Enums\UserRole;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel;
-
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 class UserModel extends Authenticatable
 {
-    use HasApiTokens , Notifiable;
+    use HasApiTokens , Notifiable , LogsActivity;
 
     protected $table = 'app_users';
 
@@ -54,4 +54,23 @@ class UserModel extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('user')
+            ->logOnly([
+                'first_name',
+                'last_name',
+                'user_name',
+                'department_id',
+                'role',
+            ])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
+                'created' => 'إنشاء مستخدم',
+                'updated' => 'تحديث مستخدم',
+                'deleted' => 'حذف مستخدم',
+            });
+    }
 }
