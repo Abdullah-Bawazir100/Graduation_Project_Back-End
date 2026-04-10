@@ -9,6 +9,7 @@ use App\Application\User\UseCases\GetAllUsersUseCase;
 use App\Application\User\UseCases\FindUserByIdUseCase;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\DTOs\UserResponseDTO;
+use App\Application\User\Services\UploadFileService;
 use Illuminate\Support\Facades\Auth;
 use App\Domain\User\Entities\User as DomainUser;
 use App\Http\Responses\ApiResponse;
@@ -23,7 +24,8 @@ class UserController extends Controller
         private UpdateUserUseCase $updateUser,
         private DeleteUserUseCase $deleteUser,
         private GetAllUsersUseCase $getUsers,
-        private FindUserByIdUseCase $findUser
+        private FindUserByIdUseCase $findUser,
+        private UploadFileService $uploadFile
     ) {}
 
    // GET /users
@@ -60,16 +62,29 @@ class UserController extends Controller
         $firstName = $request->first_name ?? $existingUser->firstName;
         $lastName = $request->last_name ?? $existingUser->lastName;
 
+        $idCardUrl = $existingUser->idCard;
+        if($request->hasFile('idCard')){
+            $idCardUrl = $this->uploadFile->uploadFile($request->file('idCard') , 'id-cards');
+        }
+
+        $imageUrl = $existingUser->image;
+        if ($request->hasFile('image')) {
+            $imageUrl = $this->uploadFile->uploadFile(
+                $request->file('image'),
+                'profile-images'
+            );
+        }
+
         $dto = new UserDTO(
             id: $id,
             firstName: $firstName,
             lastName: $lastName,
             dateOfBirth: $request->dateOfBirth ?? $existingUser->dateOfBirth,
-            idCard: $request->file('id_card')?->store('id_cards') ?? $existingUser->idCard,
+            idCard: $idCardUrl,
             userName: $request->userName ?? $existingUser->userName,
             password: $request->password ?? null,
             phone: $request->phone ?? $existingUser->phone,
-            image: $request->file('image')->store('profile-images') ?? $existingUser->image,
+            image: $imageUrl,
             departmentID: (int)($request->departmentID ?? $existingUser->departmentID),
             createdBy: $existingUser->createdBy,
             role: $request->role ?? $existingUser->role

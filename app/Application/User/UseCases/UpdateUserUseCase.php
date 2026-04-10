@@ -32,6 +32,7 @@ class UpdateUserUseCase
             idCard: $dto->idCard,
             userName: $dto->userName,
             phone: $dto->phone,
+            image: $dto->image,
             password: $existingUser->password,
             createdBy: $existingUser->createdBy,
             department: $department,

@@ -23,6 +23,7 @@ class FindUserByIdUseCase
             idCard: $user->idCard,
             userName: $user->userName,
             phone: $user->phone,
+            image: $user->image,
             createdBy: $user->createdBy ?? 0,
             departmentID: $user->department->id,
             departmentName: $user->department->name,

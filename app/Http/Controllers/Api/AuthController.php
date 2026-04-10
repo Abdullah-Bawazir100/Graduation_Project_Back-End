@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Application\User\Services\UploadFileService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -11,7 +12,7 @@ use App\Application\User\DTOs\SignUpDTO;
 use App\Application\User\DTOs\LoginDTO;
 use App\Application\User\DTOs\ResetPasswordDTO;
 use App\Application\User\DTOs\UserDTO;
-
+use App\Application\User\Services\UploadFile;
 use App\Application\User\UseCases\ChangePasswordUseCase;
 use App\Application\User\UseCases\CompleteProfileUseCase;
 use App\Application\User\UseCases\SignUpUseCase;
@@ -19,7 +20,6 @@ use App\Application\User\UseCases\LoginUseCase;
 use App\Application\User\UseCases\CreateUserUseCase;
 
 use App\Domain\User\Entities\User as DomainUser;
-use App\Domain\User\Enums\UserRole;
 use App\Domain\Department\Entities\Department;
 
 use App\Http\Requests\User\SignUpRequest;
@@ -36,7 +36,8 @@ class AuthController extends Controller
         private SignUpUseCase $signUpUseCase,
         private LoginUseCase $loginUseCase,
         private ChangePasswordUseCase $resetPasswordUseCase,
-        private CreateUserUseCase $createUserUseCase
+        private CreateUserUseCase $createUserUseCase,
+        private UploadFileService $uploadFile
     ) {}
 
     /** Admin / Manager signs up a user */
@@ -163,24 +164,15 @@ class AuthController extends Controller
 
             $actor = $this->convertToDomainUser($authUser);
 
-            $file = $request->file('idCard');
-            $fileName = Str::uuid() . '.pdf';
-            $path = $file->storeAs('id-cards' , $fileName , 'public');
-            $fileUrl = asset(Storage::url($path));
-
-            if($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
-                $imagePath = $image->storeAs('profile-images' , $imageName , 'public');
-                $imageUrl = asset(Storage::url($imagePath));
-            }
+            $idCardUrl = $this->uploadFile->uploadFile($request->file('idCard') , 'id-cards');
+            $imageUrl = $this->uploadFile->uploadFile($request->file('image') , 'profile-images');
 
             $dto = new UserDTO(
                 id: null,
                 firstName: $request->firstName,
                 lastName: $request->lastName,
                 dateOfBirth: $request->dateOfBirth ? new DateTime($request->dateOfBirth) : null,
-                idCard: $fileUrl,
+                idCard: $idCardUrl,
                 userName: null,
                 password: null,
                 phone: $request->phone,
@@ -189,7 +181,7 @@ class AuthController extends Controller
                 createdBy: $actor->id,
                 role: $request->role,
             );
-            
+
             $result = $this->createUserUseCase->execute($actor , $dto);
 
             return ApiResponse::created($result , 'User Created Successfully.');

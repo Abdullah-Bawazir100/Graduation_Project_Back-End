@@ -21,6 +21,7 @@ class UserRepository implements UserRepositoryInterface
             'user_name'     => $user->userName,
             'phone'         => $user->phone,
             'password'      => $user->password,
+            'image'         => $user->image,
             'role'          => $user->role->value,
             'department_id' => $user->department->id,
             'created_by'    => $user->createdBy,
