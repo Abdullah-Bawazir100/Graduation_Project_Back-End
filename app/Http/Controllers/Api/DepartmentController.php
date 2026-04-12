@@ -43,13 +43,6 @@ class DepartmentController extends Controller
     {
         $department = $useCase->execute($id);
 
-        if (!$department) {
-            return new ApiResponse(
-                httpStatusCode: 404,
-                errorMessage: 'Department not found'
-            );
-        }
-
         return ApiResponse::ok(
             data: $department,
             message: 'Department fetched successfully'

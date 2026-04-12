@@ -27,6 +27,6 @@ class DepartmentModel extends Model
                 'created' => 'إنشاء قسم',
                 'updated' => 'تحديث قسم',
                 'deleted' => 'حذف قسم',
-            });
+        });
     }
 }

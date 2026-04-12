@@ -13,7 +13,7 @@ class ActivityLogController extends Controller
     public function index()
     {
         $activities = Activity::with('causer')
-            ->whereIn('log_name', ['user', 'department'])
+            ->whereIn('log_name', ['user', 'department' , 'activity_type'])
             ->orderBy('created_at', 'Asc')
             ->orderBy('id', 'Asc')
             ->get();
@@ -35,9 +35,14 @@ class ActivityLogController extends Controller
                 'إنشاء مستخدم' => "تم إنشاء مستخدم جديد",
                 'تحديث مستخدم' => "تم تحديث بيانات المستخدم",
                 'حذف مستخدم' => "تم حذف المستخدم",
+
                 'إنشاء قسم' => "تم إنشاء قسم جديد" . ($new['name'] ?? ''),
                 'تحديث قسم' => "تم تحديث قسم" . ($new['name'] ?? ''),
                 'حذف قسم' => "تم حذف قسم" . ($old['name'] ?? ''),
+
+                'إنشاء نوع نشاط' => "تم إنشاء نوع نشاط جديد" . ($new['name'] ?? ''),
+                'تحديث نوع نشاط' => "تم تحديث نوع نشاط" . ($new['name'] ?? ''),
+                'حذف نوع نشاط' => "تم حذف نوع نشاط" . ($old['name'] ?? ''),
                 default => $activity->description
             };
 

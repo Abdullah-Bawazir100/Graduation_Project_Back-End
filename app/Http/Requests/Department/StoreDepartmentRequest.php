@@ -30,9 +30,10 @@ class StoreDepartmentRequest extends FormRequest
         {
             return [
                 'name.required' => 'اسم القسم مطلوب.',
+                'name.string' => 'اسم القسم يجب ان يكون نصاً.',
                 'name.max' => 'اسم القسم لا يمكن ان يزيد عن 255 حرفا.',
                 'name.unique' => 'اسم القسم مسجل مسبقاً.',
-            ];
+        ];
     }
 }
 

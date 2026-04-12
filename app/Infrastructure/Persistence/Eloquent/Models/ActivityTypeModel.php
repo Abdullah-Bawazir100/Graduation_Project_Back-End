@@ -11,16 +11,16 @@ class ActivityTypeModel extends Model
     protected $table = 'activity_types';
     protected $fillable = ['name'];
 
-    // public function getActivitylogOptions(): LogOptions
-    // {
-    //     return LogOptions::defaults()
-    //         ->useLogName('department')
-    //         ->logOnly(['name'])
-    //         ->logOnlyDirty()
-    //         ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
-    //             'created' => 'إنشاء قسم',
-    //             'updated' => 'تحديث قسم',
-    //             'deleted' => 'حذف قسم',
-    //         });
-    // }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('activity_type')
+            ->logOnly(['name'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
+                'created' => 'إنشاء نوع نشاط',
+                'updated' => 'تحديث نوع نشاط',
+                'deleted' => 'حذف نوع نشاط',
+            });
+    }
 }

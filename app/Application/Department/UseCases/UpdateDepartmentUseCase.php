@@ -22,7 +22,6 @@ class UpdateDepartmentUseCase
 
         $name = trim($departmentDTO->name);
 
-        // Business Rule: منع تكرار الاسم (باستثناء نفس القسم)
         if (
             $name !== $department->name &&
             $this->departmentRepository->existsByName($name)

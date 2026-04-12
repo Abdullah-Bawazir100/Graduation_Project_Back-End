@@ -16,7 +16,7 @@ class ShowDepartmentUseCase
         if (!$department) {
             throw new \Exception("Department with ID [$id] not found.");
         }
-        
+
         return $department;
     }
 }

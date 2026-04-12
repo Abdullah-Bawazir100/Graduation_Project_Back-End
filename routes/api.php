@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ActivityLogController;
+use App\Http\Controllers\Api\ActivityTypeController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
@@ -22,6 +23,7 @@ Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () 
     Route::post('create-user' , [AuthController::class, 'createUser']);
     Route::apiResource('app_users', UserController::class);
     Route::apiResource('departments', DepartmentController::class);
+    Route::apiResource('activity_types' , ActivityTypeController::class);
     Route::get('activity-log' , [ActivityLogController::class , 'index']);
 
 });
