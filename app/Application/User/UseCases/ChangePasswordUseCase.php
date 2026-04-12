@@ -28,7 +28,7 @@ class ChangePasswordUseCase {
         }
 
 
-        if(Hash::make($newPassword) == $user->password)
+        if(Hash::check($newPassword , $user->password))
         {
             throw new DomainException("You must choose a new password different from the default one.");
         }

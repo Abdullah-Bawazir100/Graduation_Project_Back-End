@@ -29,7 +29,10 @@ Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () 
 });
 
 Route::middleware(['auth:sanctum' , ManagerMiddleware::class])->group(function() {
+    
     Route::apiResource('manager-departments' , DepartmentController::class);
+    Route::apiResource('manager-activity_types' , ActivityTypeController::class);
+
 });
 
 
