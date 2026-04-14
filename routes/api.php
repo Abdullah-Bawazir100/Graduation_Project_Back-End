@@ -15,6 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('signup' , [AuthController::class, 'signUp']);
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
     Route::post('complete-profile', [AuthController::class, 'completeProfile']);
+    Route::post('logout' , [AuthController::class , 'logout']);
 
 });
 
@@ -29,7 +30,7 @@ Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () 
 });
 
 Route::middleware(['auth:sanctum' , ManagerMiddleware::class])->group(function() {
-    
+
     Route::apiResource('manager-departments' , DepartmentController::class);
     Route::apiResource('manager-activity_types' , ActivityTypeController::class);
 

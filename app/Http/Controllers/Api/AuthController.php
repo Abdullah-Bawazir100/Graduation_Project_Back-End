@@ -16,7 +16,7 @@ use App\Application\User\UseCases\ChangePasswordUseCase;
 use App\Application\User\UseCases\SignUpUseCase;
 use App\Application\User\UseCases\LoginUseCase;
 use App\Application\User\UseCases\CreateUserUseCase;
-
+use App\Application\User\UseCases\LogoutUseCase;
 use App\Domain\User\Entities\User as DomainUser;
 use App\Domain\Department\Entities\Department;
 
@@ -35,7 +35,8 @@ class AuthController extends Controller
         private LoginUseCase $loginUseCase,
         private ChangePasswordUseCase $resetPasswordUseCase,
         private CreateUserUseCase $createUserUseCase,
-        private UploadFileService $uploadFile
+        private UploadFileService $uploadFile,
+        private LogoutUseCase $logoutUseCase
     ) {}
 
     /** Admin / Manager signs up a user */
@@ -188,6 +189,27 @@ class AuthController extends Controller
             throw $e;
         }
 
+    }
+
+    public function logout()
+    {
+        try{
+
+            $token = request()->bearerToken();
+            if(!$token){
+                return ApiResponse::unauthorized([] , 'Token not provided.');
+            }
+
+            $this->logoutUseCase->execute($token);
+
+            return ApiResponse::ok('Logged out successfully.');
+
+        } catch(\Throwable $e)
+        {
+            return response()->json([
+                'error' => $e->getMessage()
+            ] , 500);
+        }
     }
 
     /** Helper: Convert Laravel Auth user to Domain User */
