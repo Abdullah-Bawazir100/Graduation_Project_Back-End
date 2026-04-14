@@ -17,8 +17,8 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'firstName'    => ['required', 'string', 'max:255'],
-            'lastName'     => ['required', 'string', 'max:255'],
+            'firstName'    => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
+            'lastName'     => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'dateOfBirth' => ['required', 'date', 'before:today'],
             'idCard'       => ['required', 'file', 'mimes:pdf'],
             'phone'         => ['required', 'string', 'max:20'],
@@ -34,10 +34,12 @@ class StoreUserRequest extends FormRequest
             'firstName.required' => 'الأسم الأول مطلوب.',
             'firstName.string'   => 'الأسم الأول يجب أن يكون نص.',
             'firstName.max'      => 'الأسم الأول يجب ألا يتجاوز 255 حرفًا.',
+            'firstName.not_regex' => 'لا يمكن أن يكون الأسم الأول أرقام فقط.',
 
             'lastName.required' => 'الأسم الأخير مطلوب.',
             'lastName.string'   => 'الأسم الأخير يجب أن يكون نص.',
             'lastName.max'      => 'الأسم الأخير يجب ألا يتجاوز 255 حرفًا.',
+            'lastName.not_regex' => 'لا يمكن أن يكون الأسم الأخير أرقام فقط.',
 
             'dateOfBirth.required' => 'تاريخ الميلاد مطلوب.',
             'dateOfBirth.date'     => 'تاريخ الميلاد يجب أن يكون تاريخًا صحيحًا.',

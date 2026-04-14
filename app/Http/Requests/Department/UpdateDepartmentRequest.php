@@ -22,7 +22,7 @@ class UpdateDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|string|max:255',
+            'name' => 'sometimes|string|max:255|not_regex:/^\d+$/',
         ];
     }
 
@@ -31,6 +31,7 @@ class UpdateDepartmentRequest extends FormRequest
         return [
             'name.string' => 'اسم القسم يجب ان يكون نصاً.',
             'name.max' => 'اسم القسم لا يمكن ان يزيد عن 255 حرفا.',
+            'name.not_regex' => 'لا يمكن أن يكون اسم القسم أرقام فقط.',
         ];
     }
 }

@@ -22,7 +22,7 @@ class UpdatePaymentTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes' , 'string' , 'max:255'],
+            'name' => ['sometimes' , 'string' , 'max:255' , 'not_regex:/^\d+$/'],
             'note' => ['sometimes' , 'string' , 'max:255']
         ];
     }
@@ -32,6 +32,7 @@ class UpdatePaymentTypeRequest extends FormRequest
         return [
             'name.string' => 'اسم نوع الدفع يجب أن يكون نصا',
             'name.max' => 'اسم نوع الدفع لا يمكن أن يزيد عن 255 حرفاً.',
+            'name.not_regex' => 'لا يمكن أن يكون اسم نوع الدفع أرقام فقط.',
 
             'note.string' => 'ملاحظة نوع الدفع يجب أن تكون نصا',
             'note.max' => 'الملاحظة لا يمكن أن تزيد عن 255 حرفاً.',

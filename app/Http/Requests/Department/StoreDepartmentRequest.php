@@ -22,7 +22,7 @@ class StoreDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:departments,name',
+            'name' => 'required|string|max:255|not_regex:/^\d+$/|unique:departments,name',
         ];
     }
 
@@ -33,6 +33,7 @@ class StoreDepartmentRequest extends FormRequest
                 'name.string' => 'اسم القسم يجب ان يكون نصاً.',
                 'name.max' => 'اسم القسم لا يمكن ان يزيد عن 255 حرفا.',
                 'name.unique' => 'اسم القسم مسجل مسبقاً.',
+                'name.not_regex' => 'لا يمكن أن يكون اسم القسم أرقام فقط.',
         ];
     }
 }

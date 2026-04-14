@@ -22,7 +22,7 @@ class StoreActivityTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required' , 'string' , 'max:255' , 'unique:activity_types,name']
+            'name' => ['required' , 'string' , 'max:255' , 'not_regex:/^\d+$/' , 'unique:activity_types,name']
         ];
 
     }
@@ -33,6 +33,7 @@ class StoreActivityTypeRequest extends FormRequest
             'name.required' => 'اسم نوع النشاط مطلوب.',
             'name.max' => 'اسم نوع النشاط لا يمكن ان يزيد عن 255 حرفا.',
             'name.unique' => 'اسم نوع النشاط مسجل مسبقاً.',
+            'name.not_regex' => 'لا يمكن أن يكون اسم نوع النشاط أرقام فقط.',
         ];
     }
 }

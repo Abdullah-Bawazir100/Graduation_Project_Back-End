@@ -21,8 +21,8 @@ class UpdateUserRequest extends FormRequest
     {
 
         return [
-            'firstName'    => ['sometimes', 'string', 'max:255'],
-            'lastName'     => ['sometimes', 'string', 'max:255'],
+            'firstName'    => ['sometimes', 'string', 'max:255' , 'not_regex:/^\d+$/'],
+            'lastName'     => ['sometimes', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'dateOfBirth' => ['sometimes', 'date', 'before:today'],
             'idCard'       => ['sometimes', 'file', 'mimes:pdf'],
             'phone'         => ['sometimes', 'string', 'max:20'],
@@ -37,9 +37,11 @@ class UpdateUserRequest extends FormRequest
         return [
             'firstName.string' => 'الأسم الأول يجب أن يكون نص.',
             'firstName.max'    => 'الأسم الأول يجب ألا يتجاوز 255 حرفًا.',
+            'firstName.not_regex' => 'لا يمكن أن يكون الأسم الأول أرقام فقط.',
 
             'lastName.string' => 'الأسم الأخير يجب أن يكون نص.',
             'lastName.max'    => 'الأسم الأخير يجب ألا يتجاوز 255 حرفًا.',
+            'lastName.not_regex' => 'لا يمكن أن يكون الأسم الأخير أرقام فقط.',
 
             'dateOfBirth.date'   => 'تاريخ الميلاد يجب أن يكون تاريخًا صحيحًا.',
             'dateOfBirth.before' => 'تاريخ الميلاد يجب أن يكون قبل اليوم.',
