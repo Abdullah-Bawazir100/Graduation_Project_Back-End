@@ -4,7 +4,7 @@ namespace App\Application\Activity_Type\UseCases;
 
 use App\Domain\Activity_Type\Repositories\Activity_Type_RepositoryInterface;
 
-class ListActivityTypeUseCase
+class ListActivityTypesUseCase
 {
     public function __construct(
         private Activity_Type_RepositoryInterface $activity_Type_RepositoryInterface

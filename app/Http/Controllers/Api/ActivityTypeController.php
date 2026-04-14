@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Application\Activity_Type\DTOs\ActivityTypeDTOs;
 use App\Application\Activity_Type\UseCases\CreateActivityTypeUseCase;
 use App\Application\Activity_Type\UseCases\DeleteActivityTypeUseCase;
-use App\Application\Activity_Type\UseCases\ListActivityTypeUseCase;
+use App\Application\Activity_Type\UseCases\ListActivityTypesUseCase;
 use App\Application\Activity_Type\UseCases\ShowActivityTypeUseCase;
 use App\Application\Activity_Type\UseCases\UpdateActivityTypeUseCase;
-use App\Domain\Activity_Type\Entities\Activity_Type;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ActivityType\StoreActivityTypeRequest;
 use App\Http\Requests\ActivityType\UpdateActivityTypeRequest;
@@ -18,7 +17,7 @@ use Illuminate\Http\Request;
 class ActivityTypeController extends Controller
 {
 
-    public function index(ListActivityTypeUseCase $useCase)
+    public function index(ListActivityTypesUseCase $useCase)
     {
         $activitiesTypes = $useCase->execute();
         return ApiResponse::ok(
@@ -38,7 +37,7 @@ class ActivityTypeController extends Controller
 
         return ApiResponse::created(
             data: $activityType,
-            message: 'Activity Type created successfully'
+            message: 'Activity Type created successfully>'
         );
     }
 
@@ -49,7 +48,7 @@ class ActivityTypeController extends Controller
 
         return ApiResponse::ok(
             data: $activityType,
-            message: 'Activity Type fetched successfully'
+            message: 'Activity Type with ID [' . $id . '] fetched successfully.'
         );
     }
 
@@ -68,7 +67,7 @@ class ActivityTypeController extends Controller
 
         return ApiResponse::ok(
             data: $activityType,
-            message: 'Activity Type Updated Successfully'
+            message: 'Activity Type with ID [' . $id . '] updated successfully.'
         );
     }
 

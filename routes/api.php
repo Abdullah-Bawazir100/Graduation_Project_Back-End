@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ActivityTypeController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PaymentTypeController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\ManagerMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,7 @@ Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () 
     Route::apiResource('departments', DepartmentController::class);
     Route::apiResource('activity_types' , ActivityTypeController::class);
     Route::get('activity-log' , [ActivityLogController::class , 'index']);
+    Route::apiResource('payment_types' , PaymentTypeController::class);
 
 });
 
