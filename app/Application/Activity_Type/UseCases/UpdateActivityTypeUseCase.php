@@ -21,13 +21,14 @@ class UpdateActivityTypeUseCase
             throw new \Exception("Activity Type with ID [$id] not found.");
         }
 
-        $name = trim($activityTypeDTOs->name);
-        if(
-            $name !== $activityType->name
-            && $this->activity_Type_RepositoryInterface->existsByName($name)
-        ) {
-            throw new \DomainException("Activity Type with name '{$name}' already exists.");
-        }
+        $name = $activityTypeDTOs->name ?? $activityType->name;
+
+        // if(
+        //     $name !== $activityType->name
+        //     && $this->activity_Type_RepositoryInterface->existsByName($name)
+        // ) {
+        //     throw new \DomainException("Activity Type with name '{$name}' already exists.");
+        // }
 
         return $this->activity_Type_RepositoryInterface->update(
             new Activity_Type($id , $name)

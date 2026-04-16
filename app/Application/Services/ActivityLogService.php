@@ -10,7 +10,8 @@ class ActivityLogService
     public function getActivities($filters = [])
     {
         $query = Activity::with('causer')
-            ->whereIn('log_name', ['user', 'department', 'activity_type', 'payment_type']);
+            ->whereIn('log_name', ['user', 'department','activity_type',
+                        'payment_type' , 'region']);
 
         // Filters
         if (!empty($filters['user_id'])) {
@@ -88,23 +89,29 @@ class ActivityLogService
 
     private function formatDetails($description, $new, $old)
     {
+        $description = trim($description);
+
         return match ($description) {
 
             'إنشاء مستخدم' => "تم إنشاء مستخدم جديد",
             'تحديث مستخدم' => "تم تحديث بيانات المستخدم",
             'حذف مستخدم'  => "تم حذف المستخدم",
 
-            'إنشاء قسم' => "تم إنشاء قسم." . ($new['name'] ?? ''),
+            'إنشاء قسم' => "تم إنشاء قسم جديد." . ($new['name'] ?? ''),
             'تحديث قسم' => "تم تحديث قسم." . ($new['name'] ?? ''),
             'حذف قسم'   => "تم حذف قسم." . ($old['name'] ?? ''),
 
-            'إنشاء نوع نشاط' => "تم إنشاء نوع نشاط." . ($new['name'] ?? ''),
+            'إنشاء نوع نشاط' => "تم إنشاء نوع نشاط جديد." . ($new['name'] ?? ''),
             'تحديث نوع نشاط' => "تم تحديث نوع نشاط." . ($new['name'] ?? ''),
             'حذف نوع نشاط'  => "تم حذف نوع نشاط." . ($old['name'] ?? ''),
 
-            'إنشاء نوع دفع' => "تم إنشاء نوع دفع." . ($new['name'] ?? ''),
+            'إنشاء نوع دفع' => "تم إنشاء نوع دفع جديد." . ($new['name'] ?? ''),
             'تحديث نوع دفع' => "تم تحديث نوع دفع." . ($new['name'] ?? ''),
             'حذف نوع دفع'  => "تم حذف نوع دفع." . ($old['name'] ?? ''),
+
+            'إنشاء منطقة' => "تم إنشاء منطقة جديدة." . ($new['name'] ?? ''),
+            'تحديث منطقة' => "تم تحديث منطقة." . ($new['name'] ?? ''),
+            'حذف منطقة'  => "تم حذف منطقة." . ($old['name'] ?? ''),
 
             default => $description,
         };

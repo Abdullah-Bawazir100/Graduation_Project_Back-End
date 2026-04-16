@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ActivityType;
+namespace App\Http\Requests\Region;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreActivityTypeRequest extends FormRequest
+class StoreRegionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,17 +24,15 @@ class StoreActivityTypeRequest extends FormRequest
         return [
             'name' => ['required' , 'string' , 'max:255' , 'not_regex:/^\d+$/']
         ];
-
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'اسم نوع النشاط مطلوب.',
-            'name.string' => 'اسم نوع النشاط يجب ان يكون نصاً.',
-            'name.max' => 'اسم نوع النشاط لا يمكن ان يزيد عن 255 حرفا.',
-            //'name.unique' => 'اسم نوع النشاط مسجل مسبقاً.',
-            'name.not_regex' => 'لا يمكن أن يكون اسم نوع النشاط أرقام فقط.',
+            'name.required' => 'اسم المنطقة مطلوب.',
+            'name.string' => 'اسم المنطقة يجب ان يكون نصاً.',
+            'name.max' => 'اسم المنطقة لا يمكن ان يزيد عن 255 حرفا.',
+            'name.not_regex' => 'لا يمكن أن يكون اسم المنطقة أرقام فقط.',
         ];
     }
 }

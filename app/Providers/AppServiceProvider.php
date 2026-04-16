@@ -41,6 +41,12 @@ class AppServiceProvider extends ServiceProvider
             \App\Domain\PaymentType\Repositories\PaymentTypeRepositoryInterface ::class,
             \App\Infrastructure\Persistence\Eloquent\Repositories\PaymentTypeRepository::class
         );
+
+        $this->app->bind(
+            \App\Domain\Region\Repositories\RegionRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\RegionRepository::class
+        );
+
     }
 
     /**
