@@ -16,7 +16,7 @@ class DeletePaymentTypeUseCase
         $paymentType = $this->payment_type_repository_interface->findById($id);
 
         if (!$paymentType) {
-            throw new \DomainException("Payment Type with ID [$id] not found.");
+            throw new \DomainException("نوع الدفع مع ال ID [$id] غير موجود.");
         }
 
         $this->payment_type_repository_interface->delete($id);

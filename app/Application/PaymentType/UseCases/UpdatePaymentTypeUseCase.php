@@ -18,7 +18,7 @@ class UpdatePaymentTypeUseCase
         $paymentType = $this->payment_type_repository_interface->findById($id);
         if(!$paymentType)
         {
-            throw new \Exception("Payment Type with ID [$id] not found.");
+            throw new \Exception("نوع الدفع مع ال ID [$id] غير موجود.");
         }
 
         $name = trim($paymentTypeDTOs->name);

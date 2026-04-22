@@ -21,7 +21,7 @@ class PaymentTypeController extends Controller
         $paymentTypes = $useCase->execute();
         return ApiResponse::ok(
             data: $paymentTypes,
-            message: 'Payment Types retrieved successfully.'
+            message: 'تم جلب أنواع الدفع بنجاح.'
         );
     }
 
@@ -37,7 +37,7 @@ class PaymentTypeController extends Controller
 
         return ApiResponse::created(
             data: $paymentType,
-            message: 'Payment Type created successfully.'
+            message: 'تم إنشاء نوع دفع بنجاح.'
         );
     }
 
@@ -47,7 +47,7 @@ class PaymentTypeController extends Controller
         $paymentType = $useCase->execute($id);
         return ApiResponse::ok(
             data: $paymentType,
-            message: 'Payment Type with ID [' . $id . '] fetched successfully.'
+            message: "تم جلب نوع الدفع مع ال ID [{$id}] بنجاح."
         );
     }
 
@@ -63,7 +63,7 @@ class PaymentTypeController extends Controller
 
         return ApiResponse::ok(
             data: $paymentType,
-            message: 'Payment Type with ID [' . $id . '] updated successfully.'
+            message: "تم تحديث بيانات نوع الدفع مع ال ID [{$id}] بنجاح."
         );
     }
 
@@ -73,7 +73,7 @@ class PaymentTypeController extends Controller
         $useCase->execute($id);
         return ApiResponse::ok(
             data: null,
-            message: 'Payment Type with ID [' . $id . '] deleted successfully'
+            message: "تم حذف نوع الدفع مع ال ID [{$id}] بنجاح."
         );
     }
 }
