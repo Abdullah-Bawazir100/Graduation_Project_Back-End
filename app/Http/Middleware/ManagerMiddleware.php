@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Domain\User\Enums\UserRole;
-use App\Http\Responses\ApiResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ManagerMiddleware
@@ -22,17 +21,29 @@ class ManagerMiddleware
 
         if(!$user || $user->role !== UserRole::Manager) {
             return response()->json([
-                'message' => 'Access denied. Manager only.',
+                'message' => 'الوصول ممنوع ، المدير فقط .',
                 'status' => 403,
             ], 403);
         }
 
         if ($request->isMethod('delete')) {
+
+            $routeName = $request->route()->getName();
+            $messages = [
+                'manager-users.destroy' => 'لا يمكن للمدير حذف المستخدمين.',
+                'manager-departments.destroy' => 'لا يمكن للمدير حذف الأقسام.',
+                'manager-activity_types.destroy' => 'لا يمكن للمدير حذف نوع النشاط.',
+                'manager-payment_types.destroy' => 'لا يمكن للمدير حذف نوع الدفع.',
+                'manager-regions.destroy' => 'لا يمكن للمدير حذف المناطق.',
+            ];
+
+
             return response()->json([
-                'message' => 'Managers cannot delete departments.',
+                'message' => $messages[$routeName] ?? 'عملية الحذف غير مسموحة للمدير.',
                 'status' => 403,
             ], 403);
         }
+
 
         return $next($request);
     }

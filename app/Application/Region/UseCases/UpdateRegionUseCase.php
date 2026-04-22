@@ -18,7 +18,7 @@ class UpdateRegionUseCase
         $regionData = $this->region_repository_interface->findById($id);
         if(!$regionData)
         {
-            throw new \Exception("Region with ID [$id] not found.");
+            throw new \Exception('المنطقة مع ال ID [' . $id . '] غير موجودة.');
         }
 
         $name = $regionDTOs->name ?? $regionData->name;

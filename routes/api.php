@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('complete-profile', [AuthController::class, 'completeProfile']);
     Route::post('logout' , [AuthController::class , 'logout']);
     Route::get('get_user/{id}' , [UserController::class , 'show']);
+    Route::get('activity-log' , [ActivityLogController::class , 'index']);
 
 });
 
@@ -27,7 +28,6 @@ Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () 
     Route::apiResource('app_users', UserController::class);
     Route::apiResource('departments', DepartmentController::class);
     Route::apiResource('activity_types' , ActivityTypeController::class);
-    Route::get('activity-log' , [ActivityLogController::class , 'index']);
     Route::apiResource('payment_types' , PaymentTypeController::class);
     Route::apiResource('regions' , RegionController::class);
 
@@ -35,8 +35,12 @@ Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () 
 
 Route::middleware(['auth:sanctum' , ManagerMiddleware::class])->group(function() {
 
+    Route::post('manager-create-user' , [AuthController::class, 'createUser']);
+    Route::apiResource('manager-users', UserController::class);
     Route::apiResource('manager-departments' , DepartmentController::class);
     Route::apiResource('manager-activity_types' , ActivityTypeController::class);
+    Route::apiResource('manager-payment_types' , PaymentTypeController::class);
+    Route::apiResource('manager-regions' , RegionController::class);
 
 });
 

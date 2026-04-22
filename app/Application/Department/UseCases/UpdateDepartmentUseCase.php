@@ -17,16 +17,16 @@ class UpdateDepartmentUseCase
         $department = $this->departmentRepository->findById($id);
 
         if (!$department) {
-            throw new \Exception("Department with ID [$id] not found.");
+            throw new \Exception("القسم مع ال ID [{$id} غير موجود.");
         }
 
-        $name = trim($departmentDTO->name);
+        $name = $departmentDTO->name ?? $department->name;
 
         if (
             $name !== $department->name &&
             $this->departmentRepository->existsByName($name)
         ) {
-            throw new \DomainException("Department with name '{$name}' already exists.");
+            throw new \DomainException("القسم مع الأسم [ $name} ]موجود بالفعل.");
         }
 
         return $this->departmentRepository->update(

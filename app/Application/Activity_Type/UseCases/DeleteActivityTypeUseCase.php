@@ -16,7 +16,7 @@ class DeleteActivityTypeUseCase
         $activityType = $this->activity_type_repository_interface->findById($id);
 
         if (!$activityType) {
-            throw new \DomainException("Activity Type with ID [$id] not found.");
+            throw new \DomainException("نوع النشاط مع ال ID [{$id}] غير موجود.");
         }
 
         $this->activity_type_repository_interface->delete($id);

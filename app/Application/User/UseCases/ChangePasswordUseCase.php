@@ -30,7 +30,7 @@ class ChangePasswordUseCase {
 
         if(Hash::check($newPassword , $user->password))
         {
-            throw new DomainException("You must choose a new password different from the default one.");
+            throw new DomainException("يجب عليك إختيار كلمة مرور مختلفة عن كلمة المرور الإفتراضية.");
         }
 
         // Reset the new password

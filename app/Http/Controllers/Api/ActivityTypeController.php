@@ -22,7 +22,7 @@ class ActivityTypeController extends Controller
         $activitiesTypes = $useCase->execute();
         return ApiResponse::ok(
             data: $activitiesTypes,
-            message: 'Activities Types retrieved successfully'
+            message: 'تم جلب أنواع الأنشطة بنجاح.'
         );
     }
 
@@ -37,7 +37,7 @@ class ActivityTypeController extends Controller
 
         return ApiResponse::created(
             data: $activityType,
-            message: 'Activity Type created successfully>'
+            message: 'تم إنشاء نوع نشاط بنجاح.'
         );
     }
 
@@ -48,7 +48,7 @@ class ActivityTypeController extends Controller
 
         return ApiResponse::ok(
             data: $activityType,
-            message: 'Activity Type with ID [' . $id . '] fetched successfully.'
+            message: "تم جلب نوع النشاط مع ال ID [{$id}] بنجاح."
         );
     }
 
@@ -67,7 +67,7 @@ class ActivityTypeController extends Controller
 
         return ApiResponse::ok(
             data: $activityType,
-            message: 'Activity Type with ID [' . $id . '] updated successfully.'
+            message: "تم تحديث بيانات نوع النشاط مع ال ID [{$id}] بنجاح."
         );
     }
 
@@ -78,7 +78,7 @@ class ActivityTypeController extends Controller
 
         return ApiResponse::ok(
             data: null,
-            message: 'Activity Type with ID [' . $id . '] deleted successfully'
+            message: "تم حذف نوع النشاط مع ال ID [{$id}] بنجاح."
         );
     }
 }

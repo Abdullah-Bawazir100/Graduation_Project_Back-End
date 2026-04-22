@@ -26,13 +26,13 @@ class CreateUserUseCase
     public function execute(User $actor, UserDTO $userDTO)
     {
         if (!in_array($actor->role, [UserRole::Admin, UserRole::Manager])) {
-            throw new DomainException('Unauthorized: Only Admin or Manager can create users.');
+            throw new DomainException('غير مصرح : المشرف و المدير فقط يمكنهم إنشاء مستخدمين.');
         }
 
         // Check if department exists
         $department = $this->departmentRepository->findById($userDTO->departmentID);
         if (!$department) {
-            throw new DomainException("Department with ID [{$userDTO->departmentID}] not found.");
+            throw new DomainException("القسم مع ال ID [{$userDTO->departmentID}] غير موجود.");
         }
 
         // Generate username
