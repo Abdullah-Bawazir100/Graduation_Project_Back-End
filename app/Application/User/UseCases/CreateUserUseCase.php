@@ -36,19 +36,19 @@ class CreateUserUseCase
         }
 
         // Generate username
-        $baseUserName = strtolower(
-            trim($userDTO->firstName) . '.' . trim($userDTO->lastName)
-        );
-        $userName = $this->generateUniqueUserName($baseUserName);
+        // $baseUserName = strtolower(
+        //     trim($userDTO->firstName) . '.' . trim($userDTO->lastName)
+        // );
+        // $userName = $this->generateUniqueUserName($baseUserName);
 
-        // Generate default password
+
+        $userName = $userDTO->phone;
         $defaultPassword = '12345678';
 
         $user = new User(
             id: null,
             firstName: $userDTO->firstName,
             lastName: $userDTO->lastName,
-            dateOfBirth: $userDTO->dateOfBirth,
             idCard: $userDTO->idCard ?? '',
             userName: $userName,
             phone: $userDTO->phone ?? '',

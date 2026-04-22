@@ -16,7 +16,6 @@ class UserRepository implements UserRepositoryInterface
         $userData = UserModel::create([
             'first_name'    => $user->firstName,
             'last_name'     => $user->lastName,
-            'date_of_birth' => $user->dateOfBirth ? $user->dateOfBirth->format('Y-m-d') : null,
             'id_card'       => $user->idCard,
             'user_name'     => $user->userName,
             'phone'         => $user->phone,
@@ -40,7 +39,6 @@ class UserRepository implements UserRepositoryInterface
         $userData->update([
             'first_name'    => $user->firstName,
             'last_name'     => $user->lastName,
-            'date_of_birth' => $user->dateOfBirth ? $user->dateOfBirth->format('Y-m-d') : null,
             'id_card'       => $user->idCard,
             'user_name'     => $user->userName,
             'phone'         => $user->phone,
@@ -104,20 +102,11 @@ class UserRepository implements UserRepositoryInterface
             name: $userData->department?->name ?? ''
         );
 
-        $dateOfBirth = null;
-        if ($userData->date_of_birth) {
-            try {
-                $dateOfBirth = new \DateTime($userData->date_of_birth);
-            } catch (\Exception $e) {
-                $dateOfBirth = null;
-            }
-        }
 
         return new User(
             id: $userData->id,
             firstName: $userData->first_name,
             lastName: $userData->last_name,
-            dateOfBirth: $dateOfBirth,
             idCard: $userData->id_card ?? '',
             userName: $userData->user_name,
             phone: $userData->phone,

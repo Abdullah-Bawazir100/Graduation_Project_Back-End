@@ -19,7 +19,6 @@ class StoreUserRequest extends FormRequest
         return [
             'firstName'    => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'lastName'     => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
-            'dateOfBirth' => ['required', 'date', 'before:today'],
             'idCard'       => ['required', 'file', 'mimes:pdf'],
             'phone'         => ['required', 'string', 'max:20'],
             'image' => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:2048'],
@@ -40,10 +39,6 @@ class StoreUserRequest extends FormRequest
             'lastName.string'   => 'الأسم الأخير يجب أن يكون نص.',
             'lastName.max'      => 'الأسم الأخير يجب ألا يتجاوز 255 حرفًا.',
             'lastName.not_regex' => 'لا يمكن أن يكون الأسم الأخير أرقام فقط.',
-
-            'dateOfBirth.required' => 'تاريخ الميلاد مطلوب.',
-            'dateOfBirth.date'     => 'تاريخ الميلاد يجب أن يكون تاريخًا صحيحًا.',
-            'dateOfBirth.before'   => 'تاريخ الميلاد يجب أن يكون قبل اليوم.',
 
             'idCard.required' => 'ملف البطاقة الشخصية مطلوب.',
             'idCard.file'     => 'يجب أن يكون الملف المرفوع صحيحًا.',

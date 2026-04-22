@@ -19,16 +19,15 @@ class UpdateUserUseCase
     public function execute(User $actor, int $userId, UserDTO $dto): User
     {
         $existingUser = $this->userRepository->findById($userId);
-        if (!$existingUser) throw new \DomainException("User not found.");
+        if (!$existingUser) throw new \DomainException(' المستخدم مع ال ID [' . $userId . '] غير موجود.');
 
         $department = $this->departmentRepository->findById($dto->departmentID);
-        if (!$department) throw new \DomainException("Department not found.");
+        if (!$department) throw new \DomainException('القسم مع ال ID [' . $dto->departmentID . '] غير موجود.');
 
         $updatedUser = new User(
             id: $existingUser->id,
             firstName: $dto->firstName,
             lastName: $dto->lastName,
-            dateOfBirth: $dto->dateOfBirth,
             idCard: $dto->idCard,
             userName: $dto->userName,
             phone: $dto->phone,

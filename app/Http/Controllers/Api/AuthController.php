@@ -5,15 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Application\User\Services\UploadFileService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 use App\Application\User\DTOs\SignUpDTO;
 use App\Application\User\DTOs\LoginDTO;
 use App\Application\User\DTOs\ResetPasswordDTO;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\UseCases\ChangePasswordUseCase;
-use App\Application\User\UseCases\SignUpUseCase;
 use App\Application\User\UseCases\LoginUseCase;
 use App\Application\User\UseCases\CreateUserUseCase;
 use App\Application\User\UseCases\LogoutUseCase;
@@ -31,40 +28,12 @@ use DateTime;
 class AuthController extends Controller
 {
     public function __construct(
-        private SignUpUseCase $signUpUseCase,
         private LoginUseCase $loginUseCase,
         private ChangePasswordUseCase $resetPasswordUseCase,
         private CreateUserUseCase $createUserUseCase,
         private UploadFileService $uploadFile,
         private LogoutUseCase $logoutUseCase
     ) {}
-
-    /** Admin / Manager signs up a user */
-    public function signUp(SignUpRequest $request)
-    {
-        try {
-
-            $authUser = Auth::user();
-            if (!$authUser) return ApiResponse::unauthorized([] , "Only [Admin , Manager] can create users.");
-
-            $actor = $this->convertToDomainUser($authUser);
-
-            $dto = new SignUpDTO(
-                firstName: $request->firstName,
-                lastName: $request->lastName,
-                departmentID: $request->departmentID,
-            );
-
-            $result = $this->signUpUseCase->execute($actor, $dto);
-            return ApiResponse::created($result, 'User signed up successfully');
-
-        }
-        catch (\Throwable $e) {
-            return response()->json([
-                'error' => $e->getMessage()
-            ], 422);
-        }
-    }
 
     /** Login user */
     public function login(LoginRequest $request)
@@ -86,7 +55,7 @@ class AuthController extends Controller
                 'must_change_password' => $result['must_change_password'],
                 'user' => $result['user'] ?? null
 
-            ], 'Login successfully');
+            ], 'تم تسجيل الدخول بنجاح.');
 
         } catch (\Throwable $e) {
 
@@ -101,7 +70,7 @@ class AuthController extends Controller
     {
         try {
             $authUser = Auth::user();
-            if (!$authUser) return ApiResponse::unauthorized();
+            if (!$authUser) return ApiResponse::unauthorized([] , 'غير مصرح بتغيير كلمة المرور.');
             $domainUser = $this->convertToDomainUser($authUser);
 
             $dto = new ResetPasswordDTO(
@@ -112,7 +81,7 @@ class AuthController extends Controller
 
             return ApiResponse::ok([
                 'user_id' => $authUser->id
-            ], 'Password updated successfully');
+            ], 'تم تحديث كلمة المرور بنجاح.');
         } catch(\Throwable $e) {
             throw $e;
         }
@@ -170,7 +139,6 @@ class AuthController extends Controller
                 id: null,
                 firstName: $request->firstName,
                 lastName: $request->lastName,
-                dateOfBirth: $request->dateOfBirth ? new DateTime($request->dateOfBirth) : null,
                 idCard: $idCardUrl,
                 userName: null,
                 password: null,
@@ -183,7 +151,7 @@ class AuthController extends Controller
 
             $result = $this->createUserUseCase->execute($actor , $dto);
 
-            return ApiResponse::created($result , 'User Created Successfully.');
+            return ApiResponse::created($result , 'تم إنشاء المستخدم بنجاح.');
         }
         catch(\Throwable $e) {
             throw $e;
@@ -197,12 +165,12 @@ class AuthController extends Controller
 
             $token = request()->bearerToken();
             if(!$token){
-                return ApiResponse::unauthorized([] , 'Token not provided.');
+                return ApiResponse::unauthorized([] , 'لم يتم إرسال التوكن.');
             }
 
             $this->logoutUseCase->execute($token);
 
-            return ApiResponse::ok('Logged out successfully.');
+            return ApiResponse::ok('تم تسجيل الخروج بنجاح.');
 
         } catch(\Throwable $e)
         {
@@ -219,7 +187,6 @@ class AuthController extends Controller
             id: $authUser->id,
             firstName: $authUser->firstName ?? '',
             lastName: $authUser->lastName ?? '',
-            dateOfBirth: $authUser->dateOfBirth ? new DateTime($authUser->dateOfBirth) : null,
             idCard: $authUser->idCard ?? '',
             userName: $authUser->userName ?? '',
             phone: $authUser->phone ?? '',

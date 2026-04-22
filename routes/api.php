@@ -14,10 +14,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('login' , [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::post('signup' , [AuthController::class, 'signUp']);
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
     Route::post('complete-profile', [AuthController::class, 'completeProfile']);
     Route::post('logout' , [AuthController::class , 'logout']);
+    Route::get('get_user/{id}' , [UserController::class , 'show']);
 
 });
 

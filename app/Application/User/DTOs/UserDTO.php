@@ -10,7 +10,6 @@ class UserDTO
             public ?int $id,
             public ?string $firstName,
             public ?string $lastName,
-            public ?DateTime $dateOfBirth = null,
             public ?string $idCard = null,
             public ?string $userName = null,
             public ?string $password = null,

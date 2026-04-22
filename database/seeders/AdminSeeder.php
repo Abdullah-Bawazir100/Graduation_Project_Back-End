@@ -11,13 +11,14 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
+        $phone = '735940751';
+
         DB::table('app_users')->insert([
             'first_name' => 'Abdullah',
             'last_name' => 'Bawazir',
-            'date_of_birth' => '1990-01-01',
             'id_card' => null,
-            'user_name' => 'AbdullahBawazir',
-            'phone' => '735940751',
+            'phone' => $phone,
+            'user_name' => $phone,
             'image' => null,
             'password' => Hash::make('12345678'),
             'must_change_password' => false,

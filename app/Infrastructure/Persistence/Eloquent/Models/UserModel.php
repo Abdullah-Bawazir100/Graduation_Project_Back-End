@@ -18,7 +18,6 @@ class UserModel extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
-        'date_of_birth',
         'id_card',
         'user_name',
         'phone',

@@ -19,7 +19,6 @@ class FindUserByIdUseCase
             id: $user->id,
             firstName: $user->firstName,
             lastName: $user->lastName,
-            dateOfBirth: $user->dateOfBirth,
             idCard: $user->idCard,
             userName: $user->userName,
             phone: $user->phone,

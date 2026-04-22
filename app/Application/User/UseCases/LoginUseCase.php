@@ -20,12 +20,12 @@ class LoginUseCase
         // Check if userName exists
         $user = $this->userRepository->findByUserName($loginDTO->userName);
         if(!$user) {
-            throw new \DomainException('Invalid credentials: User not found.');
+            throw new \DomainException('بيانات الدخول غير صحيحة : اسم المستخدم غير موجود.');
         }
 
         // Check password
         if(!$this->passwordHash->verifyPassword($loginDTO->password , $user->password)) {
-            throw new \DomainException('Invalid credentials: Incorrect password.');
+            throw new \DomainException('بيانات الدخول غير صحيحة : كلمة المرور غير صحيحة.');
         }
 
         $token = $this->tokenService->generateToken($user);

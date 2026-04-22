@@ -21,7 +21,7 @@ class DepartmentController extends Controller
 
         return ApiResponse::ok(
             data: $departments,
-            message: 'Departments retrieved successfully'
+            message: 'تم جلب الأقسام بنجاح.'
         );
     }
 
@@ -35,7 +35,7 @@ class DepartmentController extends Controller
 
         return ApiResponse::created(
             data: $department,
-            message: 'Department created successfully'
+            message: 'تم إنشاء قسم بنجاح.'
         );
     }
 
@@ -45,7 +45,7 @@ class DepartmentController extends Controller
 
         return ApiResponse::ok(
             data: $department,
-            message: 'Department fetched successfully'
+            message: 'تم جلب بيانات القسم بنجاح.'
         );
     }
 
@@ -62,7 +62,7 @@ class DepartmentController extends Controller
 
         return ApiResponse::ok(
             data: $department,
-            message: 'Department updated successfully'
+            message: 'تم تحديث بيانات القسم بنجاح.'
         );
     }
 
@@ -72,7 +72,7 @@ class DepartmentController extends Controller
 
         return ApiResponse::ok(
             data: null,
-            message: 'Department with ID [' . $id . '] deleted successfully'
+            message: 'تم حذف القسم مع ال ID [' . $id . '] بنجاح.'
         );
     }
 }

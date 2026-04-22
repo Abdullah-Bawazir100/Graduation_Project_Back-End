@@ -13,7 +13,6 @@ use App\Application\User\Services\UploadFileService;
 use Illuminate\Support\Facades\Auth;
 use App\Domain\User\Entities\User as DomainUser;
 use App\Http\Responses\ApiResponse;
-use App\Domain\User\Enums\UserRole;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Domain\Department\Entities\Department;
 use Illuminate\Auth\AuthenticationException;
@@ -32,7 +31,7 @@ class UserController extends Controller
     public function index(): ApiResponse
     {
         $users = $this->getUsers->execute();
-        return ApiResponse::ok($users, 'Users fetched successfully');
+        return ApiResponse::ok($users, 'تم جلب المستخدمين بنجاح.');
     }
 
     // GET /users/{id}
@@ -42,10 +41,10 @@ class UserController extends Controller
 
         $userData = $this->findUser->execute($id);
         if(!$userData) {
-            return ApiResponse::notFound([] , 'User with id [' . $id . '] not found');
+            return ApiResponse::notFound([] , 'المستخدم مع ال ID [' . $id . '] غير موجود.');
         }
 
-        return ApiResponse::ok($userData, 'User fetched successfully');
+        return ApiResponse::ok($userData, 'تم جلب بيانات المستخدم بنجاح.');
     }
 
     // PUT /users/{id}
@@ -56,11 +55,11 @@ class UserController extends Controller
         $existingUser = $this->findUser->execute($id);
 
         if (!$existingUser) {
-            return ApiResponse::notFound([], 'User with ID [' . $id . '] not found');
+            return ApiResponse::notFound([] , 'المستخدم مع ال ID [' . $id . '] غير موجود.');
         }
 
-        $firstName = $request->first_name ?? $existingUser->firstName;
-        $lastName = $request->last_name ?? $existingUser->lastName;
+        $firstName = $request->firstName ?? $existingUser->firstName;
+        $lastName = $request->lastName ?? $existingUser->lastName;
 
         $idCardUrl = $existingUser->idCard;
         if($request->hasFile('idCard')){
@@ -79,7 +78,6 @@ class UserController extends Controller
             id: $id,
             firstName: $firstName,
             lastName: $lastName,
-            dateOfBirth: $request->dateOfBirth ?? $existingUser->dateOfBirth,
             idCard: $idCardUrl,
             userName: $request->userName ?? $existingUser->userName,
             password: $request->password ?? null,
@@ -93,7 +91,7 @@ class UserController extends Controller
         /** @var UserResponseDTO $user */
         $user = $this->updateUser->execute($actor, $id, $dto);
 
-        return ApiResponse::ok($user, 'User updated successfully');
+        return ApiResponse::ok($user, 'تم تحديث بيانات المستخدم بنجاح.');
     }
 
     // DELETE /users/{id}
@@ -104,12 +102,12 @@ class UserController extends Controller
         $existingUser = $this->findUser->execute($id);
         if(!$existingUser)
         {
-            return ApiResponse::notFound([] , 'User with id [' . $id . '] not found');
+            return ApiResponse::notFound([] , 'المستخدم مع ال ID [' . $id . '] غير موجود.');
 
         }
 
         $this->deleteUser->execute($actor, $id);
-        return ApiResponse::ok([], 'User deleted successfully');
+        return ApiResponse::ok([], 'تم حذف المستخدم مع ال ID [' . $id . '] بنجاح.');
     }
 
     private function getActor(): DomainUser
@@ -125,7 +123,6 @@ class UserController extends Controller
             id: $authUser->id,
             firstName: $authUser->first_name,
             lastName: $authUser->last_name,
-            dateOfBirth: new \DateTime($authUser->date_of_birth),
             idCard: $authUser->id_card,
             userName: $authUser->user_name,
             phone: $authUser->phone,
