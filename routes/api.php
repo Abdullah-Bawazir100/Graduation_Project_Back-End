@@ -7,8 +7,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PaymentTypeController;
 use App\Http\Controllers\Api\RegionController;
-use App\Http\Middleware\AdminMiddleware;
-use App\Http\Middleware\ManagerMiddleware;
+use App\Http\Middleware\AdminManagerEmployeeMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login' , [AuthController::class, 'login']);
@@ -22,7 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () {
+Route::middleware(['auth:sanctum' , AdminManagerEmployeeMiddleware::class])->group(function () {
 
     Route::post('create-user' , [AuthController::class, 'createUser']);
     Route::apiResource('app_users', UserController::class);
@@ -33,16 +32,6 @@ Route::middleware(['auth:sanctum' , AdminMiddleware::class])->group(function () 
 
 });
 
-Route::middleware(['auth:sanctum' , ManagerMiddleware::class])->group(function() {
-
-    Route::post('manager-create-user' , [AuthController::class, 'createUser']);
-    Route::apiResource('manager-users', UserController::class);
-    Route::apiResource('manager-departments' , DepartmentController::class);
-    Route::apiResource('manager-activity_types' , ActivityTypeController::class);
-    Route::apiResource('manager-payment_types' , PaymentTypeController::class);
-    Route::apiResource('manager-regions' , RegionController::class);
-
-});
 
 
 
