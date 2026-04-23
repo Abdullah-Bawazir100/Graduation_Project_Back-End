@@ -25,7 +25,7 @@ class UpdateUserRequest extends FormRequest
             'lastName'     => ['sometimes', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'idCard'       => ['sometimes', 'file', 'mimes:pdf'],
             'phone'         => ['sometimes', 'string', 'max:20'],
-            'image'         => ['sometimes', 'string', 'mimes:png,jpg,jpeg,gif' , 'max:2048'],
+            'image'         => ['sometimes', 'image', 'mimes:png,jpg,jpeg,gif' , 'max:2048'],
             'role'          => ['sometimes', Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
             'departmentID' => ['sometimes', 'integer', 'exists:departments,id'],
         ];

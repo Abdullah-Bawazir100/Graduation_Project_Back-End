@@ -42,6 +42,7 @@ class UserRepository implements UserRepositoryInterface
             'id_card'       => $user->idCard,
             'user_name'     => $user->userName,
             'phone'         => $user->phone,
+            'image'         => $user->image,
             'password'      => $user->password,
             'role'          => $user->role->value,
             'department_id' => $user->department->id,

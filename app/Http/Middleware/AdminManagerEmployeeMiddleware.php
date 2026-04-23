@@ -49,7 +49,8 @@ class AdminManagerEmployeeMiddleware
             ], 403);
         }
 
-        if($user->role === UserRole::Employee && ($request->isMethod('delete') || $request->isMethod('put') || $request->isMethod('patch')))
+        if($user->role === UserRole::Employee && ($request->isMethod('delete')
+            || $request->isMethod('put') || $request->isMethod('patch')))
         {
             return response()->json([
                 'message' => 'غير مصرح ، المشرف و المدير فقط يمكنهم (التحديث - الحذف).',
