@@ -33,18 +33,23 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            \App\Domain\Activity_Type\Repositories\Activity_Type_RepositoryInterface ::class,
+            \App\Domain\Activity_Type\Repositories\Activity_Type_RepositoryInterface::class,
             \App\Infrastructure\Persistence\Eloquent\Repositories\Activity_Type_Repository::class
         );
 
         $this->app->bind(
-            \App\Domain\PaymentType\Repositories\PaymentTypeRepositoryInterface ::class,
+            \App\Domain\PaymentType\Repositories\PaymentTypeRepositoryInterface::class,
             \App\Infrastructure\Persistence\Eloquent\Repositories\PaymentTypeRepository::class
         );
 
         $this->app->bind(
             \App\Domain\Region\Repositories\RegionRepositoryInterface::class,
             \App\Infrastructure\Persistence\Eloquent\Repositories\RegionRepository::class
+        );
+
+        $this->app->bind(
+            \App\Domain\District\Repositories\DistrictRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\DistrictRepository::class
         );
 
     }

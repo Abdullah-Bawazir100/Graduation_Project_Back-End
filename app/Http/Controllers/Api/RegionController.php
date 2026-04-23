@@ -36,7 +36,7 @@ class RegionController extends Controller
 
         return ApiResponse::created(
             data: $regionData,
-            message: 'Region created successfully.'
+            message: 'تم إنشاء منطقة جديدة بنجاح.'
         );
     }
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ActivityTypeController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\PaymentTypeController;
 use App\Http\Controllers\Api\RegionController;
 use App\Http\Middleware\AdminManagerEmployeeMiddleware;
@@ -29,6 +30,7 @@ Route::middleware(['auth:sanctum' , AdminManagerEmployeeMiddleware::class])->gro
     Route::apiResource('activity_types' , ActivityTypeController::class);
     Route::apiResource('payment_types' , PaymentTypeController::class);
     Route::apiResource('regions' , RegionController::class);
+    Route::apiResource('districts' , DistrictController::class);
 
 });
 

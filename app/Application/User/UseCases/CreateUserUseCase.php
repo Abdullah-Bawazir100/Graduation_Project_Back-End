@@ -25,10 +25,6 @@ class CreateUserUseCase
 
     public function execute(User $actor, UserDTO $userDTO)
     {
-        if (!in_array($actor->role, [UserRole::Admin, UserRole::Manager])) {
-            throw new DomainException('غير مصرح : المشرف و المدير فقط يمكنهم إنشاء مستخدمين.');
-        }
-
         // Check if department exists
         $department = $this->departmentRepository->findById($userDTO->departmentID);
         if (!$department) {

@@ -77,9 +77,9 @@ class UserRepository implements UserRepositoryInterface
 
     public function getAll(): array
     {
-        $models = UserModel::with('department')->get();
+        $userData = UserModel::with('department')->get();
 
-        return $models->map(fn(UserModel $model) => $this->mapToDomain($model))->toArray();
+        return $userData->map(fn(UserModel $model) => $this->mapToDomain($model))->toArray();
     }
 
     public function updatePassword(int $id, string $password, bool $mustChangePassword)
