@@ -50,12 +50,17 @@ class DistrictRepository implements DistrictRepositoryInterface
     public function findById(int $id)
     {
         $districtModel = DistrictModel::with('region')->find($id);
+        if(!$districtModel)
+            return null;
+
         return $this->mapToDomain($districtModel);
 
     }
     public function existsByName(string $name)
     {
         $districtData = DistrictModel::with('region')->where('name', $name)->first();
+        if(!$districtData)
+            return null;
         return $this->mapToDomain($districtData);
     }
 

@@ -17,7 +17,7 @@ class ShowRegionUseCase
 
         if(!$region)
         {
-            throw new \Exception("Region with ID [$id] not found.");
+            throw new \Exception("المنطقة مع ال ID [{$id}] غير موجودة.");
         }
 
         return $region;

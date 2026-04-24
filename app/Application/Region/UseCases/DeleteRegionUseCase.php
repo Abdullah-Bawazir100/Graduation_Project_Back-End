@@ -16,7 +16,7 @@ class DeleteRegionUseCase
         $region = $this->region_repository_interface->findById($id);
 
         if (!$region) {
-            throw new \DomainException("Region with ID [$id] not found.");
+            throw new \DomainException("المنطقة مع ال ID [{$id}] غير موجودة.");
         }
 
         $this->region_repository_interface->delete($id);

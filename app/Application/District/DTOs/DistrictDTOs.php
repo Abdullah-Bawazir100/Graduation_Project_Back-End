@@ -6,7 +6,7 @@ class DistrictDTOs
 {
     public function __construct(
         public ?string $name,
-        public int $regionID
+        public ?int $regionID
     )
     {}
 }

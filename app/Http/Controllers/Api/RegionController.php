@@ -21,7 +21,7 @@ class RegionController extends Controller
         $regions = $useCase->execute();
         return ApiResponse::ok(
             data: $regions,
-            message: 'Regions retrieved successfully'
+            message: 'تم جلب المناطق بنجاح.'
         );
     }
 
@@ -62,7 +62,7 @@ class RegionController extends Controller
 
         return ApiResponse::ok(
             data: $regionData,
-            message: 'Region with ID [' . $id . '] updated successfully.'
+            message: "تم تحديث بيانات المنطقة مع ال ID [{$id}] بنجاح."
         );
     }
 
@@ -73,7 +73,7 @@ class RegionController extends Controller
 
         return ApiResponse::ok(
             data: null,
-            message: 'Region with ID [' . $id . '] deleted successfully'
+            message: "تم حذف المنطقة مع ال ID [{$id}] بنجاح."
         );
     }
 }
