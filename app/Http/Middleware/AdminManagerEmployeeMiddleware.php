@@ -58,6 +58,12 @@ class AdminManagerEmployeeMiddleware
             ], 403);
         }
 
+        if($user->role === UserRole::Tax_payer)
+        {
+            $routeName = $request->route()->getName();
+            
+        }
+
         return $next($request);
 
     }
