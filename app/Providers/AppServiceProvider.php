@@ -52,6 +52,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Persistence\Eloquent\Repositories\DistrictRepository::class
         );
 
+        $this->app->bind(
+            \App\Domain\Address\Repositories\AddressRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\AddressRepository::class
+        );
+
     }
 
     /**

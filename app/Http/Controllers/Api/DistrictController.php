@@ -9,8 +9,8 @@ use App\Application\District\UseCases\ListDistrictsUseCase;
 use App\Application\District\UseCases\ShowDistrictUseCase;
 use App\Application\District\UseCases\UpdateDistrictUseCase;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\District\UpdateDistrictRequest;
 use App\Http\Requests\District\StoreDistrictRequest;
+use App\Http\Requests\District\UpdateDistrictRequest;
 use App\Http\Responses\ApiResponse;
 
 class DistrictController extends Controller
@@ -21,7 +21,7 @@ class DistrictController extends Controller
         $districts = $useCase->execute();
         return ApiResponse::ok(
             data: $districts,
-            message: "تم جلب الأحياء بنجاح."
+            message: 'تم جلب الأحياء بنجاح.'
         );
     }
 
@@ -30,50 +30,62 @@ class DistrictController extends Controller
     {
         $dto = new DistrictDTOs(
             name: $request->name,
-            regionID: $request->regionID,
-        );
-
-        $district = $useCase->execute($dto);
-
-        return ApiResponse::created(
-            data: $district,
-            message: "تم إنشاء حي جديد بنجاح."
-        );
-    }
-
-
-    public function show(int $id , ShowDistrictUseCase $useCase)
-    {
-        $districtData = $useCase->execute($id);
-        return ApiResponse::ok(
-            data: $districtData,
-            message: "تم جلب الحي بنجاح."
-        );
-    }
-
-
-    public function update(int $id , UpdateDistrictRequest $request , UpdateDistrictUseCase $useCase)
-    {
-        $dto = new DistrictDTOs(
-            name: $request->name,
             regionID: $request->regionID
         );
 
-        $districtData = $useCase->execute($id , $dto);
+        $districtData = $useCase->execute($dto);
 
-        return ApiResponse::ok(
+        return ApiResponse::created(
             data: $districtData,
-            message: "تم تحديث الحي مع ال ID [{$id}] بنجاح."
+            message: 'تم إنشاء حي جديد بنجاح.'
         );
     }
 
 
-    public function destroy(int $id , DeleteDistrictUseCase $useCase)
+    public function show(ShowDistrictUseCase $useCase, int $id)
+    {
+        $district = $useCase->execute($id);
+
+        return ApiResponse::ok(
+            data: $district,
+            message: 'تم جلب الحي بنجاح.'
+        );
+    }
+
+
+    public function update(UpdateDistrictRequest $request, UpdateDistrictUseCase $useCase, int $id)
+    {
+        $dto = new DistrictDTOs(
+            name: $request->name ?? null,
+            regionID: $request->region_id ?? null
+        );
+
+        $district = $useCase->execute($id, $dto);
+
+        return ApiResponse::ok(
+            data: $district,
+            message: 'تم تحديث الحي بنجاح.'
+        );
+    }
+
+
+    public function destroy(DeleteDistrictUseCase $useCase, int $id)
     {
         $useCase->execute($id);
+
         return ApiResponse::ok(
             data: null,
-            message: "تم حذف الحي مع ال ID [{$id}] بنجاح."
+            message: 'تم حذف الحي بنجاح.'
+        );
+    }
+
+    public function getByRegion($regionId)
+    {
+        $districts = \App\Infrastructure\Persistence\Eloquent\Models\DistrictModel::where('region_id', $regionId)->get();
+
+        return ApiResponse::ok(
+            data: $districts,
+            message: 'تم جلب الأحياء حسب المنطقة بنجاح.'
         );
     }
 }

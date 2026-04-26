@@ -5,7 +5,6 @@ namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 use App\Domain\Region\Entities\Region;
 use App\Domain\Region\Repositories\RegionRepositoryInterface;
 use App\Infrastructure\Persistence\Eloquent\Models\RegionModel;
-use Symfony\Polyfill\Intl\Idn\Resources\unidata\Regex;
 
 class RegionRepository implements RegionRepositoryInterface
 {

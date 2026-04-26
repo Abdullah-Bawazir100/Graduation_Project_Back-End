@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\Api\ActivityLogController;
 use App\Http\Controllers\Api\ActivityTypeController;
+use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\PaymentTypeController;
 use App\Http\Controllers\Api\RegionController;
 use App\Http\Middleware\AdminManagerEmployeeMiddleware;
@@ -31,12 +32,7 @@ Route::middleware(['auth:sanctum' , AdminManagerEmployeeMiddleware::class])->gro
     Route::apiResource('payment_types' , PaymentTypeController::class);
     Route::apiResource('regions' , RegionController::class);
     Route::apiResource('districts' , DistrictController::class);
+    Route::get('/districts/region/{regionId}', [DistrictController::class, 'getByRegion']);
+    Route::apiResource('addresses' , AddressController::class);
 
 });
-
-
-
-
-
-
-
