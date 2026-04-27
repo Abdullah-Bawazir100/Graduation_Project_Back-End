@@ -8,11 +8,11 @@ use App\Application\Activity_Type\UseCases\DeleteActivityTypeUseCase;
 use App\Application\Activity_Type\UseCases\ListActivityTypesUseCase;
 use App\Application\Activity_Type\UseCases\ShowActivityTypeUseCase;
 use App\Application\Activity_Type\UseCases\UpdateActivityTypeUseCase;
+use App\Application\Activity_Type\UseCases\CountActivitiesTypes;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ActivityType\StoreActivityTypeRequest;
 use App\Http\Requests\ActivityType\UpdateActivityTypeRequest;
 use App\Http\Responses\ApiResponse;
-use Illuminate\Http\Request;
 
 class ActivityTypeController extends Controller
 {
@@ -79,6 +79,16 @@ class ActivityTypeController extends Controller
         return ApiResponse::ok(
             data: null,
             message: "تم حذف نوع النشاط مع ال ID [{$id}] بنجاح."
+        );
+    }
+
+    public function count(CountActivitiesTypes $useCase)
+    {
+        $count = $useCase->execute();
+
+        return ApiResponse::ok(
+            data: ['count' => $count],
+            message: 'تم جلب عدد أنواع الأنشطة بنجاح.'
         );
     }
 }

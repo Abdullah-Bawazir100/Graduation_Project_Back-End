@@ -70,4 +70,9 @@ class Activity_Type_Repository implements Activity_Type_RepositoryInterface {
         return ActivityTypeModel::where('name' , $name)->exists();
     }
 
+    public function countActivitiesTypes(): int
+    {
+        return ActivityTypeModel::count();
+    }
+
 }

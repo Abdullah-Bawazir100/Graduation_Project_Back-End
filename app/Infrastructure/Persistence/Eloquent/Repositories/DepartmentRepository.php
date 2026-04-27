@@ -72,4 +72,9 @@ class DepartmentRepository implements DepartmentRepositoryInterface
     {
         return DepartmentModel::where('name', $name)->exists();
     }
+    
+    public function countDepartments(): int
+    {
+        return DepartmentModel::count();
+    }
 }

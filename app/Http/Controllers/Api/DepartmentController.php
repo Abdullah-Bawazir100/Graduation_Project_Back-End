@@ -8,6 +8,7 @@ use App\Application\Department\UseCases\ListDepartmentUseCase;
 use App\Application\Department\UseCases\ShowDepartmentUseCase;
 use App\Application\Department\UseCases\UpdateDepartmentUseCase;
 use App\Application\Department\UseCases\DeleteDepartmentUseCase;
+use App\Application\Department\UseCases\CountDepartmentsUseCase;
 use App\Http\Requests\Department\StoreDepartmentRequest;
 use App\Http\Requests\Department\UpdateDepartmentRequest;
 use App\Application\Department\DTOs\DepartmentDTO;
@@ -73,6 +74,16 @@ class DepartmentController extends Controller
         return ApiResponse::ok(
             data: null,
             message: 'تم حذف القسم مع ال ID [' . $id . '] بنجاح.'
+        );
+    }
+    
+    public function count(CountDepartmentsUseCase $useCase)
+    {
+        $count = $useCase->execute();
+        
+        return ApiResponse::ok(
+            data: ['count' => $count],
+            message: 'تم جلب عدد الأقسام بنجاح.'
         );
     }
 }
