@@ -8,6 +8,7 @@ use App\Application\District\UseCases\DeleteDistrictUseCase;
 use App\Application\District\UseCases\ListDistrictsUseCase;
 use App\Application\District\UseCases\ShowDistrictUseCase;
 use App\Application\District\UseCases\UpdateDistrictUseCase;
+use App\Application\District\UseCases\CountDistrictsUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\District\StoreDistrictRequest;
 use App\Http\Requests\District\UpdateDistrictRequest;
@@ -86,6 +87,16 @@ class DistrictController extends Controller
         return ApiResponse::ok(
             data: $districts,
             message: 'تم جلب الأحياء حسب المنطقة بنجاح.'
+        );
+    }
+    
+    public function count(CountDistrictsUseCase $useCase)
+    {
+        $count = $useCase->execute();
+        
+        return ApiResponse::ok(
+            data: ['count' => $count],
+            message: 'تم جلب عدد الأحياء بنجاح.'
         );
     }
 }

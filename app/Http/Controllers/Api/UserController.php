@@ -7,6 +7,7 @@ use App\Application\User\UseCases\UpdateUserUseCase;
 use App\Application\User\UseCases\DeleteUserUseCase;
 use App\Application\User\UseCases\GetAllUsersUseCase;
 use App\Application\User\UseCases\FindUserByIdUseCase;
+use App\Application\User\UseCases\CountUsersUseCase;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\DTOs\UserResponseDTO;
 use App\Application\User\Services\UploadFileService;
@@ -108,6 +109,14 @@ class UserController extends Controller
 
         $this->deleteUser->execute($actor, $id);
         return ApiResponse::ok([], 'تم حذف المستخدم مع ال ID [' . $id . '] بنجاح.');
+    }
+
+    // GET /users-count
+    public function count(CountUsersUseCase $useCase): ApiResponse
+    {
+        $count = $useCase->execute();
+        
+        return ApiResponse::ok(['count' => $count], 'تم جلب عدد المستخدمين بنجاح.');
     }
 
     private function getActor(): DomainUser

@@ -96,6 +96,11 @@ class UserRepository implements UserRepositoryInterface
 
     }
 
+    public function countUsers(): int
+    {
+        return UserModel::count();
+    }
+
     private function mapToDomain(UserModel $userData): User
     {
         $department = new Department(

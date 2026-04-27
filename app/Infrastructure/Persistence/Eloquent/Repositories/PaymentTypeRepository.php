@@ -77,4 +77,9 @@ class PaymentTypeRepository implements PaymentTypeRepositoryInterface
     {
         return PaymentTypeModel::where('name' , $name)->exists();
     }
+    
+    public function countPaymentsTypes(): int
+    {
+        return PaymentTypeModel::count();
+    }
 }

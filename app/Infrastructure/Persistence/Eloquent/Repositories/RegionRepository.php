@@ -70,4 +70,9 @@ class RegionRepository implements RegionRepositoryInterface
     {
         return RegionModel::where('name' , $name)->exists();
     }
+    
+    public function countRegions(): int
+    {
+        return RegionModel::count();
+    }
 }

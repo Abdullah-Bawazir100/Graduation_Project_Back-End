@@ -76,4 +76,9 @@ class DistrictRepository implements DistrictRepositoryInterface
             region: $region
         );
     }
+    
+    public function countDistricts(): int
+    {
+        return DistrictModel::count();
+    }
 }

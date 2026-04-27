@@ -8,7 +8,7 @@ use App\Application\Activity_Type\UseCases\DeleteActivityTypeUseCase;
 use App\Application\Activity_Type\UseCases\ListActivityTypesUseCase;
 use App\Application\Activity_Type\UseCases\ShowActivityTypeUseCase;
 use App\Application\Activity_Type\UseCases\UpdateActivityTypeUseCase;
-use App\Application\Activity_Type\UseCases\CountActivitiesTypes;
+use App\Application\Activity_Type\UseCases\CountActivitiesTypesUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ActivityType\StoreActivityTypeRequest;
 use App\Http\Requests\ActivityType\UpdateActivityTypeRequest;
@@ -82,7 +82,7 @@ class ActivityTypeController extends Controller
         );
     }
 
-    public function count(CountActivitiesTypes $useCase)
+    public function count(CountActivitiesTypesUseCase $useCase)
     {
         $count = $useCase->execute();
 

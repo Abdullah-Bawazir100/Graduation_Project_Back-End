@@ -8,6 +8,7 @@ use App\Application\PaymentType\UseCases\DeletePaymentTypeUseCase;
 use App\Application\PaymentType\UseCases\ListPaymentTypesUseCase;
 use App\Application\PaymentType\UseCases\ShowPaymentTypeUseCase;
 use App\Application\PaymentType\UseCases\UpdatePaymentTypeUseCase;
+use App\Application\PaymentType\UseCases\CountPaymentsTypesUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaymentType\StorePaymentTypeRequest;
 use App\Http\Requests\PaymentType\UpdatePaymentTypeRequest;
@@ -74,6 +75,16 @@ class PaymentTypeController extends Controller
         return ApiResponse::ok(
             data: null,
             message: "تم حذف نوع الدفع مع ال ID [{$id}] بنجاح."
+        );
+    }
+
+    public function count(CountPaymentsTypesUseCase $useCase)
+    {
+        $count = $useCase->execute();
+
+        return ApiResponse::ok(
+            data: ['count' => $count],
+            message: 'تم جلب عدد أنواع الدفع بنجاح.'
         );
     }
 }

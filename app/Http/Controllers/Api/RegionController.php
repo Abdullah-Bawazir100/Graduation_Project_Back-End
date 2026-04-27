@@ -8,6 +8,7 @@ use App\Application\Region\UseCases\DeleteRegionUseCase;
 use App\Application\Region\UseCases\ListRegionsUseCase;
 use App\Application\Region\UseCases\ShowRegionUseCase;
 use App\Application\Region\UseCases\UpdateRegionUseCase;
+use App\Application\Region\UseCases\CountRegionsUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Region\StoreRegionRequest;
 use App\Http\Requests\Region\UpdateRegionRequest;
@@ -47,7 +48,7 @@ class RegionController extends Controller
 
         return ApiResponse::ok(
             data: $region,
-            message: 'Region with ID [' . $id . '] fetched successfully.'
+            message: "تم جلب المنطقة مع ال ID [{$id}] بنجاح."
         );
     }
 
@@ -74,6 +75,16 @@ class RegionController extends Controller
         return ApiResponse::ok(
             data: null,
             message: "تم حذف المنطقة مع ال ID [{$id}] بنجاح."
+        );
+    }
+    
+    public function count(CountRegionsUseCase $useCase)
+    {
+        $count = $useCase->execute();
+        
+        return ApiResponse::ok(
+            data: ['count' => $count],
+            message: 'تم جلب عدد المناطق بنجاح.'
         );
     }
 }

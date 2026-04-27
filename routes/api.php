@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PaymentTypeController;
 use App\Http\Controllers\Api\RegionController;
-use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Middleware\AdminManagerEmployeeMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +27,7 @@ Route::middleware(['auth:sanctum' , AdminManagerEmployeeMiddleware::class])->gro
 
     Route::post('create-user' , [AuthController::class, 'createUser']);
     Route::apiResource('app_users', UserController::class);
+    Route::get('users-count', [UserController::class, 'count']);
 
     Route::apiResource('departments', DepartmentController::class);
     Route::get('departments-count', [DepartmentController::class, 'count']);
@@ -36,10 +36,13 @@ Route::middleware(['auth:sanctum' , AdminManagerEmployeeMiddleware::class])->gro
     Route::get('activity-types-count', [ActivityTypeController::class, 'count']);
 
     Route::apiResource('payment_types' , PaymentTypeController::class);
+    Route::get('payment-types-count', [PaymentTypeController::class, 'count']);
 
     Route::apiResource('regions' , RegionController::class);
+    Route::get('regions-count', [RegionController::class, 'count']);
 
     Route::apiResource('districts' , DistrictController::class);
+    Route::get('districts-count', [DistrictController::class, 'count']);
     
     Route::get('/districts/region/{regionId}', [DistrictController::class, 'getByRegion']);
     Route::apiResource('addresses' , AddressController::class);
