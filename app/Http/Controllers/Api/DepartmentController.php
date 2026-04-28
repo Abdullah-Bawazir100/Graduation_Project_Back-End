@@ -9,8 +9,10 @@ use App\Application\Department\UseCases\ShowDepartmentUseCase;
 use App\Application\Department\UseCases\UpdateDepartmentUseCase;
 use App\Application\Department\UseCases\DeleteDepartmentUseCase;
 use App\Application\Department\UseCases\CountDepartmentsUseCase;
+use App\Application\Department\UseCases\MoveUsersUseCase;
 use App\Http\Requests\Department\StoreDepartmentRequest;
 use App\Http\Requests\Department\UpdateDepartmentRequest;
+use App\Http\Requests\Department\MoveUsersRequest;
 use App\Application\Department\DTOs\DepartmentDTO;
 use App\Http\Responses\ApiResponse;
 
@@ -76,14 +78,29 @@ class DepartmentController extends Controller
             message: 'تم حذف القسم مع ال ID [' . $id . '] بنجاح.'
         );
     }
-    
+
     public function count(CountDepartmentsUseCase $useCase)
     {
         $count = $useCase->execute();
-        
+
         return ApiResponse::ok(
             data: ['count' => $count],
             message: 'تم جلب عدد الأقسام بنجاح.'
+        );
+    }
+
+    public function moveUsersToAnotherDepartment(
+        int $id,
+        MoveUsersRequest $request,
+        MoveUsersUseCase $useCase
+    ) {
+        $newDepartmentId = $request->department_id;
+
+        $useCase->execute($id, $newDepartmentId);
+
+        return ApiResponse::ok(
+            data: null,
+            message: 'تم نقل جميع المستخدمين من القسم [' . $id . '] إلى القسم [' . $newDepartmentId . '] بنجاح.'
         );
     }
 }

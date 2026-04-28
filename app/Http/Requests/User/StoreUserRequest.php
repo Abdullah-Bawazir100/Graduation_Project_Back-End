@@ -19,9 +19,9 @@ class StoreUserRequest extends FormRequest
         return [
             'firstName'    => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'lastName'     => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
-            'idCard'       => ['required', 'file', 'mimes:pdf'],
+            'idCard'       => ['required', 'file', 'mimes:pdf' , 'max:5242880'],
             'phone'         => ['required', 'string', 'max:20'],
-            'image' => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:2048'],
+            'image' => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:5242880'],
             'role' => ['required' , Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
             'departmentID' => ['required', 'integer', 'exists:departments,id'],
         ];
@@ -43,6 +43,7 @@ class StoreUserRequest extends FormRequest
             'idCard.required' => 'ملف البطاقة الشخصية مطلوب.',
             'idCard.file'     => 'يجب أن يكون الملف المرفوع صحيحًا.',
             'idCard.mimes'    => 'يجب أن يكون الملف بصيغة PDF فقط.',
+            'idCard.max'     => 'يجب أن لا يتجاوز حجم الملف 5 MB.',
 
             'phone.required' => 'رقم الهاتف مطلوب.',
             'phone.string'   => 'رقم الهاتف يجب أن يكون نصًا.',

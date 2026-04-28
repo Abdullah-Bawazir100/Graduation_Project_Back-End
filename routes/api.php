@@ -31,6 +31,7 @@ Route::middleware(['auth:sanctum' , AdminManagerEmployeeMiddleware::class])->gro
 
     Route::apiResource('departments', DepartmentController::class);
     Route::get('departments-count', [DepartmentController::class, 'count']);
+    Route::post('departments/{id}/move-users', [DepartmentController::class, 'moveUsersToAnotherDepartment']);
 
     Route::apiResource('activity_types' , ActivityTypeController::class);
     Route::get('activity-types-count', [ActivityTypeController::class, 'count']);

@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 use App\Domain\Department\Entities\Department;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel;
+use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
 
 class DepartmentRepository implements DepartmentRepositoryInterface
 {
@@ -72,9 +73,21 @@ class DepartmentRepository implements DepartmentRepositoryInterface
     {
         return DepartmentModel::where('name', $name)->exists();
     }
-    
+
     public function countDepartments(): int
     {
         return DepartmentModel::count();
+    }
+
+    public function moveUsersToAnotherDepartment(int $oldDepartmentId, int $newDepartmentId): void
+    {
+        $targetDepartment = DepartmentModel::find($newDepartmentId);
+
+        if (!$targetDepartment) {
+            throw new \DomainException("Target department with ID [$newDepartmentId] does not exist.");
+        }
+
+        // Update all users from old department to new department
+        UserModel::where('department_id', $oldDepartmentId)->update(['department_id' => $newDepartmentId]);
     }
 }
