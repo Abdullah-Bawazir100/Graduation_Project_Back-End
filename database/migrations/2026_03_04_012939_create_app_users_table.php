@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->boolean('must_change_password')->default(true);
 
-            $table->enum('role', ['Admin', 'Manager', 'Employee', 'Tax_Payer'])->default('Employee');
+            $table->enum('role', ['Admin', 'Manager', 'Employee', 'Tax_Payer' , 'Collectors_Manager'])->default('Employee');
 
             $table->foreignId('department_id')->constrained('departments')->cascadeOnDelete();
             $table->foreignId('created_by')->nullable()->constrained('app_users')->nullOnDelete();

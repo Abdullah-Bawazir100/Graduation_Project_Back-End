@@ -8,4 +8,5 @@ enum UserRole: string
     case Manager = 'Manager';
     case Employee = 'Employee';
     case Tax_payer = 'Tax_payer';
+    case Collectors_Manager = 'Collectors_Manager';
 }

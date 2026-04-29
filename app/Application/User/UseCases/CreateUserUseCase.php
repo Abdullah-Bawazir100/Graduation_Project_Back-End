@@ -5,7 +5,6 @@ namespace App\Application\User\UseCases;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Domain\User\Entities\User;
-use App\Domain\User\Enums\UserRole;
 use App\Application\User\DTOs\UserDTO;
 use App\Domain\User\Interfaces\PasswordHashInterface;
 use DomainException;

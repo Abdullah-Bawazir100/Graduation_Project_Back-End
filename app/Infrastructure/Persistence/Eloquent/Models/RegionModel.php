@@ -10,6 +10,14 @@ class RegionModel extends Model
     use LogsActivity;
     protected $table = 'regions';
     protected $fillable = ['name'];
+    public function districts()
+    {
+        return $this->hasMany(
+            DistrictModel::class,
+            'region_id',
+            'id'
+        );
+    }
 
     public function getActivitylogOptions(): LogOptions
     {

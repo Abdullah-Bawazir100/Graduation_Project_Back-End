@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Application\District\DTOs\DistrictDTOs;
+use App\Infrastructure\Persistence\Eloquent\Models\DistrictModel;
 use App\Application\District\UseCases\CreateDistrictUseCase;
 use App\Application\District\UseCases\DeleteDistrictUseCase;
 use App\Application\District\UseCases\ListDistrictsUseCase;
@@ -82,18 +83,18 @@ class DistrictController extends Controller
 
     public function getByRegion($regionId)
     {
-        $districts = \App\Infrastructure\Persistence\Eloquent\Models\DistrictModel::where('region_id', $regionId)->get();
+        $districts = DistrictModel::where('region_id', $regionId)->get();
 
         return ApiResponse::ok(
             data: $districts,
             message: 'تم جلب الأحياء حسب المنطقة بنجاح.'
         );
     }
-    
+
     public function count(CountDistrictsUseCase $useCase)
     {
         $count = $useCase->execute();
-        
+
         return ApiResponse::ok(
             data: ['count' => $count],
             message: 'تم جلب عدد الأحياء بنجاح.'

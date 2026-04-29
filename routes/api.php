@@ -46,8 +46,8 @@ Route::middleware(['auth:sanctum' , AdminManagerEmployeeMiddleware::class])->gro
 
     Route::apiResource('districts' , DistrictController::class);
     Route::get('districts-count', [DistrictController::class, 'count']);
-
-    Route::get('/districts/region/{regionId}', [DistrictController::class, 'getByRegion']);
+    Route::get('districts/region/{regionId}', [DistrictController::class, 'getByRegion']);
+    
     Route::apiResource('addresses' , AddressController::class);
 
 });
