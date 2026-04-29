@@ -2,7 +2,6 @@
 
 namespace App\Http\Responses;
 
-use Illuminate\Http\JsonResponse;
 use illuminate\Contracts\Support\Responsable;
 
 class ApiResponse implements Responsable
@@ -38,12 +37,12 @@ class ApiResponse implements Responsable
         $payload = match (true) {
 
             $this->httpStatusCode >= 500 => [
-                'error_message' => $this->errorMessage ?: 'Server error occurred, Please try again later.',
+                'error_message' => $this->errorMessage ?: 'حدث خطأ في الخادم، يرجى المحاولة لاحقًا.',
                 'status' => $this->httpStatusCode,
             ],
 
             $this->httpStatusCode >= 400 => [
-                'error_message' => $this->errorMessage ?: 'An error occurred.',
+                'error_message' => $this->errorMessage ?: 'حدث خطأ.',
                 'status' => $this->httpStatusCode,
             ],
 
@@ -53,7 +52,7 @@ class ApiResponse implements Responsable
                 'meta' => $this->meta ?: null,
             ], fn ($value) => $value !== null),
 
-            default => ['message' => 'Unknown response'],
+            default => ['message' => 'الاستجابة غير معروفة'],
         };
 
         return response()->json(
@@ -88,7 +87,13 @@ class ApiResponse implements Responsable
     // Client Responses(4xx)
     public static function badRequest(mixed $data = [], string $message = 'Bad request', array $meta = []): self
     {
-        return new static(400, $data, $message, $meta);
+        return new static(
+            400,
+            $data,
+            '',
+            $meta,
+            $message
+        );
     }
 
     public static function unauthorized(mixed $data = [], string $message = 'Unauthorized', array $meta = []): self
@@ -119,5 +124,17 @@ class ApiResponse implements Responsable
     public static function tooManyRequests(mixed $data = [], string $message = 'Too many requests' , array $meta = []): self
     {
         return new static(429, $data, $message, $meta);
+    }
+
+    // Server Error Responses (5xx)
+    public static function serverError(mixed $data = [], string $message = 'Internal server error', array $meta = []): self
+    {
+        return new static(
+            500,
+            $data,
+            '',
+            $meta,
+            $message
+        );
     }
 }

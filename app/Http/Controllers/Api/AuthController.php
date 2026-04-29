@@ -4,23 +4,25 @@ namespace App\Http\Controllers\Api;
 
 use App\Application\User\Services\UploadFileService;
 use App\Http\Controllers\Controller;
+use DomainException;
 use Illuminate\Support\Facades\Auth;
 
-use App\Application\User\DTOs\SignUpDTO;
 use App\Application\User\DTOs\LoginDTO;
 use App\Application\User\DTOs\ResetPasswordDTO;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\UseCases\ChangePasswordUseCase;
 use App\Application\User\UseCases\LoginUseCase;
 use App\Application\User\UseCases\CreateUserUseCase;
+use App\Application\User\UseCases\ForgotPasswordUseCase;
 use App\Application\User\UseCases\LogoutUseCase;
+use App\Application\User\UseCases\UpdateUserPasswordUseCase;
 use App\Domain\User\Entities\User as DomainUser;
 use App\Domain\Department\Entities\Department;
 
-use App\Http\Requests\User\SignUpRequest;
 use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\ResetPasswordRequest;
 use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\ForgotPasswordRequest;
 
 use App\Http\Responses\ApiResponse;
 use DateTime;
@@ -157,6 +159,24 @@ class AuthController extends Controller
             throw $e;
         }
 
+    }
+
+    public function forgetPassword(ForgotPasswordRequest $request , ForgotPasswordUseCase $useCase)
+    {
+        try {
+            $userName = $request->userName;
+            $phone = $request->phone;
+            $new_password = $request->new_password;
+
+            $useCase->execute($userName , $phone , $new_password);
+
+            return ApiResponse::ok('تم إعادة تعيين كلمة المرور بنجاح.');
+
+        } catch (DomainException $e) {
+            return ApiResponse::badRequest([], $e->getMessage());
+        } catch (\Throwable $e) {
+            return ApiResponse::serverError([], 'حدث خطأ أثناء معالجة طلبك.');
+        }
     }
 
     public function logout()

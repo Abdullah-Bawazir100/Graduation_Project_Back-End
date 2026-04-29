@@ -82,23 +82,26 @@ class UserRepository implements UserRepositoryInterface
         return $userData->map(fn(UserModel $model) => $this->mapToDomain($model))->toArray();
     }
 
-    public function updatePassword(int $id, string $password, bool $mustChangePassword)
+    public function updatePasswordOnly(int $userId, string $hashedPassword, bool $mustChangePassword = false): void
     {
-        $userDate = UserModel::findOrFail($id);
-        $userDate->update([
-            'password' => $password,
+        UserModel::where('id', $userId)->update([
+            'password' => $hashedPassword,
             'must_change_password' => $mustChangePassword
         ]);
-
-        $userDate->load('department');
-
-        return $this->mapToDomain($userDate);
-
     }
 
-    public function countUsers(): int
+    public function findByUserNameAndPhone(string $userName, string $phone): ?User
     {
-        return UserModel::count();
+        $userData = UserModel::with('department')
+            ->where('user_name', $userName)
+            ->where('phone', $phone)
+            ->first();
+
+        if (!$userData) {
+            return null;
+        }
+
+        return $this->mapToDomain($userData);
     }
 
     private function mapToDomain(UserModel $userData): User

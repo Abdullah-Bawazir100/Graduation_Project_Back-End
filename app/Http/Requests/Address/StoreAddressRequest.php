@@ -22,8 +22,8 @@ class StoreAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'regionID' => ['required', 'exists:regions,id'],
-            'districtID' => ['required', 'exists:districts,id']
+            'regionID' => ['required', 'integer' , 'exists:regions,id'],
+            'districtID' => ['required', 'integer' , 'exists:districts,id']
         ];
     }
 
@@ -31,9 +31,11 @@ class StoreAddressRequest extends FormRequest
     {
         return [
             'regionID.required' => 'المنطقة مطلوبة.',
+            'regionID.integer'  => 'يجب أن يكون رقم المنطقة رقما صحيحا.',
             'regionID.exists' => 'المنطقة غير موجودة.',
 
             'districtID.required' => 'الحي مطلوب.',
+            'districtID.integer'  => 'يجب أن يكون رقم الحي رقما صحيحا.',
             'districtID.exists' => 'الحي غير موجود.'
         ];
     }

@@ -13,6 +13,8 @@ use App\Http\Middleware\AdminManagerEmployeeMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login' , [AuthController::class, 'login']);
+Route::post('forget-password', [AuthController::class, 'forgetPassword']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
@@ -44,7 +46,7 @@ Route::middleware(['auth:sanctum' , AdminManagerEmployeeMiddleware::class])->gro
 
     Route::apiResource('districts' , DistrictController::class);
     Route::get('districts-count', [DistrictController::class, 'count']);
-    
+
     Route::get('/districts/region/{regionId}', [DistrictController::class, 'getByRegion']);
     Route::apiResource('addresses' , AddressController::class);
 

@@ -24,7 +24,7 @@ class ChangePasswordUseCase {
 
         if(!$user->mustChangePassword)
         {
-            throw new DomainException("Password change is not required.");
+            throw new DomainException("تغيير كلمة المرور غير مطلوب.");
         }
 
 
