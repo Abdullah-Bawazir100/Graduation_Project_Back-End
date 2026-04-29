@@ -3,8 +3,6 @@
 namespace App\Application\Department\UseCases;
 
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
-use App\Domain\Department\Entities\Department;
-use App\Http\Responses\ApiResponse;
 
 class DeleteDepartmentUseCase
 {

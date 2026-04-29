@@ -34,7 +34,7 @@ class StoreDepartmentRequest extends FormRequest
                 'name.max' => 'اسم القسم لا يمكن ان يزيد عن 255 حرفا.',
                 'name.unique' => 'اسم القسم مسجل مسبقاً.',
                 'name.not_regex' => 'لا يمكن أن يكون اسم القسم أرقام فقط.',
-        ];
-    }
+            ];
+        }
 }
 

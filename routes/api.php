@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\JobTypeController;
 use App\Http\Controllers\Api\PaymentTypeController;
 use App\Http\Controllers\Api\RegionController;
 use App\Http\Middleware\AdminManagerEmployeeMiddleware;
@@ -47,7 +48,9 @@ Route::middleware(['auth:sanctum' , AdminManagerEmployeeMiddleware::class])->gro
     Route::apiResource('districts' , DistrictController::class);
     Route::get('districts-count', [DistrictController::class, 'count']);
     Route::get('districts/region/{regionId}', [DistrictController::class, 'getByRegion']);
-    
+
     Route::apiResource('addresses' , AddressController::class);
+
+    Route::apiResource('job-types' , JobTypeController::class);
 
 });

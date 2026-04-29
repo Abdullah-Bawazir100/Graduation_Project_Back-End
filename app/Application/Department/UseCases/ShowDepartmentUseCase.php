@@ -14,7 +14,7 @@ class ShowDepartmentUseCase
         $department = $this->departmentRepository->findById($id);
 
         if (!$department) {
-            throw new \Exception("Department with ID [$id] not found.");
+            throw new \Exception("القسم مع ال ID [{$id}] غير موجود.");
         }
 
         return $department;

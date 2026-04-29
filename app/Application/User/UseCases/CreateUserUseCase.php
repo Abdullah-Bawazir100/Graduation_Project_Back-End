@@ -36,7 +36,6 @@ class CreateUserUseCase
         // );
         // $userName = $this->generateUniqueUserName($baseUserName);
 
-
         $userName = $userDTO->phone;
         $defaultPassword = '12345678';
 

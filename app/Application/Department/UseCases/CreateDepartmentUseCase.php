@@ -20,7 +20,7 @@ class CreateDepartmentUseCase
         $name = trim($departmentDTO->name);
 
         if ($this->departmentRepository->existsByName($name)) {
-            throw new \DomainException("Department with name '{$name}' already exists.");
+            throw new \DomainException("القسم مع الإسم [{$name}] موجود بالفعل.");
         }
 
         return $this->departmentRepository->create(
