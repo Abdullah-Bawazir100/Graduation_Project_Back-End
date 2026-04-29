@@ -12,5 +12,5 @@ interface DistrictRepositoryInterface
     public function getAll();
     public function findById(int $id);
     public function existsByName(string $name);
-    public function countDistricts();
+    public function countDistricts(): int;
 }

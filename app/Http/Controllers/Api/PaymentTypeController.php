@@ -77,14 +77,4 @@ class PaymentTypeController extends Controller
             message: "تم حذف نوع الدفع مع ال ID [{$id}] بنجاح."
         );
     }
-
-    public function count(CountPaymentsTypesUseCase $useCase)
-    {
-        $count = $useCase->execute();
-
-        return ApiResponse::ok(
-            data: ['count' => $count],
-            message: 'تم جلب عدد أنواع الدفع بنجاح.'
-        );
-    }
 }

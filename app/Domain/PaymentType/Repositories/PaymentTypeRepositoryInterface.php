@@ -12,5 +12,5 @@ interface PaymentTypeRepositoryInterface
     public function findById(int $id);
     public function getAll();
     public function existsByName(string $name);
-    public function countPaymentsTypes();
+    public function countPaymentsTypes(): int;
 }

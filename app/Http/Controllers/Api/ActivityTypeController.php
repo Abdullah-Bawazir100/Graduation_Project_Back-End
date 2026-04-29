@@ -82,13 +82,4 @@ class ActivityTypeController extends Controller
         );
     }
 
-    public function count(CountActivitiesTypesUseCase $useCase)
-    {
-        $count = $useCase->execute();
-
-        return ApiResponse::ok(
-            data: ['count' => $count],
-            message: 'تم جلب عدد أنواع الأنشطة بنجاح.'
-        );
-    }
 }

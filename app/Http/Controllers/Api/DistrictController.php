@@ -91,13 +91,4 @@ class DistrictController extends Controller
         );
     }
 
-    public function count(CountDistrictsUseCase $useCase)
-    {
-        $count = $useCase->execute();
-
-        return ApiResponse::ok(
-            data: ['count' => $count],
-            message: 'تم جلب عدد الأحياء بنجاح.'
-        );
-    }
 }

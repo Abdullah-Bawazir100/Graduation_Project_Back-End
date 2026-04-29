@@ -79,15 +79,6 @@ class DepartmentController extends Controller
         );
     }
 
-    public function count(CountDepartmentsUseCase $useCase)
-    {
-        $count = $useCase->execute();
-
-        return ApiResponse::ok(
-            data: ['count' => $count],
-            message: 'تم جلب عدد الأقسام بنجاح.'
-        );
-    }
 
     public function moveUsersToAnotherDepartment(
         int $id,

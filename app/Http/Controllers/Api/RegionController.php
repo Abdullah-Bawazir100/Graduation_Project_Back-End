@@ -77,14 +77,4 @@ class RegionController extends Controller
             message: "تم حذف المنطقة مع ال ID [{$id}] بنجاح."
         );
     }
-    
-    public function count(CountRegionsUseCase $useCase)
-    {
-        $count = $useCase->execute();
-        
-        return ApiResponse::ok(
-            data: ['count' => $count],
-            message: 'تم جلب عدد المناطق بنجاح.'
-        );
-    }
 }

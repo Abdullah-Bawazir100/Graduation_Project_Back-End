@@ -7,11 +7,11 @@ use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 class CountDepartmentsUseCase
 {
     public function __construct(
-        private DepartmentRepositoryInterface $departmentRepository
+        private DepartmentRepositoryInterface $repository
     ) {}
 
     public function execute(): int
     {
-        return $this->departmentRepository->countDepartments();
+        return $this->repository->countDepartments();
     }
 }
