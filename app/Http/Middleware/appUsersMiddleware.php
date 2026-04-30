@@ -40,6 +40,8 @@ class appUsersMiddleware
                 'activity_types.destroy' => 'لا يمكن للمدير حذف نوع النشاط.',
                 'payment_types.destroy' => 'لا يمكن للمدير حذف نوع الدفع.',
                 'regions.destroy' => 'لا يمكن للمدير حذف المناطق.',
+                'districts.destroy' => 'لا يمكن للمدير حذف الحي.',
+                'tax-collectors.destroy' =>  'لا يمكن للمدير حذف جامع الضرائب.',
             ];
 
 
@@ -60,8 +62,23 @@ class appUsersMiddleware
 
         if($user->role === UserRole::Collectors_Manager)
         {
+            $routeName = $request->route()->getName();
+            if(($routeName === 'tax-collectors.store' && $request->isMethod('post'))
+                || ($routeName === 'tax-collectors.update' && ($request->isMethod('put') || $request->isMethod('patch'))))
+            {
+                return $next($request);
+            }
+
+            elseif($routeName !== 'tax-collectors.store')
+            {
+                return response()->json([
+                'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحيات على الأقسام الأخرى.',
+                'status' => 403,
+            ], 403);
+            }
+
             return response()->json([
-                'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحية.',
+                'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحية (التعديل - الحذف).',
                 'status' => 403,
             ], 403);
         }
