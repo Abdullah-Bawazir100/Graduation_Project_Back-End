@@ -15,7 +15,7 @@ class DeleteDepartmentUseCase
         $department = $this->departmentRepository->findById($id);
 
         if (!$department) {
-            throw new \DomainException("Department with ID [$id] not found.");
+            throw new \DomainException("القسم مع ال ID [{$id}] غير موجود.");
         }
 
         $this->departmentRepository->delete($id);

@@ -26,4 +26,13 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 401);
             }
         });
+        
+        $exceptions->render(function (\DomainException $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'status' => 400,
+                ], 400);
+            }
+        });
     })->create();

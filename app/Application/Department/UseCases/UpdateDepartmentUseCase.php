@@ -17,7 +17,7 @@ class UpdateDepartmentUseCase
         $department = $this->departmentRepository->findById($id);
 
         if (!$department) {
-            throw new \Exception("القسم مع ال ID [{$id} غير موجود.");
+            throw new \DomainException("القسم مع ال ID [{$id}] غير موجود.");
         }
 
         $name = $departmentDTO->name ?? $department->name;
@@ -26,7 +26,7 @@ class UpdateDepartmentUseCase
             $name !== $department->name &&
             $this->departmentRepository->existsByName($name)
         ) {
-            throw new \DomainException("القسم مع الأسم [ $name} ]موجود بالفعل.");
+            throw new \DomainException("القسم مع الأسم [{$name}] موجود بالفعل.");
         }
 
         return $this->departmentRepository->update(

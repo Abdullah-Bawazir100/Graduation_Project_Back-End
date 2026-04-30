@@ -11,7 +11,7 @@ class ActivityLogService
     {
         $query = Activity::with('causer')
             ->whereIn('log_name', ['user', 'department','activity_type',
-                        'payment_type' , 'region' , 'district']);
+                        'payment_type' , 'region' , 'district' , 'job_type']);
 
         // Filters
         if (!empty($filters['user_id'])) {
@@ -116,6 +116,10 @@ class ActivityLogService
             'إنشاء حي' => "تم إنشاء حي جديد." . ($new['name'] ?? ''),
             'تحديث حي' => "تم تحديث حي." . ($new['name'] ?? ''),
             'حذف حي'  => "تم حذف حي." . ($old['name'] ?? ''),
+
+            'إنشاء نوع وظيفة' => "تم إنشاء نوع وظيفة جديد." . ($new['name'] ?? ''),
+            'تحديث نوع وظيفة' => "تم تحديث نوع وظيفة." . ($new['name'] ?? ''),
+            'حذف نوع وظيفة'  => "تم حذف نوع وظيفة." . ($old['name'] ?? ''),
 
             default => $description,
         };
