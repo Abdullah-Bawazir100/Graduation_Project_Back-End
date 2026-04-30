@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Domain\User\Enums\UserRole;
-class AdminManagerEmployeeMiddleware
+class appUsersMiddleware
 {
     /**
      * Handle an incoming request.
