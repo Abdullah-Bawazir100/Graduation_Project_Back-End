@@ -13,5 +13,6 @@ interface UserRepositoryInterface {
     public function findById(int $id): ?User;
     public function findByUserName(string $userName): ?User;
     public function updatePasswordOnly(int $id , string $newPassword , bool $mustChangePassword);
+    public function updatePassword(int $id , string $newPassword , bool $mustChangePassword);
     public function findByUserNameAndPhone(string $userName, string $phone): ?User;
 }

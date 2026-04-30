@@ -90,6 +90,19 @@ class UserRepository implements UserRepositoryInterface
         ]);
     }
 
+    public function updatePassword(int $userId, string $newPassword, bool $mustChangePassword)
+    {
+        $userData = UserModel::findOrFail($userId);
+
+        $userData->update([
+            'password' => $newPassword,
+            'must_change_password' => $mustChangePassword
+        ]);
+
+        $userData->load('department');
+        return $this->mapToDomain($userData);
+    }
+
     public function findByUserNameAndPhone(string $userName, string $phone): ?User
     {
         $userData = UserModel::with('department')
