@@ -63,8 +63,10 @@ class appUsersMiddleware
         if($user->role === UserRole::Collectors_Manager)
         {
             $routeName = $request->route()->getName();
+
             if(($routeName === 'tax-collectors.store' && $request->isMethod('post'))
-                || ($routeName === 'tax-collectors.update' && ($request->isMethod('put') || $request->isMethod('patch'))))
+                || ($routeName === 'tax-collectors.update' && ($request->isMethod('put') || $request->isMethod('patch')))
+                || (($routeName === 'tax-collectors.index' || $routeName === 'tax-collectors.show') && ($request->isMethod('get'))))
             {
                 return $next($request);
             }

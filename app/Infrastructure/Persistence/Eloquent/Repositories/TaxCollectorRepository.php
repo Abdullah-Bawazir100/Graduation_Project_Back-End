@@ -30,10 +30,6 @@ class TaxCollectorRepository implements TaxCollectorRepositoryInterface
     {
         $taxCollectorModel = TaxCollectorModel::find($taxCollector->id);
 
-        if (!$taxCollectorModel) {
-            throw new \DomainException("جامع الضرائب مع ال ID [{$taxCollector->id}] غير موجود");
-        }
-
         $taxCollectorModel->update([
             'full_name' => $taxCollector->fullName,
             'id_card' => $taxCollector->idCard,
@@ -67,7 +63,6 @@ class TaxCollectorRepository implements TaxCollectorRepositoryInterface
     public function getAll()
     {
         $taxCollectors = TaxCollectorModel::with('jobType' , 'department')->get();
-
         return $taxCollectors->map(fn(TaxCollectorModel $model) => $this->mapToDomain($model))->toArray();
     }
 

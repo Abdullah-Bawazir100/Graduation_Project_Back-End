@@ -9,7 +9,6 @@ use App\Application\TaxCollector\UseCases\DeleteTaxCollectorUseCase;
 use App\Application\TaxCollector\UseCases\ShowTaxCollectorUseCase;
 use App\Application\TaxCollector\UseCases\FindByIdUseCase;
 use App\Application\TaxCollector\UseCases\ListTaxCollectorUseCase;
-use App\Application\TaxCollector\UseCases\FindByNameUseCase;
 use App\Application\TaxCollector\DTOs\TaxCollectorDTOs;
 use App\Http\Requests\TaxCollector\StoreTaxCollectorRequest;
 use App\Http\Requests\TaxCollector\UpdateTaxCollectorRequest;
@@ -19,10 +18,7 @@ use App\Application\User\Services\UploadFileService;
 class TaxCollectorController extends Controller
 {
     public function __construct(
-        private DeleteTaxCollectorUseCase $deleteTaxCollector,
-        private ShowTaxCollectorUseCase $showTaxCollectors,
         private FindByIdUseCase $findTaxCollectorById,
-        private FindByNameUseCase $findTaxCollectorByName,
         private UploadFileService $uploadFileService
     ) {}
 
@@ -94,4 +90,5 @@ class TaxCollectorController extends Controller
         $useCase->execute($id);
         return ApiResponse::ok([], 'تم حذف جامع الضرائب مع ال ID [' . $id . '] بنجاح.');
     }
+
 }
