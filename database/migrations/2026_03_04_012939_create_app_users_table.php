@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('id_card')->nullable();
             $table->string('user_name')->unique();
-            $table->string('phone')->nullable();
+            $table->string('phone');
             $table->string('password');
             $table->string('image')->nullable();
             $table->boolean('must_change_password')->default(true);

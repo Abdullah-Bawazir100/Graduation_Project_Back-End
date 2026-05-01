@@ -34,10 +34,6 @@ class CreateTaxPayerWithUserUseCase
         }
 
         $userName = $userDTO->phone;
-        if ($this->user_repository->findByUserName($userName)) {
-            throw new DomainException("رقم الهاتف مستخدم مسبقًا.");
-        }
-        
         $defaultPassword = '12345678';
 
         $user = new User(
