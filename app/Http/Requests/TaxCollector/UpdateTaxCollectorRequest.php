@@ -14,7 +14,7 @@ class UpdateTaxCollectorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fullName' => 'sometimes|required|string|max:255',
+            'fullName' => 'sometimes|required|string|max:255|not_regex:/^\d+$/',
             'idCard' => 'sometimes|required|file|mimes:pdf|max:5120', // 5MB max, PDF only
             'phone' => 'sometimes|required|string|max:20',
             'jobTypeId' => 'sometimes|integer|exists:job_types,id',
@@ -27,7 +27,8 @@ class UpdateTaxCollectorRequest extends FormRequest
         return [
             'fullName.string' => 'يجب أن يكون الاسم الكامل نصًا',
             'fullName.max' => 'لا يمكن أن يتجاوز الاسم الكامل 255 حرفًا',
-
+            'fullName.not_regex' => 'لا يمكن أن يكون الأسم الكامل أرقام فقط.',
+            
             'idCard.required' => 'ملف بطاقة الهوية مطلوب',
             'idCard.file' => 'يجب أن يكون الملف ملف صالح',
             'idCard.mimes' => 'يجب أن يكون نوع الملف PDF',

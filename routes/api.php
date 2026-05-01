@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\TaxCollectorController;
+use App\Http\Controllers\Api\TaxPayerController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\JobTypeController;
@@ -52,5 +53,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::get('statistics', [StatisticsController::class, 'getStatistics']);
 
     Route::apiResource('tax-collectors', TaxCollectorController::class);
+    
+    Route::apiResource('tax-payers', TaxPayerController::class);
 
 });

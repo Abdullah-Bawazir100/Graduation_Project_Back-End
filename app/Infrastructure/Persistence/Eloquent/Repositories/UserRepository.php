@@ -13,6 +13,7 @@ class UserRepository implements UserRepositoryInterface
 {
     public function create(User $user): User
     {
+
         $userData = UserModel::create([
             'first_name'    => $user->firstName,
             'last_name'     => $user->lastName,

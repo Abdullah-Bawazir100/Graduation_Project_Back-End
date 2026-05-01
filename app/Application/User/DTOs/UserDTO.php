@@ -3,21 +3,20 @@
 namespace App\Application\User\DTOs;
 
 use App\Domain\User\Enums\UserRole;
-use DateTime;
 class UserDTO
 {
         public function __construct (
             public ?int $id,
             public ?string $firstName,
             public ?string $lastName,
-            public ?string $idCard = null,
-            public ?string $userName = null,
-            public ?string $password = null,
-            public ?string $phone = null,
-            public ?string $image = null,
+            public ?string $idCard,
+            public ?string $userName,
+            public ?string $password,
+            public ?string $phone,
+            public ?string $image,
             public int $departmentID,
             public int $createdBy,
-            public $role = null,
+            public UserRole $role,
     ) {}
 
     public function getRole(): UserRole

@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Application\User\DTOs\LoginDTO;
 use App\Application\User\DTOs\ResetPasswordDTO;
 use App\Application\User\DTOs\UserDTO;
+use App\Domain\User\Enums\UserRole;
 use App\Application\User\UseCases\ChangePasswordUseCase;
 use App\Application\User\UseCases\LoginUseCase;
 use App\Application\User\UseCases\CreateUserUseCase;
 use App\Application\User\UseCases\ForgotPasswordUseCase;
 use App\Application\User\UseCases\LogoutUseCase;
-use App\Application\User\UseCases\UpdateUserPasswordUseCase;
 use App\Domain\User\Entities\User as DomainUser;
 use App\Domain\Department\Entities\Department;
 
@@ -25,7 +25,6 @@ use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\ForgotPasswordRequest;
 
 use App\Http\Responses\ApiResponse;
-use DateTime;
 
 class AuthController extends Controller
 {
@@ -148,7 +147,7 @@ class AuthController extends Controller
                 image: $imageUrl,
                 departmentID: $request->departmentID,
                 createdBy: $actor->id,
-                role: $request->role,
+                role: UserRole::from($request->role),
             );
 
             $result = $this->createUserUseCase->execute($actor , $dto);
