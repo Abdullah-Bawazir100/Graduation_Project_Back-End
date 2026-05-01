@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaxPayer\StoreTaxPayerRequest;
 use App\Application\TaxPayer\DTOs\TaxPayerDTOs;
-use App\Application\TaxPayer\UseCases\CreateTaxPayerUseCase;
 use App\Application\TaxPayer\UseCases\CreateTaxPayerWithUserUseCase;
+use App\Application\TaxPayer\UseCases\DeleteTaxPayerUseCase;
+use App\Application\TaxPayer\UseCases\FindTaxPayerByUserIDUseCase;
+use App\Application\TaxPayer\UseCases\ListTaxPayersUseCase;
+use App\Application\TaxPayer\UseCases\ShowTaxPayerUseCase;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\Services\UploadFileService;
 use App\Domain\Department\Entities\Department;
@@ -21,7 +24,14 @@ class TaxPayerController extends Controller
 {
     public function __construct(
         private UploadFileService $uploadFileService,
+
     ) {}
+
+    public function index(ListTaxPayersUseCase $useCase): ApiResponse
+    {
+        $taxPayers = $useCase->execute();
+        return ApiResponse::ok($taxPayers , 'تم جلب دافعي الضرائب بنجاح.');
+    }
 
     public function store(StoreTaxPayerRequest $request , CreateTaxPayerWithUserUseCase $useCase): ApiResponse
     {
@@ -36,7 +46,7 @@ class TaxPayerController extends Controller
 
             $idCardUrl = $this->uploadFileService->uploadFile($request->file('idCard') , 'id-cards');
             $imageUrl = $this->uploadFileService->uploadFile($request->file('image') , 'profile-images');
-
+            
             $commercialRecordUrl = $this->uploadFileService->uploadFile($request->file('commercialRecord') , 'commercial-records');
             $activityLicenseUrl = $this->uploadFileService->uploadFile($request->file('activityLicense') , 'activity-licenses');
             $tradePictUrl = $this->uploadFileService->uploadFile($request->file('tradePict') , 'trade-picts');
@@ -76,19 +86,22 @@ class TaxPayerController extends Controller
         }
     }
 
-    /**
-     * Maps Arabic file type labels back to enum values
-     */
-    private function mapFileTypeToEnumValue(string $fileTypeInput): string
+    public function show(int $id , ShowTaxPayerUseCase $useCase)
     {
-        foreach (enFileType::cases() as $case) {
-            if ($fileTypeInput === $case->value || $fileTypeInput === $case->label()) {
-                return $case->value;
-            }
-        }
+        $taxPayer = $useCase->execute($id);
+        return ApiResponse::ok($taxPayer , 'تم جلب دافع الضرائب بنجاح.');
+    }
 
-        // If no match found, throw an exception
-        throw new Exception('Invalid file type value: ' . $fileTypeInput);
+    public function findTaxPayerByUserID(int $userID , FindTaxPayerByUserIDUseCase $useCase)
+    {
+        $taxPayer = $useCase->execute($userID);
+        return ApiResponse::ok($taxPayer , "تم جلب دافع الضرائب بال userId [{$userID}] بنجاح.");
+    }
+
+    public function destroy(int $id , DeleteTaxPayerUseCase $useCase)
+    {
+        $useCase->execute($id);
+        return ApiResponse::ok(null , "تم حذف دافع الضرائب مع ال ID [{$id}] بنجاح.");
     }
 
     private function convertToDomainUser($authUser): DomainUser

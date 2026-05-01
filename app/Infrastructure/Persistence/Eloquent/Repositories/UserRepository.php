@@ -67,6 +67,16 @@ class UserRepository implements UserRepositoryInterface
         return $this->mapToDomain($userData);
     }
 
+    public function findTaxPayerById(int $id): ?User
+    {
+        $userData = UserModel::with('department')->where('id' , $id)
+                                    ->where('role' , UserRole::Tax_Payer->value)->find($id);
+
+        if (!$userData) return null;
+
+        return $this->mapToDomain($userData);
+    }
+
     public function findByUserName(string $user_name): ?User
     {
         $userData = UserModel::with('department')->where('user_name', $user_name)->first();
@@ -106,8 +116,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function findByUserNameAndPhone(string $userName, string $phone): ?User
     {
-        $userData = UserModel::with('department')
-            ->where('user_name', $userName)
+        $userData = UserModel::where('user_name', $userName)
             ->where('phone', $phone)
             ->first();
 

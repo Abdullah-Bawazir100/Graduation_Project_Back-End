@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Infrastructure\Persistence\Eloquent\Models\TaxPayerModel;
+use Override;
 
 class TaxPayerRepository implements TaxPayerRepositoryInterface
 {
@@ -21,7 +22,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             'file_type' => $taxPayer->fileType->value,
         ]);
 
-        $model->load('user');
+        $model->load('users');
 
         return $this->mapToDomain($model);
     }
@@ -40,7 +41,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             'file_type' => $data['file_type'],
         ]);
 
-        $taxPayerModel->load('user');
+        $taxPayerModel->load('users');
 
         return $this->mapToDomain($taxPayerModel);
     }
@@ -53,19 +54,28 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     public function findById(int $id): ?TaxPayer
     {
-        $taxPayerModel = TaxPayerModel::with('user')->find($id);
+        $taxPayerModel = TaxPayerModel::with('users')->find($id);
+        if (!$taxPayerModel) {
+        return null;
+    }
         return $this->mapToDomain($taxPayerModel);
     }
 
     public function getAll()
     {
-        $taxPayers = TaxPayerModel::with('user')->get();
+        $taxPayers = TaxPayerModel::with('users')->get();
         return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
     }
 
     public function findByUserId(int $userId): ?TaxPayer
     {
-        $taxPayerModel = TaxPayerModel::with('user')->where('user_id', $userId)->first();
+        $taxPayerModel = TaxPayerModel::with('users')->where('user_id', $userId)->first();
+        return $this->mapToDomain($taxPayerModel);
+    }
+
+    public function findByUserName(string $userName): ?TaxPayer
+    {
+        $taxPayerModel = TaxPayerModel::with('users')->where('user_name', $userName)->first();
         return $this->mapToDomain($taxPayerModel);
     }
 

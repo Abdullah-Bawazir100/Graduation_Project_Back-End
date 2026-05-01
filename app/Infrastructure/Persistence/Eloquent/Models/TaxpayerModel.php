@@ -29,7 +29,7 @@ class TaxPayerModel extends Model
         'file_type' => enFileType::class
     ];
 
-    public function user(): BelongsTo
+    public function users(): BelongsTo
     {
         return $this->belongsTo(User::class , 'user_id');
     }

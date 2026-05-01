@@ -53,7 +53,8 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::get('statistics', [StatisticsController::class, 'getStatistics']);
 
     Route::apiResource('tax-collectors', TaxCollectorController::class);
-    
+
     Route::apiResource('tax-payers', TaxPayerController::class);
+    Route::get('tax-payer-by-userId/{id}', [TaxPayerController::class , 'findTaxPayerByUserID']);
 
 });

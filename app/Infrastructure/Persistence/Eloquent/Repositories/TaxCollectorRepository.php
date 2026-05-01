@@ -69,11 +69,6 @@ class TaxCollectorRepository implements TaxCollectorRepositoryInterface
     public function findByName(string $name): ?TaxCollector
     {
         $taxCollectorModel = TaxCollectorModel::with('jobType', 'department')->where('full_name', $name)->first();
-
-        if (!$taxCollectorModel) {
-            return null;
-        }
-
         return $this->mapToDomain($taxCollectorModel);
     }
 
