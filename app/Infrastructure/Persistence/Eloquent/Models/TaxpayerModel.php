@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Domain\TaxPayer\Enums\enFileType;
-use App\Models\User;
 
 class TaxPayerModel extends Model
 {
@@ -31,6 +30,11 @@ class TaxPayerModel extends Model
 
     public function users(): BelongsTo
     {
-        return $this->belongsTo(User::class , 'user_id');
+        return $this->belongsTo(UserModel::class , 'user_id');
+    }
+
+    public function companies()
+    {
+        return $this->hasMany(CompanyModel::class , 'tax_payer_id');
     }
 }

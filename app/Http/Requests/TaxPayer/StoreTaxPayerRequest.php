@@ -25,6 +25,7 @@ class StoreTaxPayerRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // User fields
             'firstName'    => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'lastName'     => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'idCard'       => ['required', 'file', 'mimes:pdf' , 'max:5242880'],
@@ -33,24 +34,38 @@ class StoreTaxPayerRequest extends FormRequest
             'role' => ['required' , Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
             'departmentID' => ['required', 'integer', 'exists:departments,id'],
 
-
+            // Taxpayer fields
             'commercialRecord' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240', // Max 10MB
             'activityLicense' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240',
             'tradePict' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240',
             'insuranceCard' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240',
             'propertyDocPict' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240',
             'fileType' => ['required' , Rule::in(array_map(fn($r) => $r->value, enFileType::cases()))],
+
+            // Company fields
+            'articlesOfIncorporation' => [
+                Rule::requiredIf(fn() => $this->fileType === enFileType::Company->value),
+                'file',
+                'mimes:jpeg,png,jpg,pdf',
+                'max:10240',
+            ],
+
+            'govemorLicense' => [
+                Rule::requiredIf(fn() => $this->fileType === enFileType::Company->value),
+                'file',
+                'mimes:jpeg,png,jpg,pdf',
+                'max:10240',
+            ],
+
+            'partnersIDCards' => [
+                Rule::requiredIf(fn() => $this->fileType === enFileType::Company->value),
+                'file',
+                'mimes:jpeg,png,jpg,pdf',
+                'max:10240',
+            ],
+
         ];
     }
-
-    // protected function passedValidation()
-    // {
-    //     $this->merge([
-    //         'role' => UserRole::from($this->role),
-    //         'fileType' => enFileType::from($this->fileType),
-    //     ]);
-    // }
-
 
     public function messages(): array
     {

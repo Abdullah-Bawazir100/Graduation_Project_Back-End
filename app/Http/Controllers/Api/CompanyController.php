@@ -2,38 +2,36 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\TaxPayer\StoreTaxPayerRequest;
+use App\Application\Company\DTOs\CompanyDTOs;
+use App\Application\Company\UseCases\CreateCompanyUseCase;
 use App\Application\TaxPayer\DTOs\TaxPayerDTOs;
-use App\Application\TaxPayer\UseCases\CreateTaxPayerWithUserUseCase;
-use App\Application\TaxPayer\UseCases\DeleteTaxPayerUseCase;
-use App\Application\TaxPayer\UseCases\FindTaxPayerByUserIDUseCase;
-use App\Application\TaxPayer\UseCases\ListTaxPayersUseCase;
-use App\Application\TaxPayer\UseCases\ShowTaxPayerUseCase;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\Services\UploadFileService;
 use App\Domain\Department\Entities\Department;
 use App\Domain\TaxPayer\Enums\enFileType;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\TaxPayer\StoreTaxPayerRequest;
 use App\Domain\User\Entities\User as DomainUser;
 use App\Domain\User\Enums\UserRole;
 use App\Http\Responses\ApiResponse;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class TaxPayerController extends Controller
+class CompanyController extends Controller
 {
     public function __construct(
-        private UploadFileService $uploadFileService,
+        private UploadFileService $uploadFileService
+    )
+    {}
 
-    ) {}
-
-    public function index(ListTaxPayersUseCase $useCase): ApiResponse
+    public function index()
     {
-        $taxPayers = $useCase->execute();
-        return ApiResponse::ok($taxPayers , 'تم جلب دافعي الضرائب بنجاح.');
+        //
     }
 
-    public function store(StoreTaxPayerRequest $request , CreateTaxPayerWithUserUseCase $useCase): ApiResponse
+
+    public function store(StoreTaxPayerRequest $request , CreateCompanyUseCase $useCase)
     {
         try {
             $authUser = Auth::user();
@@ -52,6 +50,10 @@ class TaxPayerController extends Controller
             $tradePictUrl = $this->uploadFileService->uploadFile($request->file('tradePict') , 'trade-picts');
             $insuranceCardUrl = $this->uploadFileService->uploadFile($request->file('insuranceCard') , 'insurance-cards');
             $propertyDocPictUrl = $this->uploadFileService->uploadFile($request->file('propertyDocPict') , 'property-docs-picts');
+
+            $articlesOfIncorporationUrl = $this->uploadFileService->uploadFile($request->file('articlesOfIncorporation') , 'articles-of-incorporation');
+            $govemorLicenseUrl = $this->uploadFileService->uploadFile($request->file('govemorLicense') , 'govemor-license');
+            $partnersIDCardsUrl = $this->uploadFileService->uploadFile($request->file('partnersIDCards') , 'partners-id-cards');
 
             $userDTO = new UserDTO(
                 id: null,
@@ -77,31 +79,37 @@ class TaxPayerController extends Controller
                 fileType: enFileType::from($request->fileType),
             );
 
-            $result = $useCase->execute($taxPayerDTO , $userDTO , $actor);
+            $companyDTO = new CompanyDTOs(
+                articlesOfIncorporation: $articlesOfIncorporationUrl,
+                govemorLicense: $govemorLicenseUrl,
+                partnersIDCards: $partnersIDCardsUrl,
+            );
 
-            return ApiResponse::created($result , 'تم إنشاء دافع الضرائب مع بنجاح.');
+            $result = $useCase->execute($companyDTO , $taxPayerDTO , $userDTO , $actor);
+
+            return ApiResponse::created($result , 'تم إنشاء دافع الضرائب مع ملف شركة بنجاح.');
 
         } catch (Exception $e) {
             return ApiResponse::serverError($e->getMessage());
         }
     }
 
-    public function show(int $id , ShowTaxPayerUseCase $useCase)
+
+    public function show(string $id)
     {
-        $taxPayer = $useCase->execute($id);
-        return ApiResponse::ok($taxPayer , 'تم جلب دافع الضرائب بنجاح.');
+        //
     }
 
-    public function findTaxPayerByUserID(int $userID , FindTaxPayerByUserIDUseCase $useCase)
+
+    public function update(Request $request, string $id)
     {
-        $taxPayer = $useCase->execute($userID);
-        return ApiResponse::ok($taxPayer , "تم جلب دافع الضرائب بال userId [{$userID}] بنجاح.");
+        //
     }
 
-    public function destroy(int $id , DeleteTaxPayerUseCase $useCase)
+
+    public function destroy(string $id)
     {
-        $useCase->execute($id);
-        return ApiResponse::ok(null , "تم حذف دافع الضرائب مع ال ID [{$id}] بنجاح.");
+        //
     }
 
     private function convertToDomainUser($authUser): DomainUser

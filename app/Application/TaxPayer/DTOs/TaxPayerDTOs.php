@@ -8,7 +8,7 @@ use App\Domain\User\Entities\User;
 class TaxPayerDTOs
 {
     public function __construct(
-        public int $userId,
+        public ?int $userId,
         public ?string $commercialRecord,
         public ?string $activityLicense,
         public ?string $tradePict,

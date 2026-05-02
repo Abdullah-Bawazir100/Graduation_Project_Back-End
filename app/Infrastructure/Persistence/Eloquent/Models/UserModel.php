@@ -42,6 +42,16 @@ class UserModel extends Authenticatable
         );
     }
 
+    public function taxPayers()
+    {
+        return $this->hasMany(TaxPayerModel::class , 'user_id');
+    }
+
+    public function companies()
+    {
+        return $this->hasMany(CompanyModel::class , 'tax_payer_id');
+    }
+
     public function creator()
     {
         return $this->belongsTo(
