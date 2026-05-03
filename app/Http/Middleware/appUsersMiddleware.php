@@ -18,6 +18,7 @@ class appUsersMiddleware
     {
         $user = Auth::user();
 
+        // Check if user is logon
         if (!$user) {
             return response()->json([
                 'message' => 'غير مصرح.',
@@ -25,12 +26,13 @@ class appUsersMiddleware
             ], 403);
         }
 
-
+        // Admin Permissions
         if($user->role === UserRole::Admin)
         {
             return $next($request);
         }
 
+        // Manager Permissions
         if($user->role === UserRole::Manager && $request->isMethod('delete'))
         {
             $routeName = $request->route()->getName();
@@ -52,6 +54,7 @@ class appUsersMiddleware
             ], 403);
         }
 
+        // Employee Permissions
         if($user->role === UserRole::Employee && ($request->isMethod('delete')
             || $request->isMethod('put') || $request->isMethod('patch')))
         {
@@ -61,6 +64,7 @@ class appUsersMiddleware
             ], 403);
         }
 
+        // Collectors-Manager Permissions
         if($user->role === UserRole::Collectors_Manager)
         {
             $routeName = $request->route()->getName();
@@ -72,20 +76,21 @@ class appUsersMiddleware
                 return $next($request);
             }
 
-            elseif($routeName !== 'tax-collectors.store')
+            elseif($routeName === 'tax-collectors.destroy')
             {
                 return response()->json([
-                'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحيات على الأقسام الأخرى.',
+                'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحية (الحذف).',
                 'status' => 403,
             ], 403);
             }
 
             return response()->json([
-                'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحية (التعديل - الحذف).',
+                'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحيات على الأقسام الأخرى.',
                 'status' => 403,
             ], 403);
         }
 
+        // Tax-Payers Permissions
         if($user->role === UserRole::Tax_Payer)
         {
             $routeName = $request->route()->getName();
@@ -96,7 +101,7 @@ class appUsersMiddleware
 
             else {
                 return response()->json([
-                'message' => 'غير مصرح : لا يمكن للمكلف التحكم أقسام أخرى من النظام.',
+                'message' => 'غير مصرح : لا يمكن للمكلف التحكم في أقسام أخرى من النظام.',
                 'status' => 403,
             ], 403);
             }
