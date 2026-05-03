@@ -3,7 +3,6 @@
 namespace App\Application\Department\UseCases;
 
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
-use App\Domain\Department\Entities\Department;
 
 class MoveUsersUseCase
 {
@@ -14,7 +13,7 @@ class MoveUsersUseCase
 
     public function execute(int $oldDepartmentId, int $newDepartmentId): void
     {
-        
+
         $oldDepartment = $this->departmentRepository->findById($oldDepartmentId);
         if (!$oldDepartment) {
             throw new \DomainException("القسم القديم [$oldDepartmentId] غير موجود.");

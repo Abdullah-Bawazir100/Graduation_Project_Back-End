@@ -25,10 +25,6 @@ class DepartmentRepository implements DepartmentRepositoryInterface
     {
         $departmentModel = DepartmentModel::find($department->id);
 
-        if (!$departmentModel) {
-            throw new \Exception("No department found with ID: [$department->id]");
-        }
-
         $departmentModel->name = $department->name;
         $departmentModel->save();
 
@@ -81,12 +77,6 @@ class DepartmentRepository implements DepartmentRepositoryInterface
 
     public function moveUsersToAnotherDepartment(int $oldDepartmentId, int $newDepartmentId): void
     {
-        $targetDepartment = DepartmentModel::find($newDepartmentId);
-
-        if (!$targetDepartment) {
-            throw new \DomainException("Target department with ID [$newDepartmentId] does not exist.");
-        }
-
         // Update all users from old department to new department
         UserModel::where('department_id', $oldDepartmentId)->update(['department_id' => $newDepartmentId]);
     }

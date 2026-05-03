@@ -14,16 +14,16 @@ class MoveUsersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'department_id' => 'required|integer|exists:departments,id',
+            'departmentID' => 'required|integer|exists:departments,id',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'department_id.required' => 'القسم الجديد مطلوب.',
-            'department_id.integer' => 'يجب أن يكون القسم الجديد رقمًا صحيحًا.',
-            'department_id.exists' => 'القسم الجديد غير موجود.',
+            'departmentID.required' => 'القسم الجديد مطلوب.',
+            'departmentID.integer' => 'يجب أن يكون القسم الجديد رقمًا صحيحًا.',
+            'departmentID.exists' => 'القسم الجديد غير موجود.',
         ];
     }
 }

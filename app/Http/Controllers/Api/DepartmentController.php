@@ -85,7 +85,7 @@ class DepartmentController extends Controller
         MoveUsersRequest $request,
         MoveUsersUseCase $useCase
     ) {
-        $newDepartmentId = $request->department_id;
+        $newDepartmentId = $request->departmentID;
 
         $useCase->execute($id, $newDepartmentId);
 
