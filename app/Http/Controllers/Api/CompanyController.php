@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Application\Company\DTOs\CompanyDTOs;
 use App\Application\Company\UseCases\CreateCompanyUseCase;
+use App\Application\Company\UseCases\DeleteCompanyUseCase;
+use App\Application\Company\UseCases\FindByIdUseCase;
+use App\Application\Company\UseCases\ListCompaniesUseCase;
 use App\Application\TaxPayer\DTOs\TaxPayerDTOs;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\Services\UploadFileService;
@@ -25,9 +28,10 @@ class CompanyController extends Controller
     )
     {}
 
-    public function index()
+    public function index(ListCompaniesUseCase $useCase)
     {
-        //
+        $companies = $useCase->execute();
+        return ApiResponse::ok($companies , "تم جلب ملفات الشركات بنجاح.");
     }
 
 
@@ -95,9 +99,10 @@ class CompanyController extends Controller
     }
 
 
-    public function show(string $id)
+    public function show(int $id , FindByIdUseCase $useCase)
     {
-        //
+        $company = $useCase->execute($id);
+        return ApiResponse::ok($company , "تم جلب ملف الشركة بنجاح.");
     }
 
 
@@ -107,9 +112,10 @@ class CompanyController extends Controller
     }
 
 
-    public function destroy(string $id)
+    public function destroy(int $id , DeleteCompanyUseCase $useCase)
     {
-        //
+        $useCase->execute($id);
+        return ApiResponse::ok(null , "تم حذف ملف الشركة مع ال ID [{$id}] بنجاح.");
     }
 
     private function convertToDomainUser($authUser): DomainUser

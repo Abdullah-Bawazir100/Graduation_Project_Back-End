@@ -17,8 +17,9 @@ class UpdateUserUseCase
 
     public function execute(User $actor, int $userId, UserDTO $dto): User
     {
-        // Check authorization: Admins & Manager can update any user, non-admins & non-manager can only update themselves
-        if (($actor->role !== UserRole::Admin || $actor->role !== UserRole::Manager) && $actor->id !== $userId) {
+        // Check authorization: Admins & Manager can update any user, others can only update themselves
+        $isAdmin = ($actor->role === UserRole::Admin);
+        if (!$isAdmin && $actor->id !== $userId) {
             throw new \DomainException('الوصول ممنوع : أنت لا تمتلك صلاحية تحديث بيانات المستخدمين الأخرين.');
         }
 
@@ -39,7 +40,7 @@ class UpdateUserUseCase
             password: $existingUser->password,
             createdBy: $existingUser->createdBy,
             department: $department,
-            role: UserRole::from($dto->role)
+            role: $dto->role,
         );
 
         return $this->userRepository->update($updatedUser);

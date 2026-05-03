@@ -11,7 +11,8 @@ class ActivityLogService
     {
         $query = Activity::with('causer')
             ->whereIn('log_name', ['user', 'department','activity_type',
-                        'payment_type' , 'region' , 'district' , 'job_type']);
+                        'payment_type' , 'region' , 'district' , 'job_type',
+                        'tax_collector' , 'tax_payer' , 'company']);
 
         // Filters
         if (!empty($filters['user_id'])) {
@@ -121,9 +122,17 @@ class ActivityLogService
             'تحديث نوع وظيفة' => "تم تحديث نوع وظيفة." . ($new['name'] ?? ''),
             'حذف نوع وظيفة'  => "تم حذف نوع وظيفة." . ($old['name'] ?? ''),
 
-            'إنشاء جامع ضرائب' => "تم إنشاء جامع ضرائب جديد." . ($new['name'] ?? ''),
-            'تحديث جامع ضرائب' => "تم تحديث جامع ضرائب" . ($new['name'] ?? ''),
-            'حذف جامع ضرائب'  => "تم حذف جامع ضرائب" . ($old['name'] ?? ''),
+            'إنشاء مأمور' => "تم إنشاء مأمور جديد." . ($new['name'] ?? ''),
+            'تحديث مأمور' => "تم تحديث مأمور." . ($new['name'] ?? ''),
+            'حذف مأمور'  => "تم حذف مأمور." . ($old['name'] ?? ''),
+
+            'إنشاء مكلف' => "تم إنشاء مكلف جديد." . ($new['name'] ?? ''),
+            'تحديث مكلف' => "تم تحديث مكلف." . ($new['name'] ?? ''),
+            'حذف مكلف'  => "تم حذف مكلف." . ($old['name'] ?? ''),
+
+            'إنشاء مكلف مع ملف شركة' => "تم إنشاء مكلف  مع ملف شركة جديد." . ($new['name'] ?? ''),
+            'تحديث مكلف مع ملف شركة' => "تم تحديث مكلف مع ملف شركة" . ($new['name'] ?? ''),
+            'حذف مكلف مع ملف شركة'  => "تم حذف مكلف مع ملف شركة." . ($old['name'] ?? ''),
 
             default => $description,
         };

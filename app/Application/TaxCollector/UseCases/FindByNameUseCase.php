@@ -4,6 +4,7 @@ namespace App\Application\TaxCollector\UseCases;
 
 use App\Domain\TaxCollector\Repositories\TaxCollectorRepositoryInterface;
 use App\Domain\TaxCollector\Entities\TaxCollector;
+use DomainException;
 
 class FindByNameUseCase
 {
@@ -13,6 +14,11 @@ class FindByNameUseCase
 
     public function execute(string $name): ?TaxCollector
     {
-        return $this->taxCollectorRepository->findByName($name);
+        $taxCollector = $this->taxCollectorRepository->findByName($name);
+        if(!$taxCollector)
+        {
+            throw new DomainException('المأمور مع الأسم [' . $name . '] غير موجود.');
+        }
+        return $taxCollector;
     }
 }

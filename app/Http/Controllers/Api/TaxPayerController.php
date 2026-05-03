@@ -95,7 +95,7 @@ class TaxPayerController extends Controller
     public function findTaxPayerByUserID(int $userID , FindTaxPayerByUserIDUseCase $useCase)
     {
         $taxPayer = $useCase->execute($userID);
-        return ApiResponse::ok($taxPayer , "تم جلب دافع الضرائب بال userId [{$userID}] بنجاح.");
+        return ApiResponse::ok($taxPayer , "تم جلب المستخدم دافع الضرائب مع ال ID [{$userID}] بنجاح.");
     }
 
     public function destroy(int $id , DeleteTaxPayerUseCase $useCase)

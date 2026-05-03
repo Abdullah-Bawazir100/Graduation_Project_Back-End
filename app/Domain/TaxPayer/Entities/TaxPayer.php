@@ -8,7 +8,7 @@ class TaxPayer
 {
     public function __construct(
         public readonly ?int $id,
-        public int $userId,
+        public ?int $userId,
         public ?string $commercialRecord,
         public ?string $activityLicense,
         public ?string $tradePict,

@@ -4,6 +4,7 @@ namespace App\Application\TaxCollector\UseCases;
 
 use App\Domain\TaxCollector\Repositories\TaxCollectorRepositoryInterface;
 use App\Domain\TaxCollector\Entities\TaxCollector;
+use DomainException;
 
 class FindByIdUseCase
 {
@@ -13,6 +14,11 @@ class FindByIdUseCase
 
     public function execute(int $id): ?TaxCollector
     {
-        return $this->taxCollectorRepository->findById($id);
+        $taxCollector =  $this->taxCollectorRepository->findById($id);
+        if(!$taxCollector)
+        {
+            throw new DomainException('المأمور مع ال ID [' . $id . '] غير موجود.');
+        }
+        return $taxCollector;
     }
 }

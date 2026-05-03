@@ -21,6 +21,26 @@ class CompanyRepository implements CompanyRepositoryInterface
         return $this->mapToDomain($model);
     }
 
+    public function getAll()
+    {
+        $taxPayers = CompanyModel::with('taxPayer')->get();
+        return $taxPayers->map(fn(CompanyModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
+    public function findById(int $id): ?Company
+    {
+        $taxPayerModel = CompanyModel::with('taxpayer')->find($id);
+        if (!$taxPayerModel) {
+            return null;
+        }
+        return $this->mapToDomain($taxPayerModel);
+    }
+
+    public function delete(int $id)
+    {
+        CompanyModel::findOrFail($id)->delete();
+    }
+
     private function mapToDomain(CompanyModel $model): Company
     {
         return new Company(

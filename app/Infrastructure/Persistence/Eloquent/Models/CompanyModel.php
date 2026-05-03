@@ -5,10 +5,12 @@ namespace App\Infrastructure\Persistence\Eloquent\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class CompanyModel extends Model
 {
-    use HasFactory;
+    use HasFactory , LogsActivity;
 
     protected $table = 'companies';
 
@@ -26,5 +28,24 @@ class CompanyModel extends Model
     public function taxPayer(): BelongsTo
     {
         return $this->belongsTo(TaxPayerModel::class , 'tax_payer_id');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('company')
+            ->logOnly([
+                'first_name',
+                'last_name',
+                'user_name',
+                'department_id',
+                'role',
+            ])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
+                'created' => 'إنشاء مكلف مع ملف شركة',
+                'updated' => 'تحديث مكلف مع ملف شركة',
+                'deleted' => 'حذف مكلف مع ملف شركة',
+            });
     }
 }

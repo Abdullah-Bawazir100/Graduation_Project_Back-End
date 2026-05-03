@@ -46,9 +46,9 @@ class TaxCollectorModel extends Model
             ])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
-                'created' => 'إنشاء جامع ضرائب',
-                'updated' => 'تحديث جامع ضرائب',
-                'deleted' => 'حذف جامع ضرائب',
+                'created' => 'إنشاء مأمور',
+                'updated' => 'تحديث مأمور',
+                'deleted' => 'حذف مأمور',
             });
     }
 }

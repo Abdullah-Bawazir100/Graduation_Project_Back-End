@@ -15,6 +15,7 @@ use App\Domain\User\Entities\User as DomainUser;
 use App\Http\Responses\ApiResponse;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Domain\Department\Entities\Department;
+use App\Domain\User\Enums\UserRole;
 use Illuminate\Auth\AuthenticationException;
 use DomainException;
 
@@ -75,6 +76,9 @@ class UserController extends Controller
             );
         }
 
+        $roleInput = $request->input('role');
+        $role = $roleInput !== null ? UserRole::from($roleInput) : UserRole::from($existingUser->role);
+        
         $dto = new UserDTO(
             id: $id,
             firstName: $firstName,
@@ -86,7 +90,7 @@ class UserController extends Controller
             image: $imageUrl,
             departmentID: (int)($request->departmentID ?? $existingUser->departmentID),
             createdBy: $existingUser->createdBy,
-            role: $request->role ?? $existingUser->role
+            role: $role
         );
 
         /** @var UserResponseDTO $user */

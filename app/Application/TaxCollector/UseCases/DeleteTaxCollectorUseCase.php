@@ -16,7 +16,7 @@ class DeleteTaxCollectorUseCase
         $taxCollector = $this->taxCollectorRepository->findById($id);
 
         if (!$taxCollector) {
-            throw new DomainException('جامع الضرائب مع ال ID [' . $id . '] غير موجود.');
+            throw new DomainException('المأمور مع ال ID [' . $id . '] غير موجود.');
         }
 
         $this->taxCollectorRepository->delete($id);

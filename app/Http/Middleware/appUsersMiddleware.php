@@ -42,6 +42,7 @@ class appUsersMiddleware
                 'regions.destroy' => 'لا يمكن للمدير حذف المناطق.',
                 'districts.destroy' => 'لا يمكن للمدير حذف الحي.',
                 'tax-collectors.destroy' =>  'لا يمكن للمدير حذف جامع الضرائب.',
+                'tax-payers.destroy' =>  'لا يمكن للمدير حذف دافع الضرائب.',
             ];
 
 
@@ -85,9 +86,20 @@ class appUsersMiddleware
             ], 403);
         }
 
-        if($user->role === UserRole::Tax_payer)
+        if($user->role === UserRole::Tax_Payer)
         {
             $routeName = $request->route()->getName();
+            if(($routeName === 'tax-payers.show' || $routeName === 'tax-payers.update'))
+            {
+                return $next($request);
+            }
+
+            else {
+                return response()->json([
+                'message' => 'غير مصرح : لا يمكن للمكلف التحكم أقسام أخرى من النظام.',
+                'status' => 403,
+            ], 403);
+            }
 
         }
 

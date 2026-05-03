@@ -27,18 +27,18 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         return $this->mapToDomain($model);
     }
 
-    public function update(array $data, int $id): TaxPayer
+    public function update(TaxPayer $taxPayer , int $id): TaxPayer
     {
         $taxPayerModel = TaxPayerModel::find($id);
 
         $taxPayerModel->update([
-            'user_id' => $data['user_id'],
-            'commercial_record' => $data['commercial_record'],
-            'activity_license' => $data['activity_license'],
-            'trade_pict' => $data['trade_pict'],
-            'insurance_card' => $data['insurance_card'],
-            'property_doc_pict' => $data['property_doc_pict'],
-            'file_type' => $data['file_type'],
+            'user_id' => $taxPayer->userId,
+            'commercial_record' => $taxPayer->commercialRecord,
+            'activity_license' => $taxPayer->activityLicense,
+            'trade_pict' => $taxPayer->tradePict,
+            'insurance_card' => $taxPayer->insuranceCard,
+            'property_doc_pict' => $taxPayer->propertyDocPict,
+            'file_type' => $taxPayer->fileType,
         ]);
 
         $taxPayerModel->load('users');

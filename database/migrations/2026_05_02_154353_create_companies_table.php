@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('articles_of_incorporation');
             $table->string('govemor_license');
             $table->string('partners_id_cards');
-            $table->foreignId('tax_payer_id')->constrained('tax_payers' , 'id')->cascadeOnDelete();
+            $table->foreignId('tax_payer_id')->constrained('tax_payers')->cascadeOnDelete();
             $table->timestamps();
         });
     }

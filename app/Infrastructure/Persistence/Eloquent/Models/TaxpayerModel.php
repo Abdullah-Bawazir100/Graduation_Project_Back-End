@@ -2,14 +2,16 @@
 
 namespace App\Infrastructure\Persistence\Eloquent\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Domain\TaxPayer\Enums\enFileType;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class TaxPayerModel extends Model
 {
-    use HasFactory;
+    use Notifiable , LogsActivity;
 
     protected $table = 'tax_payers';
 
@@ -36,5 +38,24 @@ class TaxPayerModel extends Model
     public function companies()
     {
         return $this->hasMany(CompanyModel::class , 'tax_payer_id');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('tax_payer')
+            ->logOnly([
+                'first_name',
+                'last_name',
+                'user_name',
+                'department_id',
+                'role',
+            ])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
+                'created' => 'إنشاء مكلف',
+                'updated' => 'تحديث مكلف',
+                'deleted' => 'حذف مكلف',
+            });
     }
 }
