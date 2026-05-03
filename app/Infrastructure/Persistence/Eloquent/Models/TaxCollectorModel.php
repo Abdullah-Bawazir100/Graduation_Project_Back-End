@@ -38,11 +38,11 @@ class TaxCollectorModel extends Model
         return LogOptions::defaults()
             ->useLogName('tax_collector')
             ->logOnly([
-                'first_name',
-                'last_name',
-                'user_name',
-                'department_id',
-                'role',
+                'full_name',
+                'id_card',
+                'phone',
+                'job_type_id',
+                'dept_id',
             ])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {

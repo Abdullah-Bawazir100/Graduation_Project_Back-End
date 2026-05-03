@@ -16,7 +16,7 @@ class StoreTaxCollectorRequest extends FormRequest
         return [
             'fullName' => 'required|string|max:255|not_regex:/^\d+$/',
             'idCard' => 'required|file|mimes:pdf|max:5120', // 5MB max, PDF only
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|string|min:9',
             'jobTypeId' => 'required|integer|exists:job_types,id',
             'deptID' => 'required|integer|exists:departments,id',
         ];
@@ -38,7 +38,7 @@ class StoreTaxCollectorRequest extends FormRequest
 
             'phone.required' => 'رقم الهاتف مطلوب',
             'phone.string' => 'يجب أن يكون رقم الهاتف نصًا',
-            'phone.max' => 'لا يمكن أن يتجاوز رقم الهاتف 20 حرفًا',
+            'phone.min'      => 'رقم الهاتف يجب على الأقل أن يكون 9 أرقام.',
 
             'jobTypeId.required' => 'نوع الوظيفة مطلوب',
             'jobTypeId.integer' => 'يجب أن يكون نوع الوظيفة رقمًا',

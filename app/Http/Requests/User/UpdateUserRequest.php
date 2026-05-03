@@ -24,8 +24,8 @@ class UpdateUserRequest extends FormRequest
             'firstName'    => ['sometimes', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'lastName'     => ['sometimes', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'idCard'       => ['sometimes', 'file', 'mimes:pdf'],
-            'phone'         => ['sometimes', 'string', 'max:20'],
-            'image'         => ['sometimes', 'image', 'mimes:png,jpg,jpeg,gif' , 'max:2048'],
+            'phone'         => ['sometimes', 'string', 'min:9'],
+            'image'         => ['sometimes', 'image', 'mimes:png,jpg,jpeg,gif' , 'max:5012'],
             'role'          => ['sometimes', Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
             'departmentID' => ['sometimes', 'integer', 'exists:departments,id'],
         ];
@@ -46,9 +46,9 @@ class UpdateUserRequest extends FormRequest
             'idCard.mimes' => 'يجب أن يكون الملف بصيغة PDF فقط.',
 
             'phone.string' => 'رقم الهاتف يجب أن يكون نصًا.',
-            'phone.max'    => 'رقم الهاتف يجب ألا يتجاوز 20 رقمًا.',
+            'phone.min'      => 'رقم الهاتف يجب على الأقل أن يكون 9 أرقام.',
 
-            'image.max' => 'حجم الصورة يجب ألا يتجاوز 2 MB .',
+            'image.max' => 'حجم الصورة يجب ألا يتجاوز 5 MB .',
 
             'role.in' => 'الدور المحدد غير صالح.',
 

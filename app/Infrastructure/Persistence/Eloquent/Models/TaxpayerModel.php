@@ -30,7 +30,8 @@ class TaxPayerModel extends Model
         'file_type' => enFileType::class
     ];
 
-    public function users(): BelongsTo
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(UserModel::class , 'user_id');
     }
@@ -45,11 +46,13 @@ class TaxPayerModel extends Model
         return LogOptions::defaults()
             ->useLogName('tax_payer')
             ->logOnly([
-                'first_name',
-                'last_name',
-                'user_name',
-                'department_id',
-                'role',
+                'user_id',
+                'commercial_record',
+                'activity_license',
+                'trade_pict',
+                'insurance_card',
+                'property_doc_pict',
+                'file_type',
             ])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {

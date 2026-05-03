@@ -35,11 +35,10 @@ class CompanyModel extends Model
         return LogOptions::defaults()
             ->useLogName('company')
             ->logOnly([
-                'first_name',
-                'last_name',
-                'user_name',
-                'department_id',
-                'role',
+                'tax_payer_id',
+                'articles_of_incorporation',
+                'govemor_license',
+                'partners_id_cards',
             ])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {

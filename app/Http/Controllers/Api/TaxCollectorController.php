@@ -25,11 +25,12 @@ class TaxCollectorController extends Controller
     public function index(ListTaxCollectorUseCase $useCase): ApiResponse
     {
         $taxCollectors = $useCase->execute();
-        return ApiResponse::ok($taxCollectors, 'تم جلب جامعي الضرائب بنجاح.');
+        return ApiResponse::ok($taxCollectors, 'تم جلب المأمورين بنجاح.');
     }
 
     public function store(StoreTaxCollectorRequest $request , CreateTaxCollectorUseCase $useCase): ApiResponse
     {
+        $idCardUrl = null;
         if ($request->hasFile('idCard')) {
             $idCardUrl = $this->uploadFileService->uploadFile($request->file('idCard') , 'id-cards');
         }
@@ -45,7 +46,7 @@ class TaxCollectorController extends Controller
 
         $taxCollector = $useCase->execute($dto);
 
-        return ApiResponse::created($taxCollector, 'تم إنشاء جامع الضرائب بنجاح.');
+        return ApiResponse::created($taxCollector, 'تم إنشاء المأمور بنجاح.');
     }
 
     public function show(int $id): ApiResponse
@@ -53,17 +54,17 @@ class TaxCollectorController extends Controller
         $taxCollector = $this->findTaxCollectorById->execute($id);
 
         if (!$taxCollector) {
-            return ApiResponse::notFound([] , 'جامع الضرائب مع ال ID [' . $id . '] غير موجود.');
+            return ApiResponse::notFound([] , 'المأمور مع ال ID [' . $id . '] غير موجود.');
         }
 
-        return ApiResponse::ok($taxCollector, 'تم جلب جامع الضرائب بنجاح.');
+        return ApiResponse::ok($taxCollector, 'تم جلب المأمور بنجاح.');
     }
 
     public function update(int $id , UpdateTaxCollectorRequest $request, UpdateTaxCollectorUseCase $useCase): ApiResponse
     {
         $existingUser = $this->findTaxCollectorById->execute($id);
         if  (!$existingUser) {
-            return ApiResponse::notFound([] , 'جامع الضرائب مع ال ID [' . $id . '] غير موجود.');
+            return ApiResponse::notFound([] , 'المأمور مع ال ID [' . $id . '] غير موجود.');
         }
 
         $idCardUrl = $existingUser->idCard;
@@ -82,13 +83,13 @@ class TaxCollectorController extends Controller
 
         $taxCollector = $useCase->execute($id , $dto);
 
-        return ApiResponse::ok($taxCollector, 'تم تحديث بيانات جامع الضرائب بنجاح.');
+        return ApiResponse::ok($taxCollector, 'تم تحديث بيانات المأمور بنجاح.');
     }
 
     public function destroy(int $id , DeleteTaxCollectorUseCase $useCase): ApiResponse
     {
         $useCase->execute($id);
-        return ApiResponse::ok([], 'تم حذف جامع الضرائب مع ال ID [' . $id . '] بنجاح.');
+        return ApiResponse::ok([], 'تم حذف المأمور مع ال ID [' . $id . '] بنجاح.');
     }
 
 }

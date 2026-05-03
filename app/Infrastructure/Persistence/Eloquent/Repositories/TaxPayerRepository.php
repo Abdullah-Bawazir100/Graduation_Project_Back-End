@@ -22,14 +22,17 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             'file_type' => $taxPayer->fileType->value,
         ]);
 
-        $model->load('users');
+        $model->load('user');
 
         return $this->mapToDomain($model);
     }
 
-    public function update(TaxPayer $taxPayer , int $id): TaxPayer
+    public function update(TaxPayer $taxPayer , int $id): ?TaxPayer
     {
         $taxPayerModel = TaxPayerModel::find($id);
+        if (!$taxPayerModel) {
+            return null;
+        }
 
         $taxPayerModel->update([
             'user_id' => $taxPayer->userId,
@@ -38,10 +41,10 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             'trade_pict' => $taxPayer->tradePict,
             'insurance_card' => $taxPayer->insuranceCard,
             'property_doc_pict' => $taxPayer->propertyDocPict,
-            'file_type' => $taxPayer->fileType,
+            'file_type' => $taxPayer->fileType->value,
         ]);
 
-        $taxPayerModel->load('users');
+        $taxPayerModel->load('user');
 
         return $this->mapToDomain($taxPayerModel);
     }
@@ -54,28 +57,31 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     public function findById(int $id): ?TaxPayer
     {
-        $taxPayerModel = TaxPayerModel::with('users')->find($id);
+
+        $taxPayerModel = TaxPayerModel::with('user')->find($id);
+
         if (!$taxPayerModel) {
-        return null;
-    }
+            return null;
+        }
+
         return $this->mapToDomain($taxPayerModel);
     }
 
     public function getAll()
     {
-        $taxPayers = TaxPayerModel::with('users')->get();
+        $taxPayers = TaxPayerModel::with('user')->get();
         return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
     }
 
     public function findByUserId(int $userId): ?TaxPayer
     {
-        $taxPayerModel = TaxPayerModel::with('users')->where('user_id', $userId)->first();
+        $taxPayerModel = TaxPayerModel::with('user')->where('user_id', $userId)->first();
         return $this->mapToDomain($taxPayerModel);
     }
 
     public function findByUserName(string $userName): ?TaxPayer
     {
-        $taxPayerModel = TaxPayerModel::with('users')->where('user_name', $userName)->first();
+        $taxPayerModel = TaxPayerModel::with('user')->where('user_name', $userName)->first();
         return $this->mapToDomain($taxPayerModel);
     }
 

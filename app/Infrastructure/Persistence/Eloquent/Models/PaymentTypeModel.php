@@ -15,7 +15,7 @@ class PaymentTypeModel extends Model
     {
         return LogOptions::defaults()
             ->useLogName('payment_type')
-            ->logOnly(['name'])
+            ->logOnly(['name' , 'note'])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
                 'created' => 'إنشاء نوع سداد',

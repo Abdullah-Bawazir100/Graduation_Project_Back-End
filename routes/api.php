@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\TaxCollectorController;
-use App\Http\Controllers\Api\TaxPayerController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
@@ -14,6 +13,7 @@ use App\Http\Controllers\Api\JobTypeController;
 use App\Http\Controllers\Api\PaymentTypeController;
 use App\Http\Controllers\Api\RegionController;
 use App\Http\Controllers\Api\StatisticsController;
+use App\Http\Controllers\Api\TaxPayerController;
 use App\Http\Middleware\appUsersMiddleware;
 use Illuminate\Support\Facades\Route;
 

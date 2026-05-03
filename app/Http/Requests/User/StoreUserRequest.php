@@ -20,8 +20,8 @@ class StoreUserRequest extends FormRequest
             'firstName'    => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'lastName'     => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'idCard'       => ['required', 'file', 'mimes:pdf' , 'max:5242880'],
-            'phone'         => ['required', 'string', 'max:20' , 'unique:app_users,phone'],
-            'image' => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:5242880'],
+            'phone'         => ['required', 'string', 'min:9' , 'unique:app_users,phone'],
+            'image' => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:5012'],
             'role' => ['required' , Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
             'departmentID' => ['required', 'integer', 'exists:departments,id'],
         ];
@@ -47,11 +47,11 @@ class StoreUserRequest extends FormRequest
 
             'phone.required' => 'رقم الهاتف مطلوب.',
             'phone.string'   => 'رقم الهاتف يجب أن يكون نصًا.',
-            'phone.max'      => 'رقم الهاتف يجب ألا يتجاوز 20 رقمًا.',
+            'phone.min'      => 'رقم الهاتف يجب على الأقل أن يكون 9 أرقام.',
             'phone.unique'   => 'رقم الهاتف موجود بالفعل.',
 
             'image.required' => 'صورة الشخص مطلوبة.',
-            'image.max' => 'حجم الصورة يجب ألا يتجاوز 2 MB .',
+            'image.max' => 'حجم الصورة يجب ألا يتجاوز 5 MB .',
 
             'role.required' => 'الدور مطلوب.',
             'role.in' => 'الدور المحدد غير صالح.',

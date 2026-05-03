@@ -23,7 +23,7 @@ class DistrictModel extends Model
     {
         return LogOptions::defaults()
             ->useLogName('district')
-            ->logOnly(['name'])
+            ->logOnly(['name' , 'region_id'])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
                 'created' => 'إنشاء حي ',
