@@ -4,6 +4,7 @@ namespace App\Application\JobType\UseCases;
 
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Domain\JobType\Repositories\JobTypeRepositoryInterface;
+use DomainException;
 
 class DeleteJobTypeUseCase
 {
@@ -16,7 +17,7 @@ class DeleteJobTypeUseCase
         $jobType = $this->job_type_repository->findById($id);
 
         if (!$jobType) {
-            throw new \DomainException("نوع الوظيفة مع ال ID [{$id}] غير موجود.");
+            throw new DomainException("نوع الوظيفة مع ال ID [{$id}] غير موجود.");
         }
 
         $this->job_type_repository->delete($id);

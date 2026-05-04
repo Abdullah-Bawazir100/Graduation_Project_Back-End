@@ -4,6 +4,7 @@ namespace App\Application\JobType\UseCases;
 
 use App\Domain\JobType\Entities\JobType;
 use App\Domain\JobType\Repositories\JobTypeRepositoryInterface;
+use DomainException;
 
 class ShowJobTypeUseCase
 {
@@ -14,7 +15,7 @@ class ShowJobTypeUseCase
         $jobType = $this->job_type_repository->findById($id);
 
         if (!$jobType) {
-            throw new \Exception("نوع الوظيفة مع ال ID [{$id}] غير موجود.");
+            throw new DomainException("نوع الوظيفة مع ال ID [{$id}] غير موجود.");
         }
 
         return $jobType;

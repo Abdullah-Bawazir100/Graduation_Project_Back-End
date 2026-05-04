@@ -5,6 +5,7 @@ namespace App\Application\JobType\UseCases;
 use App\Application\JobType\DTOs\JobTypeDTOs;
 use App\Domain\JobType\Entities\JobType;
 use App\Domain\JobType\Repositories\JobTypeRepositoryInterface;
+use DomainException;
 
 class UpdateJobTypeUseCase
 {
@@ -17,7 +18,7 @@ class UpdateJobTypeUseCase
         $jobType = $this->job_type_repository->findById($id);
 
         if (!$jobType) {
-            throw new \Exception("نوع الوظيفة مع ال ID [{$id} غير موجود.");
+            throw new DomainException("نوع الوظيفة مع ال ID [{$id} غير موجود.");
         }
 
         $name = $jobTypeDTOs->name ?? $jobType->name;
@@ -26,7 +27,7 @@ class UpdateJobTypeUseCase
             $name !== $jobType->name &&
             $this->job_type_repository->existsByName($name)
         ) {
-            throw new \DomainException("نوع الوظيفة مع الأسم [ $name} ]موجود بالفعل.");
+            throw new DomainException("نوع الوظيفة مع الأسم [ $name} ]موجود بالفعل.");
         }
 
         return $this->job_type_repository->update(

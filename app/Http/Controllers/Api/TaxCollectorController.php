@@ -10,10 +10,12 @@ use App\Application\TaxCollector\UseCases\ShowTaxCollectorUseCase;
 use App\Application\TaxCollector\UseCases\FindByIdUseCase;
 use App\Application\TaxCollector\UseCases\ListTaxCollectorUseCase;
 use App\Application\TaxCollector\DTOs\TaxCollectorDTOs;
+use App\Application\TaxCollector\UseCases\MoveTaxCollectorsToAnotherDeptUseCase;
 use App\Http\Requests\TaxCollector\StoreTaxCollectorRequest;
 use App\Http\Requests\TaxCollector\UpdateTaxCollectorRequest;
 use App\Http\Responses\ApiResponse;
 use App\Application\User\Services\UploadFileService;
+use App\Http\Requests\TaxCollector\MoveTaxCollectorsRequest;
 
 class TaxCollectorController extends Controller
 {
@@ -90,6 +92,14 @@ class TaxCollectorController extends Controller
     {
         $useCase->execute($id);
         return ApiResponse::ok([], 'تم حذف المأمور مع ال ID [' . $id . '] بنجاح.');
+    }
+
+    public function moveTaxCollectorsToAnotherDepartment(int $id,
+    MoveTaxCollectorsRequest $request , MoveTaxCollectorsToAnotherDeptUseCase $useCase): ApiResponse
+    {
+        $newDepartmentId = $request->new_departmentId;
+        $useCase->execute($id , $newDepartmentId);
+        return ApiResponse::ok([], "تم نقل المأمورين من القسم [{$id}] إلى القسم [{ $newDepartmentId}] بنجاح.");
     }
 
 }

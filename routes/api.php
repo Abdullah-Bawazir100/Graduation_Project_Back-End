@@ -55,6 +55,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::get('statistics', [StatisticsController::class, 'getStatistics']);
 
     Route::apiResource('tax-collectors', TaxCollectorController::class);
+    Route::post('departments/{id}/move-taxCollectors', [TaxCollectorController::class, 'moveTaxCollectorsToAnotherDepartment']);
 
     Route::apiResource('tax-payers', TaxPayerController::class);
     Route::get('tax-payer-by-userId/{id}', [TaxPayerController::class , 'findTaxPayerByUserID']);

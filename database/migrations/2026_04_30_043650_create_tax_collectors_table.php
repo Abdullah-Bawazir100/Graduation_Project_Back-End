@@ -13,8 +13,8 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('id_card'); // Path to the uploaded file
             $table->string('phone');
-            $table->foreignId('job_type_id')->constrained('job_types');
-            $table->foreignId('dept_id')->constrained('departments');
+            $table->foreignId('job_type_id')->constrained('job_types')->cascadeOnDelete();
+            $table->foreignId('dept_id')->constrained('departments')->cascadeOnDelete();
             $table->timestamps();
         });
     }

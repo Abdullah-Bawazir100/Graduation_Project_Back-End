@@ -67,27 +67,37 @@ class appUsersMiddleware
         // Collectors-Manager Permissions
         if($user->role === UserRole::Collectors_Manager)
         {
-            $routeName = $request->route()->getName();
-
-            if(($routeName === 'tax-collectors.store' && $request->isMethod('post'))
-                || ($routeName === 'tax-collectors.update' && ($request->isMethod('put') || $request->isMethod('patch')))
-                || (($routeName === 'tax-collectors.index' || $routeName === 'tax-collectors.show') && ($request->isMethod('get'))))
-            {
+            $routeName = $request->route()?->getName();
+            if (
+                (
+                    in_array($routeName, ['job-types.update', 'job-types.index', 'job-types.show'])
+                    && in_array($request->method(), ['GET', 'PUT', 'PATCH'])
+                )
+                ||
+                (
+                    $routeName === 'tax-collectors.store'
+                    && $request->isMethod('post')
+                )
+                || (
+                    $routeName === 'tax-collectors.update'
+                    && ($request->isMethod('put') || $request->isMethod('patch'))
+                )
+                || (
+                    ($routeName === 'tax-collectors.index' || $routeName === 'tax-collectors.show')
+                    && $request->isMethod('get')
+                )
+            ) {
                 return $next($request);
             }
 
-            elseif($routeName === 'tax-collectors.destroy')
-            {
+            elseif (($routeName === 'tax-collectors.destroy') ||
+                (($routeName === 'job-types.destroy') && $request->isMethod('delete'))
+            ) {
                 return response()->json([
-                'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحية (الحذف).',
-                'status' => 403,
-            ], 403);
+                    'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحية (الحذف).',
+                    'status' => 403,
+                ], 403);
             }
-
-            return response()->json([
-                'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحيات على العمليات الأخرى.',
-                'status' => 403,
-            ], 403);
         }
 
         // Tax-Payers Permissions

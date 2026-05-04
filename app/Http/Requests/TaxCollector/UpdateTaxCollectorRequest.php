@@ -16,7 +16,7 @@ class UpdateTaxCollectorRequest extends FormRequest
         return [
             'fullName' => 'sometimes|required|string|max:255|not_regex:/^\d+$/',
             'idCard' => 'sometimes|required|file|mimes:pdf|max:5120', // 5MB max, PDF only
-            'phone' => 'sometimes|required|string|min:9',
+            'phone' => 'sometimes|required|string|min:9|unique:tax_collectors,phone',
             'jobTypeId' => 'sometimes|integer|exists:job_types,id',
             'deptID' => 'sometimes|integer|exists:departments,id',
         ];
@@ -35,6 +35,8 @@ class UpdateTaxCollectorRequest extends FormRequest
 
             'phone.string' => 'يجب أن يكون رقم الهاتف نصًا',
             'phone.min'      => 'رقم الهاتف يجب على الأقل أن يكون 9 أرقام.',
+            'phone.unique' => 'هذا الرقم الهاتف موجود بالفعل',
+
 
             'jobTypeId.integer' => 'نوع الوظيفة يجب أن يكون رقما صحيحا',
             'jobTypeId.exists' => 'نوع الوظيفة المحدد غير موجود',
