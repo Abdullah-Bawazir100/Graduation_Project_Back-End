@@ -77,6 +77,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Persistence\Eloquent\Repositories\CompanyRepository::class
         );
 
+        $this->app->bind(
+            \App\Domain\CharitableCompany\Repositories\CharitableCompanyRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\CharitableCompanyRepository::class
+        );
+
     }
 
     /**

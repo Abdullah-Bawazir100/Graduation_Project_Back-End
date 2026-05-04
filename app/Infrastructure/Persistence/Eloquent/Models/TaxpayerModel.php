@@ -41,6 +41,11 @@ class TaxPayerModel extends Model
         return $this->hasMany(CompanyModel::class , 'tax_payer_id');
     }
 
+    public function charitable_companies()
+    {
+        return $this->hasMany(CharitableCompanyModel::class , 'tax_payer_id');
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

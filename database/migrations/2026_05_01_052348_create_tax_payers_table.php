@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('trade_pict')->nullable();
             $table->string('insurance_card')->nullable();
             $table->string('property_doc_pict')->nullable();
-            $table->enum('file_type' , ['Individual', 'Company', 'NonProfit'])->default('Individual');
+            $table->enum('file_type' , ['Individual', 'Company', 'CharitableCompany'])->default('Individual');
             $table->timestamps();
 
             // Adding foreign key constraint for user_id

@@ -11,7 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('charitable_companies', function (Blueprint $table) {
+            $table->id();
+            $table->string('by_laws_copy');
+            $table->foreignId('tax_payer_id')->constrained('tax_payers')->cascadeOnDelete();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('charitable_companies');
     }
 };

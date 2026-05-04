@@ -6,14 +6,14 @@ enum enFileType: string
 {
     case Individual = 'Individual';
     case Company = 'Company';
-    case NonProfit = 'NonProfit';
+    case CharitableCompany = 'CharitableCompany';
 
     public function label(): string
     {
         return match($this) {
             self::Individual => 'ملف فرد',
             self::Company => 'ملف شركة',
-            self::NonProfit => 'ملف شركة خيرية',
+            self::CharitableCompany => 'ملف شركة خيرية',
         };
     }
 }

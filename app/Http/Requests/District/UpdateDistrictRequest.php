@@ -22,7 +22,7 @@ class UpdateDistrictRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes' , 'string' , 'max:255' , 'not_regex:/^\d+$/'],
+            'name' => ['sometimes' , 'string' , 'max:255' , 'not_regex:/^\d+$/' , 'unique:districts,name'],
             'regionID' => ['sometimes' , 'integer' , 'exists:regions,id']
         ];
     }
@@ -33,6 +33,7 @@ class UpdateDistrictRequest extends FormRequest
             'name.string' => 'اسم المنطقة يجب ان يكون نصاً.',
             'name.max' => 'اسم المنطقة لا يمكن ان يزيد عن 255 حرفا.',
             'name.not_regex' => 'لا يمكن أن يكون اسم المنطقة أرقام فقط.',
+            'name.unique' => 'اسم الحي موجود بالفعل.',
 
             'regionID.integer' => 'المنطقة يجب أن تكون رقم صحيحًا',
             'regionID.exists'   => 'المنطقة المحددة غير موجودة.',

@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\TaxCollectorController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CharitableCompanyController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\JobTypeController;
 use App\Http\Controllers\Api\PaymentTypeController;
@@ -59,5 +60,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::get('tax-payer-by-userId/{id}', [TaxPayerController::class , 'findTaxPayerByUserID']);
 
     Route::apiResource('companies', CompanyController::class);
+
+    Route::apiResource('charitable-companies', CharitableCompanyController::class);
 
 });

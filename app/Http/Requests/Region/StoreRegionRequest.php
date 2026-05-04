@@ -22,7 +22,7 @@ class StoreRegionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required' , 'string' , 'max:255' , 'not_regex:/^\d+$/']
+            'name' => ['required' , 'string' , 'max:255' , 'not_regex:/^\d+$/' , 'unique:regions,name']
         ];
     }
 
@@ -33,6 +33,8 @@ class StoreRegionRequest extends FormRequest
             'name.string' => 'اسم المنطقة يجب ان يكون نصاً.',
             'name.max' => 'اسم المنطقة لا يمكن ان يزيد عن 255 حرفا.',
             'name.not_regex' => 'لا يمكن أن يكون اسم المنطقة أرقام فقط.',
+            'name.unique' => 'اسم المنطقة موجود بالفعل.',
+
         ];
     }
 }

@@ -64,6 +64,13 @@ class StoreTaxPayerRequest extends FormRequest
                 'max:10240',
             ],
 
+            'byLawsCopy' => [
+                Rule::requiredIf(fn() => $this->fileType === enFileType::CharitableCompany->value),
+                'file',
+                'mimes:jpeg,png,jpg,pdf',
+                'max:10240',
+            ],
+
         ];
     }
 
@@ -135,6 +142,11 @@ class StoreTaxPayerRequest extends FormRequest
             'partnersIDCards.file'     => 'يجب أن تكون بطائق الشركاء ملفات.',
             'partnersIDCards.mimes'    => 'يجب أن تكون بطائق الشركاء من نوع: jpeg, png, jpg أو pdf.',
             'partnersIDCards.max'      => 'يجب ألا يتجاوز حجم بطائق الشركاء 10 MB.',
+
+            'byLawsCopy.required' => 'الصورة من النظام الأساسي  مطلوبة.',
+            'byLawsCopy.file' => 'الصورة من النظام الأساسي يجب أن تكون ملفا صالحا.',
+            'byLawsCopy.mimes' => 'الصورة من النظام الأساسي يجب ان تكون من نوع jpeg,png,jpg,pdf.',
+            'byLawsCopy.max' => 'الصورة من النظام الأساسي يجب الا تتجاوز 10MB.',
         ];
     }
 }
