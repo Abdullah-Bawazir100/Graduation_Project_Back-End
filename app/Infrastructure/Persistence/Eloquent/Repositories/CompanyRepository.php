@@ -21,6 +21,26 @@ class CompanyRepository implements CompanyRepositoryInterface
         return $this->mapToDomain($model);
     }
 
+    public function update(Company $company, int $id): ?Company
+    {
+        $companyModel = CompanyModel::with('taxPayer')->find($id);
+        if(!$companyModel)
+        {
+            return null;
+        }
+
+        $companyModel->update([
+            'tax_payer_id' => $company->tax_payer_id,
+            'articles_of_incorporation' => $company->articlesOfIncorporation,
+            'govemor_license' => $company->govemorLicense,
+            'partners_id_cards' => $company->partnersIDCards
+        ]);
+
+        $companyModel->load('taxPayer');
+        return $this->mapToDomain($companyModel);
+
+    }
+
     public function getAll()
     {
         $taxPayers = CompanyModel::with('taxPayer')->get();

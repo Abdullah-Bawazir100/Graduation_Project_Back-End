@@ -16,12 +16,14 @@ class UpdateTaxPayerUseCase
 {
     public function __construct(
         private TaxPayerRepositoryInterface $tax_payer_repository,
+        private UserRepositoryInterface $user_repository,
     )
     {}
 
     public function execute(TaxPayerDTOs $taxPayerDTO , int $id)
     {
         $existingTaxPayer = $this->tax_payer_repository->findById($id);
+        $existingUser = $this->user_repository->findById($taxPayerDTO->userId);
         if(!$existingTaxPayer)
         {
             throw new DomainException("المكلف مع ال ID [{$id}] غير موجود.");
@@ -38,6 +40,9 @@ class UpdateTaxPayerUseCase
             fileType: $taxPayerDTO->fileType,
         );
         $updatedTaxPayer = $this->tax_payer_repository->update($taxPayer, $id);
-        return $updatedTaxPayer;
+        return [
+            'UpdatedTaxPayer' => $updatedTaxPayer,
+            'userInfo' => $existingUser,
+        ];
     }
 }

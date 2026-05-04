@@ -21,7 +21,6 @@ use App\Domain\User\Entities\User as DomainUser;
 use App\Domain\User\Enums\UserRole;
 use App\Http\Requests\TaxPayer\UpdateTaxPayerRequest;
 use App\Http\Responses\ApiResponse;
-use DomainException;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -37,7 +36,7 @@ class TaxPayerController extends Controller
     public function index(ListTaxPayersUseCase $useCase): ApiResponse
     {
         $taxPayers = $useCase->execute();
-        return ApiResponse::ok($taxPayers , 'تم جلب المكلفين بنجاح.');
+        return ApiResponse::ok($taxPayers , 'تم جلب دافعي الضرائب بنجاح.');
     }
 
     public function store(StoreTaxPayerRequest $request , CreateTaxPayerWithUserUseCase $useCase): ApiResponse
@@ -98,7 +97,7 @@ class TaxPayerController extends Controller
         try {
             $existingTaxPayer = $this->findTaxPayerByIdUseCase->execute($id);
             if (!$existingTaxPayer) {
-                throw new DomainException("المكلف مع ال ID [{$id}] غير موجود.");
+                return ApiResponse::notFound([], 'المكلف مع ال ID [' . $id . '] غير موجود.');
             }
 
             $commercialRecordUrl = $existingTaxPayer->commercialRecord;
@@ -140,11 +139,9 @@ class TaxPayerController extends Controller
             $updatedTaxPayer = $useCase->execute($taxPayerDTO, $existingTaxPayer->id);
             return ApiResponse::ok($updatedTaxPayer, 'تم تحديث بيانات المكلف بنجاح.');
 
-        } catch (DomainException $e) {
-            return ApiResponse::notFound([], $e->getMessage());
         } catch (Exception $e) {
             Log::error('TaxPayer update error: ' . $e->getMessage());
-            return ApiResponse::serverError('Internal server error');
+            return ApiResponse::serverError($e->getMessage());
         }
     }
 
@@ -152,19 +149,19 @@ class TaxPayerController extends Controller
     public function show(int $id , ShowTaxPayerUseCase $useCase)
     {
         $taxPayer = $useCase->execute($id);
-        return ApiResponse::ok($taxPayer , 'تم جلب المكلف بنجاح.');
+        return ApiResponse::ok($taxPayer , 'تم جلب دافع الضرائب بنجاح.');
     }
 
     public function findTaxPayerByUserID(int $userID , FindTaxPayerByUserIDUseCase $useCase)
     {
         $taxPayer = $useCase->execute($userID);
-        return ApiResponse::ok($taxPayer , "تم جلب المستخدم المكلف مع ال ID [{$userID}] بنجاح.");
+        return ApiResponse::ok($taxPayer , "تم جلب المستخدم دافع الضرائب مع ال ID [{$userID}] بنجاح.");
     }
 
     public function destroy(int $id , DeleteTaxPayerUseCase $useCase)
     {
         $useCase->execute($id);
-        return ApiResponse::ok(null , "تم حذف المكلف مع ال ID [{$id}] بنجاح.");
+        return ApiResponse::ok(null , "تم حذف دافع الضرائب مع ال ID [{$id}] بنجاح.");
     }
 
     private function convertToDomainUser($authUser): DomainUser

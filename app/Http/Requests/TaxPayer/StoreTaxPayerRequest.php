@@ -120,6 +120,21 @@ class StoreTaxPayerRequest extends FormRequest
 
             'fileType.required' => 'نوع الملف مطلوب',
             'fileType.in' => 'يجب أن يكون نوع الملف واحدًا من: ملف فرد، ملف شركة، ملف شركة خيرية',
+
+            'articlesOfIncorporation.required' => 'عقد التأسيس مطلوب في ملف الشركة.',
+            'articlesOfIncorporation.file'     => 'يجب أن يكون عقد التأسيس ملفا صالحا.',
+            'articlesOfIncorporation.mimes'    => 'يجب أن يكون عقد التأسيس من نوع: jpeg, png, jpg أو pdf.',
+            'articlesOfIncorporation.max'      => 'يجب ألا يتجاوز حجم عقد التأسيس 10 MB.',
+
+            'govemorLicense.required' => 'ترخيص المحافظ مطلوب في ملف الشركة.',
+            'govemorLicense.file'     => 'يجب أن يكون ترخيص المحافظ ملفًا.',
+            'govemorLicense.mimes'    => 'يجب أن يكون ترخيص المحافظ من نوع: jpeg, png, jpg أو pdf.',
+            'govemorLicense.max'      => 'يجب ألا يتجاوز حجم ترخيص المحافظ 10 MB.',
+
+            'partnersIDCards.required' => 'بطائق الشركاء مطلوبة في ملف الشركة.',
+            'partnersIDCards.file'     => 'يجب أن تكون بطائق الشركاء ملفات.',
+            'partnersIDCards.mimes'    => 'يجب أن تكون بطائق الشركاء من نوع: jpeg, png, jpg أو pdf.',
+            'partnersIDCards.max'      => 'يجب ألا يتجاوز حجم بطائق الشركاء 10 MB.',
         ];
     }
 }

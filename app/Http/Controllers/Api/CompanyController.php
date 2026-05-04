@@ -7,6 +7,7 @@ use App\Application\Company\UseCases\CreateCompanyUseCase;
 use App\Application\Company\UseCases\DeleteCompanyUseCase;
 use App\Application\Company\UseCases\FindByIdUseCase;
 use App\Application\Company\UseCases\ListCompaniesUseCase;
+use App\Application\Company\UseCases\UpdateCompanyUseCase;
 use App\Application\TaxPayer\DTOs\TaxPayerDTOs;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\Services\UploadFileService;
@@ -16,15 +17,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TaxPayer\StoreTaxPayerRequest;
 use App\Domain\User\Entities\User as DomainUser;
 use App\Domain\User\Enums\UserRole;
+use App\Http\Requests\Company\UpdateCompanyRequest;
 use App\Http\Responses\ApiResponse;
+use DomainException;
 use Exception;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
     public function __construct(
-        private UploadFileService $uploadFileService
+        private UploadFileService $uploadFileService,
+        private FindByIdUseCase $findByIdUseCase
     )
     {}
 
@@ -91,7 +95,7 @@ class CompanyController extends Controller
 
             $result = $useCase->execute($companyDTO , $taxPayerDTO , $userDTO , $actor);
 
-            return ApiResponse::created($result , 'تم إنشاء دافع الضرائب مع ملف شركة بنجاح.');
+            return ApiResponse::created($result , 'تم إنشاء مكلف مع ملف شركة بنجاح.');
 
         } catch (Exception $e) {
             return ApiResponse::serverError($e->getMessage());
@@ -106,9 +110,49 @@ class CompanyController extends Controller
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(int $id , UpdateCompanyRequest $request , UpdateCompanyUseCase $useCase)
     {
-        //
+        try {
+            $findCompany = $this->findByIdUseCase->execute($id);
+            $existingCompany = $findCompany['company'];
+
+            if (!$existingCompany) {
+                return ApiResponse::notFound([], "ملف الشركة مع ال ID [{$id}] غير موجود.");
+            }
+
+            $articlesOfIncorporationUrl = $existingCompany->articlesOfIncorporation;
+            $govemorLicenseUrl = $existingCompany->govemorLicense;
+            $partnersIDCardsUrl = $existingCompany->partnersIDCards;
+
+
+            if($request->hasFile('articlesOfIncorporation')){
+                $articlesOfIncorporationUrl = $this->uploadFileService->uploadFile($request->file('articlesOfIncorporation') , 'articles-of-incorporation');
+            }
+
+            if($request->hasFile('govemorLicense')){
+                $govemorLicenseUrl = $this->uploadFileService->uploadFile($request->file('govemorLicense') , 'govemor-license');
+            }
+
+            if($request->hasFile('partnersIDCards')){
+                $partnersIDCardsUrl = $this->uploadFileService->uploadFile($request->file('partnersIDCards') , 'partners-id-cards');
+            }
+
+            $companyDTO = new CompanyDTOs(
+                articlesOfIncorporation: $articlesOfIncorporationUrl ?? $existingCompany->articlesOfIncorporation,
+                govemorLicense: $govemorLicenseUrl ?? $existingCompany->govemorLicense,
+                partnersIDCards: $partnersIDCardsUrl ?? $existingCompany->partnersIDCards,
+            );
+
+            $result = $useCase->execute($companyDTO, $existingCompany->id);
+
+            return ApiResponse::ok($result, 'تم تحديث بيانات ملف الشركة بنجاح.');
+
+        } catch (DomainException $e) {
+            return ApiResponse::notFound([], $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Company update error: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
+            return ApiResponse::serverError($e->getMessage());
+        }
     }
 
 

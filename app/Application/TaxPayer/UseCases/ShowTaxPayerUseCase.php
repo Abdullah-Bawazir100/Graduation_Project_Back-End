@@ -5,6 +5,7 @@ namespace App\Application\TaxPayer\UseCases;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use DomainException;
+use Illuminate\Support\Facades\Auth;
 
 class ShowTaxPayerUseCase
 {
@@ -20,6 +21,11 @@ class ShowTaxPayerUseCase
 
         if  (!$taxPayer) {
             throw new DomainException("دافع الضرائب مع ال ID [{$id}] غير موجود.");
+        }
+
+        $authUser = Auth::user();
+        if ($taxPayer->userId !== $authUser->id) {
+            throw new DomainException("غير مصرح لك بالإطلاع على بيانات مكلفين آخرين.");
         }
 
         $userInfo = null;

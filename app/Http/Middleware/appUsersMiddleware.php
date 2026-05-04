@@ -94,7 +94,7 @@ class appUsersMiddleware
         if($user->role === UserRole::Tax_Payer)
         {
             $routeName = $request->route()->getName();
-            if(($routeName === 'tax-payers.show' || $routeName === 'tax-payers.update'))
+            if(($routeName === 'tax-payers.show'))
             {
                 return $next($request);
             }
