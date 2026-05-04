@@ -12,7 +12,7 @@ class ActivityLogService
         $query = Activity::with('causer')
             ->whereIn('log_name', ['user', 'department','activity_type',
                         'payment_type' , 'region' , 'district' , 'job_type',
-                        'tax_collector' , 'tax_payer' , 'company']);
+                        'tax_collector' , 'tax_payer' , 'company' , 'charitable_company']);
 
         // Filters
         if (!empty($filters['user_id'])) {
@@ -27,9 +27,11 @@ class ActivityLogService
             $query->whereDate('created_at', '<=', $filters['to']);
         }
 
-        $activities = $query->orderBy('id' , 'Asc')->limit(100)->get();
-
-        return $this->transform($activities);
+        $activities = $query
+            ->orderBy('created_at', 'desc')->orderBy('id')
+            ->limit(100)
+            ->get();
+                return $this->transform($activities);
     }
 
     private function transform($activities)
@@ -133,6 +135,10 @@ class ActivityLogService
             'إنشاء مكلف مع ملف شركة' => "تم إنشاء مكلف  مع ملف شركة جديد." . ($new['name'] ?? ''),
             'تحديث مكلف مع ملف شركة' => "تم تحديث مكلف مع ملف شركة" . ($new['name'] ?? ''),
             'حذف مكلف مع ملف شركة'  => "تم حذف مكلف مع ملف شركة." . ($old['name'] ?? ''),
+
+            'إنشاء مكلف مع ملف شركة خيرية' => "تم إنشاء مكلف  مع ملف شركة خيرية جديد." . ($new['name'] ?? ''),
+            'تحديث مكلف مع ملف  شركة خيرية' => "تم تحديث مكلف مع ملف خيرية شركة" . ($new['name'] ?? ''),
+            'حذف مكلف مع ملف شركة خيرية'  => "تم حذف مكلف مع ملف خيرية شركة." . ($old['name'] ?? ''),
 
             default => $description,
         };
