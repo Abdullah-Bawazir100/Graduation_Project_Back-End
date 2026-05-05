@@ -14,9 +14,9 @@ class UpdateTaxCollectorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fullName' => 'sometimes|required|string|max:255|not_regex:/^\d+$/',
-            'idCard' => 'sometimes|required|file|mimes:pdf|max:5120', // 5MB max, PDF only
-            'phone' => 'sometimes|required|string|min:9|unique:tax_collectors,phone',
+            'fullName' => 'sometimes|string|max:255|not_regex:/^\d+$/',
+            'idCard' => 'sometimes|file|mimes:pdf|max:5120', // 5MB max, PDF only
+            'phone' => 'sometimes|string|min:9|unique:tax_collectors,phone',
             'jobTypeId' => 'sometimes|integer|exists:job_types,id',
             'deptID' => 'sometimes|integer|exists:departments,id',
         ];
