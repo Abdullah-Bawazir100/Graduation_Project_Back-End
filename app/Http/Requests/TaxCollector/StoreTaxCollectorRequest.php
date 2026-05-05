@@ -39,7 +39,7 @@ class StoreTaxCollectorRequest extends FormRequest
             'phone.required' => 'رقم الهاتف مطلوب',
             'phone.string' => 'يجب أن يكون رقم الهاتف نصًا',
             'phone.min'      => 'رقم الهاتف يجب على الأقل أن يكون 9 أرقام.',
-            'phone.unique' => 'هذا الرقم الهاتف موجود بالفعل',
+            'phone.unique' => 'رقم الهاتف موجود بالفعل.',
 
             'jobTypeId.required' => 'نوع الوظيفة مطلوب',
             'jobTypeId.integer' => 'يجب أن يكون نوع الوظيفة رقمًا',

@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 use App\Domain\Department\Entities\Department;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel;
+use App\Infrastructure\Persistence\Eloquent\Models\TaxCollectorModel;
 use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
 
 class DepartmentRepository implements DepartmentRepositoryInterface
@@ -79,5 +80,7 @@ class DepartmentRepository implements DepartmentRepositoryInterface
     {
         // Update all users from old department to new department
         UserModel::where('department_id', $oldDepartmentId)->update(['department_id' => $newDepartmentId]);
+        // Update all users from old department to new department
+        TaxCollectorModel::where('dept_id', $oldDepartmentId)->update(['dept_id' => $newDepartmentId]);
     }
 }

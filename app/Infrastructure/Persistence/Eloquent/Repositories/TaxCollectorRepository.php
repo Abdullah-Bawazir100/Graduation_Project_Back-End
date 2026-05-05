@@ -72,11 +72,6 @@ class TaxCollectorRepository implements TaxCollectorRepositoryInterface
         return $this->mapToDomain($taxCollectorModel);
     }
 
-    public function moveTaxCollectorsToAnotherDepartment(int $oldDepartmentId, int $newDepartmentId): void
-    {
-        // Update all users from old department to new department
-        TaxCollectorModel::where('dept_id', $oldDepartmentId)->update(['dept_id' => $newDepartmentId]);
-    }
 
     private function mapToDomain(TaxCollectorModel $model): TaxCollector
     {
