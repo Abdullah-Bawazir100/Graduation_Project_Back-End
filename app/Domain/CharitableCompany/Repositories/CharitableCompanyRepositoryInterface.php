@@ -12,5 +12,4 @@ interface CharitableCompanyRepositoryInterface
     public function getAll();
     public function delete(int $id);
 
-    
 }

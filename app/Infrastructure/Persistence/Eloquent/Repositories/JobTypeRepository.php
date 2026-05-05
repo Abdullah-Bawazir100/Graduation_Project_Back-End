@@ -5,6 +5,8 @@ namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 use App\Domain\JobType\Entities\JobType;
 use App\Domain\JobType\Repositories\JobTypeRepositoryInterface;
 use App\Infrastructure\Persistence\Eloquent\Models\JobTypeModel;
+use App\Infrastructure\Persistence\Eloquent\Models\TaxCollectorModel;
+use Override;
 
 class JobTypeRepository implements JobTypeRepositoryInterface
 {
@@ -71,6 +73,13 @@ class JobTypeRepository implements JobTypeRepositoryInterface
     public function existsByName(string $name): bool
     {
         return JobTypeModel::where('name', $name)->exists();
+    }
+
+    #[Override]
+    public function moveTaxCollectorsToAnotherJobType(int $oldJobTypeId, int $newJobTypeId)
+    {
+        TaxCollectorModel::where('job_type_id', $oldJobTypeId)
+            ->update(['job_type_id' => $newJobTypeId]);
     }
 
 }

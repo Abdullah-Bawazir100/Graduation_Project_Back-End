@@ -7,10 +7,12 @@ use App\Application\JobType\DTOs\JobTypeDTOs;
 use App\Application\JobType\UseCases\CreateJobTypeUseCase;
 use App\Application\JobType\UseCases\DeleteJobTypeUseCase;
 use App\Application\JobType\UseCases\ListJobTypeUseCase;
+use App\Application\JobType\UseCases\MoveTaxCollectorsToAnotherJobTypeUseCase;
 use App\Application\JobType\UseCases\ShowJobTypeUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobType\StoreJobTypeRequest;
 use App\Http\Requests\JobType\UpdateJobTypeRequest;
+use App\Http\Requests\TaxCollector\MoveTaxCollectorsRequest;
 use App\Http\Responses\ApiResponse;
 
 class JobTypeController extends Controller
@@ -72,6 +74,17 @@ class JobTypeController extends Controller
 
         return ApiResponse::ok(
             message: 'تم حذف نوع الوظيفة بنجاح.'
+        );
+    }
+
+    public function moveTaxCollectorsToAnotherJobType(int $id ,
+    MoveTaxCollectorsRequest $request , MoveTaxCollectorsToAnotherJobTypeUseCase $useCase)
+    {
+        $newJobTypeId = $request->newJobTypeId;
+        $useCase->execute($id , $newJobTypeId);
+        return ApiResponse::ok(
+            data: null,
+            message: 'تم نقل جميع المأمورين من نوع الوظيفة [' . $id . '] إلى نوع الوظيفة [' . $newJobTypeId . '] بنجاح.'
         );
     }
 }

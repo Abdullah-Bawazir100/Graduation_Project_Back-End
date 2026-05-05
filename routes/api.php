@@ -51,6 +51,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::apiResource('addresses' , AddressController::class);
 
     Route::apiResource('job-types' , JobTypeController::class);
+    Route::post('job-types/{id}/move-TaxCollectors', [JobTypeController::class, 'moveTaxCollectorsToAnotherJobType']);
 
     Route::get('statistics', [StatisticsController::class, 'getStatistics']);
 

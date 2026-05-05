@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Application\CharitableCompany\DTOs\CharitableCompanyDTOs;
 use App\Application\CharitableCompany\UseCases\CreateCharitableCompanyUseCase;
+use App\Application\CharitableCompany\UseCases\DeleteCharitableCompanyUseCase;
+use App\Application\CharitableCompany\UseCases\FindCharitableCompanyByIdUseCase;
+use App\Application\CharitableCompany\UseCases\ListCharitableCompaniesUseCase;
+use App\Application\CharitableCompany\UseCases\UpdateCharitableCompanyUseCase;
 use App\Application\TaxPayer\DTOs\TaxPayerDTOs;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\Services\UploadFileService;
@@ -14,22 +18,27 @@ use App\Http\Requests\TaxPayer\StoreTaxPayerRequest;
 use App\Http\Responses\ApiResponse;
 use App\Domain\User\Entities\User as DomainUser;
 use App\Domain\User\Enums\UserRole;
+use App\Http\Requests\CheritableCompany\UpdateCharitableCompanyRequest;
+use DomainException;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CharitableCompanyController extends Controller
 {
     public function __construct(
         private UploadFileService $uploadFileService,
+        private FindCharitableCompanyByIdUseCase $findCharitableCompanyByIdUseCase
     )
     {}
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(ListCharitableCompaniesUseCase $useCase)
     {
-        //
+        $charitableCompanies = $useCase->execute();
+        return ApiResponse::ok($charitableCompanies , "تم جلب ملفات الشركات الخيرية بنجاح.");
     }
 
     /**
@@ -97,25 +106,54 @@ class CharitableCompanyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
+        $charitableCompany = $this->findCharitableCompanyByIdUseCase->execute($id);
+        return ApiResponse::ok($charitableCompany , "تم جلب ملف الشركة  الخيرية بنجاح.");
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(int $id , UpdateCharitableCompanyRequest $request , UpdateCharitableCompanyUseCase $useCase)
     {
-        //
+        try{
+            $findCharitableCompany = $this->findCharitableCompanyByIdUseCase->execute($id);
+            $existingCharitableCompany = $findCharitableCompany['charitableCompany'];
+            if (!$existingCharitableCompany) {
+                return ApiResponse::notFound([], "ملف الشركة الخيرية مع ال ID [{$id}] غير موجود.");
+            }
+
+            $byLawsCopyUrl = $existingCharitableCompany->byLawsCopy;
+            if($request->hasFile('byLawsCopy'))
+            {
+                $byLawsCopyUrl = $this->uploadFileService->uploadFile($request->file('byLawsCopy') , 'by-laws-copy');
+            }
+
+            $charitableCompanyDTO = new CharitableCompanyDTOs(
+                byLawsCopy: $byLawsCopyUrl,
+            );
+
+            $result = $useCase->execute($charitableCompanyDTO , $id);
+            return ApiResponse::ok($result, 'تم تحديث بيانات ملف الشركة الخيرية بنجاح.');
+        }
+        catch (DomainException $e) {
+            return ApiResponse::notFound([], $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Charitable Company update error: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
+            return ApiResponse::serverError($e->getMessage());
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id , DeleteCharitableCompanyUseCase $useCase)
     {
-        //
+        $useCase->execute($id);
+        return ApiResponse::ok([] , "تم حذف ملف الشركة الخيرية مع ال ID [{$id}] بنجاح.");
     }
 
     private function convertToDomainUser($authUser): DomainUser
