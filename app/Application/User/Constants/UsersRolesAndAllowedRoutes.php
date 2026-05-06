@@ -222,7 +222,6 @@ class UsersRolesAndAllowedRoutes
             // Authentication routes
             'auth.create-user',
             'auth.reset-password',
-            'auth.complete-profile',
             'auth.logout',
 
             // Other routes
@@ -233,16 +232,12 @@ class UsersRolesAndAllowedRoutes
         // Employee Permissions
         UserRole::Employee->value => [
             // Employees have limited access - only read operations
-            'users.show',
-            'activity-log.index',
-            'statistics.getStatistics',
+            // Just Permissions in Files Section
         ],
 
         // Tax Payer Permissions
         UserRole::Tax_Payer->value => [
-            'tax-payers.show',  // Can only view own profile
-            'users.show',
-            'activity-log.index',
+            // He will user the mobile app
         ],
 
         // Collectors Manager Permissions
@@ -260,9 +255,6 @@ class UsersRolesAndAllowedRoutes
             'tax-collectors.show',
             'tax-collectors.update',
             // Note: No destroy permission for collectors manager
-
-            // Statistics
-            'statistics.getStatistics',
         ],
     ];
 }

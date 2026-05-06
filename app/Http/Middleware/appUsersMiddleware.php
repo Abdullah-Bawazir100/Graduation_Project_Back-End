@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Application\User\Constants\UsersRolesAndAllowedRoutes;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class appUsersMiddleware
     {
         $user = Auth::user();
 
-        // Check if user is logon
+        // 1. Check authentication
         if (!$user) {
             return response()->json([
                 'message' => 'غير مصرح.',
@@ -26,99 +27,61 @@ class appUsersMiddleware
             ], 403);
         }
 
-        // Admin Permissions
-        if($user->role === UserRole::Admin)
-        {
-            return $next($request);
-        }
-
-        // Manager Permissions
-        if($user->role === UserRole::Manager && $request->isMethod('delete'))
-        {
-            $routeName = $request->route()->getName();
-            $messages = [
-                'app_users.destroy' => 'لا يمكن للمدير حذف المستخدمين.',
-                'departments.destroy' => 'لا يمكن للمدير حذف الأقسام.',
-                'activity_types.destroy' => 'لا يمكن للمدير حذف نوع النشاط.',
-                'payment_types.destroy' => 'لا يمكن للمدير حذف نوع الدفع.',
-                'regions.destroy' => 'لا يمكن للمدير حذف المناطق.',
-                'districts.destroy' => 'لا يمكن للمدير حذف الحي.',
-                'tax-collectors.destroy' =>  'لا يمكن للمدير حذف جامع الضرائب.',
-                'tax-payers.destroy' =>  'لا يمكن للمدير حذف دافع الضرائب.',
-            ];
-
-
+        // 2. Ensure role is valid enum
+        if (!$user->role instanceof UserRole) {
             return response()->json([
-                'message' => $messages[$routeName] ?? 'عملية الحذف غير مسموحة للمدير.',
+                'message' => 'دور المستخدم غير صالح.',
                 'status' => 403,
             ], 403);
         }
 
-        // Employee Permissions
-        if($user->role === UserRole::Employee && ($request->isMethod('delete')
-            || $request->isMethod('put') || $request->isMethod('patch')))
-        {
+        $role = $user->role->value;
+
+        // 3. Ensure route has a name
+        $routeName = $request->route()?->getName();
+        if (!$routeName) {
             return response()->json([
-                'message' => 'غير مصرح ، المشرف و المدير فقط يمكنهم (التحديث - الحذف).',
+                'message' => 'Route غير معرف.',
                 'status' => 403,
             ], 403);
         }
 
-        // Collectors-Manager Permissions
-        if($user->role === UserRole::Collectors_Manager)
-        {
-            $routeName = $request->route()?->getName();
-            if (
-                (
-                    in_array($routeName, ['job-types.update', 'job-types.index', 'job-types.show'])
-                    && in_array($request->method(), ['GET', 'PUT', 'PATCH'])
-                )
-                ||
-                (
-                    $routeName === 'tax-collectors.store'
-                    && $request->isMethod('post')
-                )
-                || (
-                    $routeName === 'tax-collectors.update'
-                    && ($request->isMethod('put') || $request->isMethod('patch'))
-                )
-                || (
-                    ($routeName === 'tax-collectors.index' || $routeName === 'tax-collectors.show')
-                    && $request->isMethod('get')
-                )
-            ) {
-                return $next($request);
-            }
+        // 4. Get allowed routes for the role
+        $allowedRoutes = UsersRolesAndAllowedRoutes::$allowedRoutes[$role] ?? [];
 
-            elseif (($routeName === 'tax-collectors.destroy') ||
-                (($routeName === 'job-types.destroy') && $request->isMethod('delete'))
-            ) {
-                return response()->json([
-                    'message' => 'غير مصرح ، مدير المأمورين ليس لديه صلاحية (الحذف).',
-                    'status' => 403,
-                ], 403);
-            }
-        }
-
-        // Tax-Payers Permissions
-        if($user->role === UserRole::Tax_Payer)
-        {
-            $routeName = $request->route()->getName();
-            if(($routeName === 'tax-payers.show'))
-            {
-                return $next($request);
-            }
-
-            else {
-                return response()->json([
-                'message' => 'غير مصرح : لا يمكن للمكلف التحكم في أقسام أخرى من النظام.',
+        // 5. Authorization check (strict)
+        if (!in_array($routeName, $allowedRoutes, true)) {
+            return response()->json([
+                'message' => $this->getForbiddenMessage($user->role, $request->method(), $routeName),
                 'status' => 403,
             ], 403);
-            }
-
         }
 
         return $next($request);
+    }
 
+    private function getForbiddenMessage(UserRole $role, string $method, ?string $routeName): string
+    {
+        return match ($role) {
+            UserRole::Manager =>
+                $routeName && str_contains($routeName, 'destroy')
+                    ? 'لا يمكن للمدير تنفيذ عمليات الحذف.'
+                    : 'غير مصرح.',
+
+            UserRole::Employee =>
+                in_array($method, ['DELETE', 'PUT', 'PATCH'])
+                    ? 'غير مصرح ، الموظف يمكنه القراءة فقط.'
+                    : 'غير مصرح.',
+
+            UserRole::Collectors_Manager =>
+                $routeName && str_contains($routeName, 'destroy')
+                    ? 'غير مصرح ، لا يمكن لمدير المأمورين الحذف.'
+                    : 'غير مصرح.',
+
+            UserRole::Tax_Payer =>
+                'غير مصرح : لا يمكن للمكلف الوصول لهذا المسار.',
+
+            default => 'غير مصرح.',
+        };
     }
 }
