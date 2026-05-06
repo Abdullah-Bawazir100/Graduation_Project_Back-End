@@ -3,6 +3,7 @@
 namespace App\Application\TaxPayer\UseCases;
 
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use DomainException;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,8 @@ class ShowTaxPayerUseCase
         }
 
         $authUser = Auth::user();
-        if ($taxPayer->userId !== $authUser->id) {
+
+        if ($taxPayer->userId !== $authUser->id || $authUser->role !== UserRole::Admin->value || $authUser->role !== UserRole::Manager->value) {
             throw new DomainException("غير مصرح لك بالإطلاع على بيانات مكلفين آخرين.");
         }
 
