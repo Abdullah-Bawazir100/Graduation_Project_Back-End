@@ -242,8 +242,12 @@ class UsersRolesAndAllowedRoutes
 
         // Collectors Manager Permissions
         UserRole::Collectors_Manager->value => [
+            
+            'departments.index',
+
             // Job Types - Can view and update only
             'job-types.index',
+            'job-types.store',
             'job-types.show',
             'job-types.update',
             'job-types.move-TaxCollectors',
