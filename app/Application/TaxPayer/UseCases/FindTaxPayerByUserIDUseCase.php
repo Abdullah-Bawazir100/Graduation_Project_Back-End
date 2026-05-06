@@ -22,12 +22,12 @@ class FindTaxPayerByUserIDUseCase
         }
 
         if ($user->role->value !== 'Tax_Payer') {
-            throw new DomainException("المستخدم مع ال ID [{$userId}] ليس دافع ضرائب.");
+            throw new DomainException("المستخدم مع ال ID [{$userId}] ليس مكلف.");
         }
 
         $taxPayer = $this->tax_payer_repository->findByUserId($userId);
         if(!$taxPayer) {
-            throw new DomainException("لا يوجد مستخدم دافع للضرائب مرتبط بالمستخدم ID [{$userId}].");
+            throw new DomainException("لا يوجد مستخدم مكلف مرتبط بالمستخدم ID [{$userId}].");
         }
 
         return [

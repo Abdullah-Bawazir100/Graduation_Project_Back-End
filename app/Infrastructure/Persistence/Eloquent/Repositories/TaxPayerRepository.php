@@ -69,7 +69,10 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     public function getAll()
     {
-        $taxPayers = TaxPayerModel::with('user')->get();
+        $taxPayers = TaxPayerModel::with('user')
+                ->where('file_type', 'Individual')
+                ->get();
+
         return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
     }
 

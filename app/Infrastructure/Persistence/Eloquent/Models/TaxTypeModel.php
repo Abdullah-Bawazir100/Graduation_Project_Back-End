@@ -11,10 +11,10 @@ class TaxTypeModel extends Model
     protected $table = 'tax_types';
     protected $fillable = ['name'];
 
-    // public function taxInformations()
-    // {
-    //     return $this->hasMany(TaxInforamtion::class , 'tax_type_id');
-    // }
+    public function taxInformations()
+    {
+        return $this->hasMany(TaxInformationModel::class , 'tax_type_id');
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
