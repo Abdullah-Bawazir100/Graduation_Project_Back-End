@@ -7,7 +7,7 @@ use App\Domain\JobType\Entities\JobType;
 interface JobTypeRepositoryInterface
 {
     public function create(JobType $jobType);
-    public function update(JobType $jobType);
+    public function update(JobType $jobType): ?JobType;
     public function delete(int $id);
     public function findById(int $id);
     public function getAll();

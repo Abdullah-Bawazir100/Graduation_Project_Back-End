@@ -27,7 +27,7 @@ class UpdateJobTypeUseCase
             $name !== $jobType->name &&
             $this->job_type_repository->existsByName($name)
         ) {
-            throw new DomainException("نوع الوظيفة مع الأسم [ $name} ]موجود بالفعل.");
+            throw new DomainException("نوع الوظيفة مع الأسم [ $name}] موجود بالفعل.");
         }
 
         return $this->job_type_repository->update(

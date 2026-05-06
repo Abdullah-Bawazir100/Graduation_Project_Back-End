@@ -34,10 +34,10 @@ class JobTypeController extends Controller
             name: $request->name
         );
 
-        $department = $useCase->execute($dto);
+        $jobType = $useCase->execute($dto);
 
         return ApiResponse::created(
-            data: $department,
+            data: $jobType,
             message: 'تم إنشاء نوع وظيفة جديد بنجاح.'
         );
     }
@@ -56,7 +56,7 @@ class JobTypeController extends Controller
     public function update(int $id , UpdateJobTypeRequest $request , UpdateJobTypeUseCase $useCase)
     {
         $dto = new JobTypeDTOs(
-            name: $request->validated('name')
+            name: $request->name
         );
 
         $jobType = $useCase->execute($id, $dto);
@@ -73,7 +73,7 @@ class JobTypeController extends Controller
         $useCase->execute($id);
 
         return ApiResponse::ok(
-            message: 'تم حذف نوع الوظيفة بنجاح.'
+            message: "تم حذف نوع الوظيفة مع ال ID [$id] بنجاح."
         );
     }
 

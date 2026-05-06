@@ -1,20 +1,14 @@
 <?php
 
-use App\Http\Controllers\Api\ActivityLogController;
-use App\Http\Controllers\Api\ActivityTypeController;
-use App\Http\Controllers\Api\AddressController;
-use App\Http\Controllers\Api\DepartmentController;
-use App\Http\Controllers\Api\DistrictController;
-use App\Http\Controllers\Api\TaxCollectorController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\CharitableCompanyController;
-use App\Http\Controllers\Api\CompanyController;
-use App\Http\Controllers\Api\JobTypeController;
-use App\Http\Controllers\Api\PaymentTypeController;
-use App\Http\Controllers\Api\RegionController;
-use App\Http\Controllers\Api\StatisticsController;
-use App\Http\Controllers\Api\TaxPayerController;
+use App\Http\Controllers\Api\{
+    ActivityLogController , ActivityTypeController , AddressController ,
+    CharitableCompanyController , CompanyController , DepartmentController ,
+    DistrictController , JobTypeController , TaxCollectorController ,
+    TaxPayerController , UserController , AuthController,
+    PaymentTypeController , RegionController , StatisticsController,
+    TaxTypeController
+};
+
 use App\Http\Middleware\appUsersMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -63,5 +57,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::apiResource('companies', CompanyController::class);
 
     Route::apiResource('charitable-companies', CharitableCompanyController::class);
+
+    Route::apiResource('tax-types', TaxTypeController::class);
 
 });
