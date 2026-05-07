@@ -15,7 +15,7 @@ class UserDTO
             public ?string $phone,
             public ?string $image,
             public int $departmentID,
-            public int $createdBy,
+            public ?int $createdBy,
             public UserRole $role,
     ) {}
 

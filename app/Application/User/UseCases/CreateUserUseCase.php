@@ -30,12 +30,6 @@ class CreateUserUseCase
             throw new DomainException("القسم مع ال ID [{$userDTO->departmentID}] غير موجود.");
         }
 
-        // Generate username
-        // $baseUserName = strtolower(
-        //     trim($userDTO->firstName) . '.' . trim($userDTO->lastName)
-        // );
-        // $userName = $this->generateUniqueUserName($baseUserName);
-
         $userName = $userDTO->phone;
         $defaultPassword = '12345678';
 

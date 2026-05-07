@@ -22,7 +22,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'userName' => 'required|string|max:255',
+            'userName' => 'required|string|max:255|exists:app_users,user_name',
             'password' => 'required|string|min:8',
         ];
 
@@ -33,6 +33,7 @@ class LoginRequest extends FormRequest
             'userName.required' => 'اسم المستخدم مطلوب.',
             'userName.string'   => 'اسم المستخدم يجب أن يكون نصًا.',
             'userName.max'      => 'اسم المستخدم يجب ألا يزيد عن 255 حرفًا.',
+            'userName.exists'   => 'اسم  المستخدم غير موجود.',
 
             'password.required' => 'كلمة المرور مطلوبة.',
             'password.string'   => 'كلمة المرور يجب أن تكون نصًا.',

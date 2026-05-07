@@ -19,13 +19,30 @@ class User {
         public ?int $createdBy,
         public Department $department,
         public UserRole $role,
-        public bool $mustChangePassword = true,
+        public ?bool $mustChangePassword,
     ) {}
 
     public function mustChangePassword(): bool
     {
         return $this->mustChangePassword;
     }
+
+    public function toArray(): array
+{
+    return [
+        'id' => $this->id,
+        'firstName' => $this->firstName,
+        'lastName' => $this->lastName,
+        'idCard' => $this->idCard,
+        'userName' => $this->userName,
+        'phone' => $this->phone,
+        'image' => $this->image,
+        'createdBy' => $this->createdBy,
+        'department' => $this->department,
+        'role' => $this->role,
+        'mustChangePassword' => $this->mustChangePassword,
+    ];
+}
 
     /*
     public function changePassword(string $newPassword): void

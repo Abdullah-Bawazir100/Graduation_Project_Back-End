@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\{
     DistrictController , JobTypeController , TaxCollectorController ,
     TaxPayerController , UserController , AuthController,
     PaymentTypeController , RegionController , StatisticsController,
-    TaxTypeController
+    TaxPayerMobileController , TaxTypeController
 };
 
 use App\Http\Middleware\appUsersMiddleware;
@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('login' , [AuthController::class, 'login'])->name('auth.login');
 Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name('auth.forget-password');
 
+Route::post('create-tax-payer-mobile', [TaxPayerMobileController::class, 'store']);
+Route::post('tax-payer-mobile-login', [TaxPayerMobileController::class, 'TaxPayerMobileLogin']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('auth.reset-password');
@@ -22,6 +25,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout' , [AuthController::class , 'logout'])->name('auth.logout');
     Route::get('get_user/{id}' , [UserController::class , 'show'])->name('users.show');
     Route::get('activity-log' , [ActivityLogController::class , 'index'])->name('activity-log.index');
+
+    Route::put('update-tax-payer-mobile/{id}', [TaxPayerMobileController::class, 'update']);
+    Route::post('tax-payer-mobile-logout' , [TaxPayerMobileController::class , 'TaxPayerMobileLogout']);
 
 });
 

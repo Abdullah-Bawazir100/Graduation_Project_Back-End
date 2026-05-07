@@ -42,7 +42,7 @@ class LoginUseCase
 
         // User already change his password & login
         return [
-            'user' => $user,
+            'user' => $user->toArray(),
             'token' => $token,
             'must_change_password' => false
         ];

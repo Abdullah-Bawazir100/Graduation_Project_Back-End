@@ -78,7 +78,7 @@ class UserController extends Controller
 
         $roleInput = $request->input('role');
         $role = $roleInput !== null ? UserRole::from($roleInput) : UserRole::from($existingUser->role);
-        
+
         $dto = new UserDTO(
             id: $id,
             firstName: $firstName,
@@ -135,7 +135,8 @@ class UserController extends Controller
             password: $authUser->password,
             createdBy: $authUser->created_by,
             department: $department,
-            role: $authUser->role
+            role: $authUser->role,
+            mustChangePassword: $authUser->must_change_password,
         );
     }
 }

@@ -87,6 +87,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Persistence\Eloquent\Repositories\TaxTypeRepository::class
         );
 
+        $this->app->bind(
+            \App\Domain\TaxPayerMobile\Repositories\TaxPayerMobileRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\TaxPayerMobileRepository::class
+        );
+
     }
 
     /**
