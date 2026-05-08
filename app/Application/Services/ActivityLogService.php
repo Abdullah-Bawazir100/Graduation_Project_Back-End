@@ -12,7 +12,8 @@ class ActivityLogService
         $query = Activity::with('causer')
             ->whereIn('log_name', ['user', 'department','activity_type',
                         'payment_type' , 'region' , 'district' , 'job_type',
-                        'tax_collector' , 'tax_payer' , 'company' , 'charitable_company']);
+                        'tax_collector' , 'tax_payer' , 'company' , 'charitable_company'
+                        , 'tax_type' , 'tax_information']);
 
         // Filters
         if (!empty($filters['user_id'])) {
@@ -139,6 +140,14 @@ class ActivityLogService
             'إنشاء مكلف مع ملف شركة خيرية' => "تم إنشاء مكلف  مع ملف شركة خيرية جديد." . ($new['name'] ?? ''),
             'تحديث مكلف مع ملف  شركة خيرية' => "تم تحديث مكلف مع ملف خيرية شركة" . ($new['name'] ?? ''),
             'حذف مكلف مع ملف شركة خيرية'  => "تم حذف مكلف مع ملف خيرية شركة." . ($old['name'] ?? ''),
+
+            'إنشاء نوع ضريبة' => "تم إنشاء نوع ضريبة جديد." . ($new['name'] ?? ''),
+            'تحديث نوع ضريبة' => "تم تحديث نوع ضريبة." . ($new['name'] ?? ''),
+            'حذف نوع ضريبة'  => "تم حذف نوع ضريبة." . ($old['name'] ?? ''),
+
+            'إنشاء معلومة ضريبية' => "تم إنشاء معلومة ضريبية جديدة." . ($new['name'] ?? ''),
+            'تحديث معلومة ضريبية' => "تم تحديث معلومة ضريبية." . ($new['name'] ?? ''),
+            'حذف معلومة ضريبية'  => "تم حذف معلومة ضريبية." . ($old['name'] ?? ''),
 
             default => $description,
         };

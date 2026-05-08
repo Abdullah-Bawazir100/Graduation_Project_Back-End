@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\{
     DistrictController , JobTypeController , TaxCollectorController ,
     TaxPayerController , UserController , AuthController,
     PaymentTypeController , RegionController , StatisticsController,
-    TaxPayerMobileController , TaxTypeController
+    TaxInformationController , TaxPayerMobileController , TaxTypeController
 };
 
 use App\Http\Middleware\appUsersMiddleware;
@@ -65,5 +65,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::apiResource('charitable-companies', CharitableCompanyController::class);
 
     Route::apiResource('tax-types', TaxTypeController::class);
+
+    Route::apiResource('tax-informations', TaxInformationController::class);
 
 });

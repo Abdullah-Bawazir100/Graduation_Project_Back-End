@@ -14,6 +14,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
     {
         $model = TaxPayerModel::create([
             'user_id' => $taxPayer->userId,
+            'trade_name' => $taxPayer->tradeName,
             'commercial_record' => $taxPayer->commercialRecord,
             'activity_license' => $taxPayer->activityLicense,
             'trade_pict' => $taxPayer->tradePict,
@@ -36,6 +37,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
         $taxPayerModel->update([
             'user_id' => $taxPayer->userId,
+            'trade_name' => $taxPayer->tradeName,
             'commercial_record' => $taxPayer->commercialRecord,
             'activity_license' => $taxPayer->activityLicense,
             'trade_pict' => $taxPayer->tradePict,
@@ -93,6 +95,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         return new TaxPayer(
             id: $model->id,
             userId: $model->user_id,
+            tradeName: $model->trade_name,
             commercialRecord: $model->commercial_record,
             activityLicense: $model->activity_license,
             tradePict: $model->trade_pict,

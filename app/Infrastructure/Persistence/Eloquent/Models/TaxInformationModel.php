@@ -26,6 +26,7 @@ class TaxInformationModel extends Model
         return $this->belongsTo(TaxPayerModel::class , 'tax_payer_id');
     }
 
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

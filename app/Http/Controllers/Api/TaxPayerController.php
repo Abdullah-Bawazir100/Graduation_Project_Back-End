@@ -75,6 +75,7 @@ class TaxPayerController extends Controller
             // Map Arabic label back to enum value
             $taxPayerDTO = new TaxPayerDTOs(
                 userId: null,
+                tradeName: $request->tradeName,
                 commercialRecord: $commercialRecordUrl,
                 activityLicense: $activityLicenseUrl,
                 tradePict: $tradePictUrl,
@@ -128,6 +129,7 @@ class TaxPayerController extends Controller
 
             $taxPayerDTO = new TaxPayerDTOs(
                 userId: $existingTaxPayer->userId,
+                tradeName:  $request->tradeName ?? $existingTaxPayer->tradeName,
                 commercialRecord: $commercialRecordUrl ?? $existingTaxPayer->commercialRecord,
                 activityLicense: $activityLicenseUrl ?? $existingTaxPayer->activityLicense,
                 tradePict: $tradePictUrl ?? $existingTaxPayer->tradePict,

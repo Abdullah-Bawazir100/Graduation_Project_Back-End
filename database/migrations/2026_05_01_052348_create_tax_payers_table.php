@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('tax_payers', function (Blueprint $table) {
             $table->id();
+            $table->string('trade_name')->unique();
             $table->string('commercial_record')->nullable();
             $table->string('activity_license')->nullable();
             $table->string('trade_pict')->nullable();

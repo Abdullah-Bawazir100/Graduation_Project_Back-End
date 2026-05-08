@@ -108,6 +108,13 @@ class UsersRolesAndAllowedRoutes
             'tax-types.update',
             'tax-types.destroy',
 
+            // Tax Informations
+            'tax-informations.index',
+            'tax-informations.store',
+            'tax-informations.show',
+            'tax-informations.update',
+            'tax-informations.destroy',
+
             // Authentication routes
             'auth.create-user',
             'auth.reset-password',
@@ -219,6 +226,12 @@ class UsersRolesAndAllowedRoutes
             'tax-types.update',
             // Note: No destroy permission for managers
 
+            // Tax Informations
+            'tax-informations.index',
+            'tax-informations.store',
+            'tax-informations.show',
+            'tax-informations.update',
+
             // Authentication routes
             'auth.create-user',
             'auth.reset-password',
@@ -242,7 +255,7 @@ class UsersRolesAndAllowedRoutes
 
         // Collectors Manager Permissions
         UserRole::Collectors_Manager->value => [
-            
+
             'departments.index',
 
             // Job Types - Can view and update only

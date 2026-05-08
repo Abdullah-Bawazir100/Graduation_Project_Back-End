@@ -6,6 +6,7 @@ use App\Application\TaxPayer\DTOs\TaxPayerDTOs;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\Services\UploadFileService;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
+use App\Domain\TaxInformation\Repositories\TaxInformationRepositoryInterface;
 use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Entities\User;
@@ -22,7 +23,8 @@ class CreateTaxPayerWithUserUseCase
         private UserRepositoryInterface $user_repository,
         private TaxPayerRepositoryInterface $tax_payer_repository,
         private DepartmentRepositoryInterface $department_repository,
-        private PasswordHashInterface $password_hash
+        private PasswordHashInterface $password_hash,
+        private TaxInformationRepositoryInterface $tax_information_repository
     )
     {}
 
@@ -56,6 +58,7 @@ class CreateTaxPayerWithUserUseCase
         $taxPayer = new TaxPayer(
             id: null,
             userId: $createdUser->id,
+            tradeName: $taxPayerDTO->tradeName,
             commercialRecord: $taxPayerDTO->commercialRecord,
             activityLicense: $taxPayerDTO->activityLicense,
             tradePict: $taxPayerDTO->tradePict,

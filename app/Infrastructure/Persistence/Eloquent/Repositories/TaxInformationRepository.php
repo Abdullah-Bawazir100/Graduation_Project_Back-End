@@ -4,6 +4,8 @@ namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 
 use App\Domain\TaxInformation\Entities\TaxInformation;
 use App\Domain\TaxInformation\Repositories\TaxInformationRepositoryInterface;
+use App\Domain\TaxPayer\Entities\TaxPayer;
+use App\Domain\TaxType\Entities\TaxType;
 use App\Infrastructure\Persistence\Eloquent\Models\TaxInformationModel;
 
 class TaxInformationRepository implements TaxInformationRepositoryInterface
@@ -16,14 +18,9 @@ class TaxInformationRepository implements TaxInformationRepositoryInterface
             'tax_amount' => $taxInformation->taxAmount,
             'last_payment' => $taxInformation->lastPayment,
         ]);
+        $taxInformationModel->load('taxType' , 'taxPayer');
 
-        return new TaxInformation(
-            $taxInformationModel->id,
-            $taxInformationModel->tax_type_id,
-            $taxInformationModel->tax_payer_id,
-            $taxInformationModel->tax_amount,
-            $taxInformationModel->last_payment,
-        );
+        return $this->mapToDomain($taxInformationModel);
     }
 
     public function update(TaxInformation $taxInformation): ?TaxInformation
@@ -42,18 +39,12 @@ class TaxInformationRepository implements TaxInformationRepositoryInterface
         ]);
         $taxInformationModel->load('taxType' , 'taxPayer');
 
-        return new TaxInformation(
-            $taxInformationModel->id,
-            $taxInformationModel->tax_type_id,
-            $taxInformationModel->tax_payer_id,
-            $taxInformationModel->tax_amount,
-            $taxInformationModel->last_payment,
-        );
+        return $this->mapToDomain($taxInformationModel);
     }
 
     public function delete(int $id): void
     {
-        TaxInformationModel::findOrFail($id)->delete();
+        TaxInformationModel::find($id)->delete();
     }
 
     public function findById(int $id): ?TaxInformation
@@ -64,34 +55,51 @@ class TaxInformationRepository implements TaxInformationRepositoryInterface
             return null;
         }
 
-        return new TaxInformation(
-            $taxInformationModel->id,
-            $taxInformationModel->tax_type_id,
-            $taxInformationModel->tax_payer_id,
-            $taxInformationModel->tax_amount,
-            $taxInformationModel->last_payment,
-        );
+        return $this->mapToDomain($taxInformationModel);
     }
 
     public function getAll(): array
     {
-        return TaxInformationModel::all()
-            ->map(fn ($taxInformationModel) =>
-                new TaxInformation(
-                    $taxInformationModel->id,
-                    $taxInformationModel->tax_type_id,
-                    $taxInformationModel->tax_payer_id,
-                    $taxInformationModel->tax_amount,
-                    $taxInformationModel->last_payment,
-                )
-            )
-            ->toArray();
+        $taxCollectors = TaxInformationModel::with('taxType' , 'taxPayer')->get();
+        return $taxCollectors->map(fn(TaxInformationModel $model) => $this->mapToDomain($model))->toArray();
     }
 
     public function moveTaxInformationToAnotherTaxType(int $oldTaxTypeId, int $newTaxTypeId)
     {
         TaxInformationModel::where('tax_type_id', $oldTaxTypeId)
             ->update(['tax_type_id' => $newTaxTypeId]);
+    }
+
+    private function mapToDomain(TaxInformationModel $model): TaxInformation
+    {
+        $taxType = new TaxType(
+            id: $model->taxType?->id ?? 0,
+            name: $model->taxType?->name ?? ''
+        );
+
+        $taxPayerModel = $model->taxPayer;
+
+        $taxPayer = new TaxPayer(
+            id: $taxPayerModel?->id,
+            userId: $taxPayerModel?->user_id,
+            tradeName: $taxPayerModel?->trade_name,
+            commercialRecord: $taxPayerModel?->commercial_record,
+            activityLicense: $taxPayerModel?->activity_license,
+            tradePict: $taxPayerModel?->trade_pict,
+            insuranceCard: $taxPayerModel?->insurance_card,
+            propertyDocPict: $taxPayerModel?->property_doc_pict,
+            fileType: $taxPayerModel?->file_type,
+        );
+
+        return new TaxInformation(
+            id: $model->id,
+            taxTypeId: $model->tax_type_id,
+            taxPayerId: $model->tax_payer_id,
+            taxAmount: $model->tax_amount,
+            lastPayment: $model->last_payment,
+            taxType: $taxType,
+            taxPayer: $taxPayer,
+        );
     }
 
 }

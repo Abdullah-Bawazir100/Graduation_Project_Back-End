@@ -35,6 +35,7 @@ class StoreTaxPayerRequest extends FormRequest
             'departmentID' => ['required', 'integer', 'exists:departments,id'],
 
             // Taxpayer fields
+            'tradeName' => 'required|string|max:255|unique:tax_payers,trade_name|not_regex:/^\d+$/',
             'commercialRecord' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240', // Max 10MB
             'activityLicense' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240',
             'tradePict' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240',
@@ -106,6 +107,12 @@ class StoreTaxPayerRequest extends FormRequest
             'departmentID.required' => 'القسم مطلوب.',
             'departmentID.integer'  => 'القسم يجب أن يكون رقمًا صحيحًا.',
             'departmentID.exists'   => 'القسم المحدد غير موجود.',
+
+            'tradeName.required' => 'السجل التجاري مطلوب.',
+            'tradeName.string' => 'السجل التجاري يجب أن يكون نصا',
+            'tradeName.max' => 'السجل التجاري لا يمكن أن يتجاوز 255 حرفًا.',
+            'tradeName.unique' => 'السجل التجاري موجود بالفعل.',
+            'tradeName.not_regex' => 'السجل التجاري لا يمكن أن يكون أرقام فقط',
 
             'commercial_record.file' => 'يجب أن يكون السجل تجاري ملفًا',
             'activity_license.file' => 'يجب أن يكون ترخيص مزاولة النشاط ملفًا',

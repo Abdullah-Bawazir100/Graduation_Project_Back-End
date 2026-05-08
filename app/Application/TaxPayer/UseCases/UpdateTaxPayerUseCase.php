@@ -32,6 +32,7 @@ class UpdateTaxPayerUseCase
         $taxPayer = new TaxPayer(
             id: $id,
             userId: $taxPayerDTO->userId,
+            tradeName: $taxPayerDTO->tradeName,
             commercialRecord: $taxPayerDTO->commercialRecord,
             activityLicense: $taxPayerDTO->activityLicense,
             tradePict: $taxPayerDTO->tradePict,

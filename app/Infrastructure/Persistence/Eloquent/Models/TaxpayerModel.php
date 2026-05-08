@@ -17,6 +17,7 @@ class TaxPayerModel extends Model
 
     protected $fillable = [
         'user_id',
+        'trade_name',
         'commercial_record',
         'activity_license',
         'trade_pict',
@@ -57,6 +58,7 @@ class TaxPayerModel extends Model
             ->useLogName('tax_payer')
             ->logOnly([
                 'user_id',
+                'trade_name',
                 'commercial_record',
                 'activity_license',
                 'trade_pict',

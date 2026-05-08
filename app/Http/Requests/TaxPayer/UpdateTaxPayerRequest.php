@@ -22,6 +22,7 @@ class UpdateTaxPayerRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'tradeName' => 'sometimes|string|max:255|unique:tax_payers,trade_name|not_regex:/^\d+$/',
             'commercialRecord' => 'sometimes|file|mimes:jpeg,png,jpg,pdf|max:10240', // Max 10MB
             'activityLicense' => 'sometimes|file|mimes:jpeg,png,jpg,pdf|max:10240',
             'tradePict' => 'sometimes|file|mimes:jpeg,png,jpg,pdf|max:10240',
@@ -33,6 +34,10 @@ class UpdateTaxPayerRequest extends FormRequest
     public function messages()
     {
         return [
+            'tradeName.string' => 'السجل التجاري يجب أن يكون نصا',
+            'tradeName.max' => 'السجل التجاري لا يمكن أن يتجاوز 255 حرفًا.',
+            'tradeName.unique' => 'السجل التجاري موجود بالفعل.',
+            'tradeName.not_regex' => 'السجل التجاري لا يمكن أن يكون أرقام فقط',
 
             'commercial_record.file' => 'يجب أن يكون السجل تجاري ملفًا',
             'activity_license.file' => 'يجب أن يكون ترخيص مزاولة النشاط ملفًا',
