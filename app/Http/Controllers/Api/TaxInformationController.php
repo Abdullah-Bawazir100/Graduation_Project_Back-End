@@ -7,13 +7,22 @@ use App\Application\TaxInformation\UseCases\CreateTaxInformationUseCase;
 use App\Application\TaxInformation\UseCases\DeleteTaxInformationUseCase;
 use App\Application\TaxInformation\UseCases\ListTaxInformationsUseCase;
 use App\Application\TaxInformation\UseCases\ShowTaxInformationUseCase;
+use App\Application\TaxInformation\UseCases\UpdateTaxInformationUseCase;
+use App\Domain\TaxInformation\Repositories\TaxInformationRepositoryInterface;
+use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaxInformation\StoreTaxInformationRequest;
+use App\Http\Requests\TaxInformation\UpdateTaxInformationRequest;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
 
 class TaxInformationController extends Controller
 {
+    public function __construct(
+        private TaxInformationRepositoryInterface $tax_information_repository,
+        private TaxPayerRepositoryInterface $tax_payer_repository
+    )
+    {}
 
     public function index(ListTaxInformationsUseCase $useCase)
     {
@@ -43,9 +52,27 @@ class TaxInformationController extends Controller
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(int $id , UpdateTaxInformationRequest $request , UpdateTaxInformationUseCase $useCase)
     {
-        //
+        $existingTaxInfo = $this->tax_information_repository->findById($id);
+        if(!$existingTaxInfo)
+        {
+            return ApiResponse::notFound([] , "لا يوجد نوع ضريبة مع ال ID [$id].");
+        }
+
+        $dto = new TaxInformationDTOs(
+            id: $existingTaxInfo->id,
+            taxTypeId: $request->taxTypeId ??  $existingTaxInfo->taxTypeId,
+            taxPayerId: $request->taxPayerId ?? $existingTaxInfo->taxPayerId,
+            taxAmount: $request->taxAmount ?? $existingTaxInfo->taxAmount,
+            lastPayment: $request->lastPayment ?? $existingTaxInfo->lastPayment,
+        );
+
+        $updatedTaxInfo = $useCase->execute($id , $dto);
+        return ApiResponse::ok(
+            $updatedTaxInfo,
+            "تم تحديث بيانات معلومات الضريبة مع ال ID [$id] بنجاح."
+        );
     }
 
 

@@ -14,6 +14,9 @@ class ListTaxInformationsUseCase
 
     public function execute()
     {
-        return $this->tax_information_repository->getAll();
+        $taxInformations = $this->tax_information_repository->getAll();
+        return [
+            'TaxInformations' => $taxInformations,
+        ];
     }
 }

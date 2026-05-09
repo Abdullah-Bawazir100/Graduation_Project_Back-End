@@ -60,6 +60,7 @@ class CreateCharitableCompanyUseCase
         $taxPayer = new TaxPayer(
             id: null,
             userId: $createdUser->id,
+            tradeName: $taxPayerDTOs->tradeName,
             commercialRecord: $taxPayerDTOs->commercialRecord,
             activityLicense: $taxPayerDTOs->activityLicense,
             tradePict: $taxPayerDTOs->tradePict,

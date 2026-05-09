@@ -70,11 +70,8 @@ class CreateTaxPayerWithUserUseCase
         $createdTaxPayer = $this->tax_payer_repository->create($taxPayer);
 
         return [
-            'user_id' => $createdTaxPayer->id,
-            'userName' => $userName,
-            'temporaryPassword' => $defaultPassword,
-            'mustChangePassword' => true,
-            'user' => $createdTaxPayer
+            'taxPayerInfo' => $createdTaxPayer,
+            'userInfo' => $createdUser->toArray(),
         ];
     }
 }

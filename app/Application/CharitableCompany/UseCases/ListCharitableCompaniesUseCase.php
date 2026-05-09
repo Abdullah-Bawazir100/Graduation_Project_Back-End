@@ -30,20 +30,15 @@ class ListCharitableCompaniesUseCase
                 if ($taxPayer && $taxPayer->userId) {
                     $user = $this->user_repository->findById($taxPayer->userId);
                     if ($user) {
-                        $taxPayerUserInfo = [
-                            'id' => $user->id,
-                            'fullName' => $user->firstName . ' ' . $user->lastName,
-                            'userName' => $user->userName,
-                            'phone' => $user->phone,
-                            'fileType' => $taxPayer->fileType,
-                        ];
+                        $taxPayerUserInfo = $user; // Return the full user object/array instead of selected fields
                     }
                 }
             }
 
             $result[] = [
-                'charitableCompany' => $charitableCompany,
-                'taxPayerInfo' => $taxPayerUserInfo
+                'charitableCompanyInfo' => $charitableCompany,
+                'taxPayerInfo' => $taxPayer,
+                'userInfo' => $taxPayerUserInfo->toArray()
             ];
         }
 

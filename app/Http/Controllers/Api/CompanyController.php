@@ -79,6 +79,7 @@ class CompanyController extends Controller
             // Map Arabic label back to enum value
             $taxPayerDTO = new TaxPayerDTOs(
                 userId: null,
+                tradeName: $request->tradeName,
                 commercialRecord: $commercialRecordUrl,
                 activityLicense: $activityLicenseUrl,
                 tradePict: $tradePictUrl,
@@ -114,7 +115,7 @@ class CompanyController extends Controller
     {
         try {
             $findCompany = $this->findByIdUseCase->execute($id);
-            $existingCompany = $findCompany['company'];
+            $existingCompany = $findCompany['companyInfo'];
 
             if (!$existingCompany) {
                 return ApiResponse::notFound([], "ملف الشركة مع ال ID [{$id}] غير موجود.");

@@ -44,6 +44,9 @@ class CreateTaxInformationUseCase
             taxPayer: $taxPayer
         );
 
-        return $this->tax_information_repository->create($taxInformation);
+        $createdTaxInfo = $this->tax_information_repository->create($taxInformation);
+        return [
+            'taxInformation' => $createdTaxInfo,
+        ];
     }
 }

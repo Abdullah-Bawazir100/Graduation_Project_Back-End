@@ -38,7 +38,7 @@ class UpdateCharitableCompanyUseCase
         return [
             'updatedCharitableCompany' => $updatedCharitableCompany,
             'taxPayerInfo' => $taxPayer,
-            'userInfo' => $user,
+            'userInfo' => $user->toArray(),
         ];
     }
 }

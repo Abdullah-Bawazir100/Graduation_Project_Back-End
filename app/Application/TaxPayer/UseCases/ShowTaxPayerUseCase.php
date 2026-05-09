@@ -24,24 +24,12 @@ class ShowTaxPayerUseCase
             throw new DomainException("دافع الضرائب مع ال ID [{$id}] غير موجود.");
         }
 
-        $authUser = Auth::user();
-
-        if ($taxPayer->userId !== $authUser->id || $authUser->role !== UserRole::Admin->value || $authUser->role !== UserRole::Manager->value) {
-            throw new DomainException("غير مصرح لك بالإطلاع على بيانات مكلفين آخرين.");
-        }
-
         $userInfo = null;
 
         if ($taxPayer->userId) {
             $user = $this->user_repository->findById($taxPayer->userId);
             if ($user) {
-                $userInfo = [
-                    'id' => $user->id,
-                    'fullName' => $user->firstName . ' ' . $user->lastName,
-                    'userName' => $user->userName,
-                    'phone' => $user->phone,
-                    'role' => $user->role,
-                ];
+                $userInfo = $user->toArray();
             }
         }
 

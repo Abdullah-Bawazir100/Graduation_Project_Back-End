@@ -32,20 +32,15 @@ class FindCharitableCompanyByIdUseCase
             if ($taxPayer && $taxPayer->userId) {
                 $user = $this->user_repository->findById($taxPayer->userId);
                 if ($user) {
-                    $taxPayerUserInfo = [
-                        'id' => $user->id,
-                        'fullName' => $user->firstName . ' ' . $user->lastName,
-                        'userName' => $user->userName,
-                        'phone' => $user->phone,
-                        'fileType' => $taxPayer->fileType,
-                    ];
+                    $taxPayerUserInfo = $user;
                 }
             }
         }
 
         return [
             'charitableCompany' => $charitableCompany,
-            'taxPayerInfo' => $taxPayerUserInfo
+            'taxPayer' => $taxPayer,
+            'userInfo' => $taxPayerUserInfo
         ];
     }
 }

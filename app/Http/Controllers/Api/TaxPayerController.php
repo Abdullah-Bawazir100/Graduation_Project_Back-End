@@ -36,7 +36,7 @@ class TaxPayerController extends Controller
     public function index(ListTaxPayersUseCase $useCase): ApiResponse
     {
         $taxPayers = $useCase->execute();
-        return ApiResponse::ok($taxPayers , 'تم جلب دافعي الضرائب بنجاح.');
+        return ApiResponse::ok($taxPayers , 'تم جلب المكلفين بنجاح.');
     }
 
     public function store(StoreTaxPayerRequest $request , CreateTaxPayerWithUserUseCase $useCase): ApiResponse

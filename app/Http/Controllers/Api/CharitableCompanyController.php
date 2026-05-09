@@ -82,6 +82,7 @@ class CharitableCompanyController extends Controller
             // Map Arabic label back to enum value
             $taxPayerDTO = new TaxPayerDTOs(
                 userId: null,
+                tradeName: $request->tradeName,
                 commercialRecord: $commercialRecordUrl,
                 activityLicense: $activityLicenseUrl,
                 tradePict: $tradePictUrl,

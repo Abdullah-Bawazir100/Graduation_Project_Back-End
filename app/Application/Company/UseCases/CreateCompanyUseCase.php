@@ -59,6 +59,7 @@ class CreateCompanyUseCase
         $taxPayer = new TaxPayer(
             id: null,
             userId: $createdUser->id,
+            tradeName: $taxPayerDTOs->tradeName,
             commercialRecord: $taxPayerDTOs->commercialRecord,
             activityLicense: $taxPayerDTOs->activityLicense,
             tradePict: $taxPayerDTOs->tradePict,
@@ -80,11 +81,9 @@ class CreateCompanyUseCase
         $createdCompany = $this->company_repository->create($company);
 
         return [
-            'tax_payer_id' => $createdTaxPayer->id,
-            'userName' => $userName,
-            'temporaryPassword' => $defaultPassword,
-            'mustChangePassword' => true,
             'company' => CompanyMapper::toArray($createdCompany),
+            'taxPayerInfo' => $createdTaxPayer,
+            'userInfo' => $createdUser,
         ];
     }
 }
