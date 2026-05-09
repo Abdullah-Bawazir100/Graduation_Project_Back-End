@@ -70,6 +70,12 @@ class UpdateTaxPayerMobileRequest extends FormRequest
                 'mimes:png,jpg,jpeg,gif',
                 'max:5012'
             ],
+
+            'departmentID' => [
+                'sometimes',
+                'integer',
+                'exists:departments,id'
+            ],
         ];
     }
 
@@ -106,6 +112,9 @@ class UpdateTaxPayerMobileRequest extends FormRequest
             'image.image' => 'الملف المرفوع يجب أن يكون صورة.',
             'image.mimes' => 'الصورة يجب أن تكون بصيغة png أو jpg أو jpeg أو gif.',
             'image.max'   => 'حجم الصورة يجب ألا يتجاوز 5 MB.',
+
+            'departmentID.integer' => 'معرف القسم يجب أن يكون رقم صحيح.',
+            'departmentID.exists' => 'القسم غير موجود.',
         ];
     }
 }

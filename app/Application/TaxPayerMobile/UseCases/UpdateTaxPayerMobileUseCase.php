@@ -13,7 +13,7 @@ use DomainException;
 class UpdateTaxPayerMobileUseCase
 {
     public function __construct(
-        private UserRepository $taxPayerMobileRepository,
+        private UserRepository $user_repository,
         private TaxPayerMobileRepositoryInterface $tax_payer_mobile_repository,
         private DepartmentRepositoryInterface $department_repository,
         private PasswordHashInterface $passwordHash
@@ -24,30 +24,32 @@ class UpdateTaxPayerMobileUseCase
     {
 
         $department = $this->department_repository->findById($userDTO->departmentID);
-        $taxPayer = $this->taxPayerMobileRepository->findById($userDTO->id);
-
-        if (!$taxPayer)
+        if(!$department)
         {
-            throw new DomainException("لا يوجد مكلف مع ال ID [{$userDTO->id}].");
+            throw new DomainException("القسم مع ال ID [$userDTO->departmentID] غير موجود.");
         }
+
+        $user = $this->user_repository->findById($userDTO->id);
+        if(!$user)
+        {
+            throw new DomainException("المستخدم مع ال ID [$userDTO->id] غير موجود.");
+        }
+
         $user = new User(
             id: $userDTO->id,
             firstName: $userDTO->firstName,
             lastName: $userDTO->lastName,
-            idCard: $userDTO->idCard ?? '',
+            idCard: $userDTO->idCard,
             userName: $userDTO->userName,
-            phone: $userDTO->phone ?? '',
-            image: $userDTO->image ?? '',
-            password: $this->passwordHash->hashPassword($userDTO->password),
-            createdBy: null,
+            phone: $userDTO->phone,
+            image: $userDTO->image,
+            password: $userDTO->password ? $this->passwordHash->hashPassword($userDTO->password) : $user->password,
+            createdBy: $userDTO->createdBy,
             department: $department,
             role: $userDTO->role,
             mustChangePassword: false
         );
-        $updatedTaxPayer = $this->tax_payer_mobile_repository->update($user);
-        return [
-            'updatedTaxPayer' => $updatedTaxPayer->toArray()
-        ];
-
+        $updatedTaxPayer = $this->user_repository->update($user);
+        return $updatedTaxPayer->toArray();
     }
 }

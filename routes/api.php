@@ -26,8 +26,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('get_user/{id}' , [UserController::class , 'show'])->name('users.show');
     Route::get('activity-log' , [ActivityLogController::class , 'index'])->name('activity-log.index');
 
-    Route::put('update-tax-payer-mobile/{id}', [TaxPayerMobileController::class, 'update']);
+    Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update']);
     Route::post('tax-payer-mobile-logout' , [TaxPayerMobileController::class , 'TaxPayerMobileLogout']);
+    Route::get('get-tax-payer-mobile-profile' , [TaxPayerMobileController::class , 'show']);
 
 });
 

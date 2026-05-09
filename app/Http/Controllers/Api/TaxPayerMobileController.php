@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Application\TaxPayerMobile\UseCases\CreateTaxPayerMobileUseCase;
+use App\Application\TaxPayerMobile\UseCases\ShowProfileUseCase;
 use App\Application\TaxPayerMobile\UseCases\UpdateTaxPayerMobileUseCase;
 use App\Application\User\DTOs\LoginDTO;
 use App\Application\User\DTOs\UserDTO;
@@ -66,29 +67,36 @@ class TaxPayerMobileController extends Controller
     }
 
 
-    public function show(string $id)
+    public function show(ShowProfileUseCase $useCase)
     {
-        //
+        try {
+            $authUser = Auth::user();
+            if(!$authUser)
+            {
+                return ApiResponse::unauthorized(null , "غير مصرح ، الرجاء تسجيل الدخول.");
+            }
+            $profile = $useCase->execute($authUser->id);
+            return ApiResponse::ok($profile , "تم جلب البيانات بنجاح.");
+        }
+        catch(\Throwable $e) {
+            throw $e;
+        }
     }
 
 
     public function update(
-        int $id,
         UpdateTaxPayerMobileRequest $request,
         UpdateTaxPayerMobileUseCase $useCase
     ) {
         try {
-            $existingUser = $this->userRepository->findById($id);
+            $existingUser = Auth::user();
 
             if (!$existingUser) {
-                return ApiResponse::notFound(
-                    [],
-                    'المكلف مع ال ID [' . $id . '] غير موجود.'
-                );
+                return ApiResponse::unauthorized(null, "غير مصرح.");
             }
 
             // ID Card
-            $idCardUrl = $existingUser->idCard;
+            $idCardUrl = $existingUser->id_card;
 
             if ($request->hasFile('idCard')) {
                 $idCardUrl = $this->uploadFileService->uploadFile(
@@ -109,15 +117,15 @@ class TaxPayerMobileController extends Controller
             // DTO
             $dto = new UserDTO(
                 id: $existingUser->id,
-                firstName: $request->firstName ?? $existingUser->firstName,
-                lastName: $request->lastName ?? $existingUser->lastName,
+                firstName: $request->firstName ?? $existingUser->first_name,
+                lastName: $request->lastName ?? $existingUser->last_name,
                 idCard: $idCardUrl,
-                userName: $request->userName ?? $existingUser->userName,
-                password: $request->password ?? $existingUser->password,
+                userName: $request->userName ?? $existingUser->user_name,
+                password: $request->password,
                 phone: $request->phone ?? $existingUser->phone,
                 image: $imageUrl,
-                departmentID: 1,
-                createdBy: $existingUser->createdBy,
+                departmentID: $request->departmentID ?? $existingUser->department_id,
+                createdBy: $existingUser->created_by,
                 role: $existingUser->role,
             );
 

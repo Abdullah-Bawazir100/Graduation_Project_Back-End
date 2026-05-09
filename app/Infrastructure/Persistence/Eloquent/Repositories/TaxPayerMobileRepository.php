@@ -34,7 +34,6 @@ class TaxPayerMobileRepository implements TaxPayerMobileRepositoryInterface
 
         return $this->mapToDomain($taxPayerData);
     }
-
     public function update(User $user)
     {
         $taxPayerData = UserModel::findOrFail($user->id);
