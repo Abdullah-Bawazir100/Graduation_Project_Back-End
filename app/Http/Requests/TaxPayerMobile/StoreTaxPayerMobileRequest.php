@@ -24,14 +24,14 @@ class StoreTaxPayerMobileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'firstName'    => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
-            'lastName'     => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
-            'idCard'       => ['required', 'file', 'mimes:pdf' , 'max:5242880'],
-            'phone'         => ['required', 'string', 'min:9' , 'unique:app_users,phone'],
-            'userName'     => ['required', 'string', 'min:3' , 'unique:app_users,user_name'],
-            'password'     => ['required', 'string', 'min:8' , 'confirmed'],
-            'image' => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:5012'],
-            'role' => [Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
+            'firstName' => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
+            'lastName'  => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
+            'idCard'    => ['required', 'image', 'mimes:png,jpg,jpeg,gif' , 'max:5012'],
+            'phone'     => ['required', 'string', 'min:9' , 'unique:app_users,phone'],
+            'userName'  => ['required', 'string', 'min:3' , 'unique:app_users,user_name'],
+            'password'  => ['required', 'string', 'min:8' , 'confirmed'],
+            'image'     => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:5012'],
+            'role'      => [Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
         ];
     }
 
