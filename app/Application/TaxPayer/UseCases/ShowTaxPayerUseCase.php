@@ -34,7 +34,7 @@ class ShowTaxPayerUseCase
         }
 
         return [
-            'taxPayer' => $taxPayer,
+            'taxPayerInfo' => $taxPayer,
             'userInfo' => $userInfo
         ];
     }
