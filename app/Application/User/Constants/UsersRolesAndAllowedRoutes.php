@@ -204,6 +204,7 @@ class UsersRolesAndAllowedRoutes
             'tax-payers.show',
             'tax-payers.update',
             'tax-payer-by-userId',
+            'get-tax-payers-with-special-info',
             // Note: No destroy permission for managers
 
             // Companies
