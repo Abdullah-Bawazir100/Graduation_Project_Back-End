@@ -36,7 +36,7 @@ class UpdateCompanyUseCase
         );
         $updatedCompany = $this->company_repository->update($company , $id);
         return [
-            'UpdatedCompany' => $updatedCompany,
+            'companyInfo' => $updatedCompany,
             'taxPayerInfo' => $existingTaxPayer,
             'userInfo' => $existingUser
         ];

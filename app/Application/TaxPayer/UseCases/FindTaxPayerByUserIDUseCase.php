@@ -31,7 +31,7 @@ class FindTaxPayerByUserIDUseCase
         }
 
         return [
-            'taxPayer' => $taxPayer,
+            'taxPayerInfo' => $taxPayer,
             'userInfo' => [
                 'id' => $user->id,
                 'fullName' => $user->firstName . ' ' . $user->lastName,

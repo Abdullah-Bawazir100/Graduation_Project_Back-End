@@ -38,8 +38,8 @@ class FindCharitableCompanyByIdUseCase
         }
 
         return [
-            'charitableCompany' => $charitableCompany,
-            'taxPayer' => $taxPayer,
+            'charitableCompanyInfo' => $charitableCompany,
+            'taxPayerInfo' => $taxPayer,
             'userInfo' => $taxPayerUserInfo
         ];
     }

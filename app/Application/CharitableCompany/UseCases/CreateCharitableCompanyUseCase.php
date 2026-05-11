@@ -80,7 +80,7 @@ class CreateCharitableCompanyUseCase
         $createdCharitableCompany = $this->charitable_company_repository->create($charitableCompany);
 
         return [
-            'CharitableCompany' => CharitableCompanyMapper::toArray($createdCharitableCompany),
+            'charitableCompanyInfo' => CharitableCompanyMapper::toArray($createdCharitableCompany),
             'taxPayerInfo' => $createdTaxPayer,
             'userInfo' => $createdUser
         ];

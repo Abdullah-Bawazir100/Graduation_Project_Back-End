@@ -81,7 +81,7 @@ class CreateCompanyUseCase
         $createdCompany = $this->company_repository->create($company);
 
         return [
-            'company' => CompanyMapper::toArray($createdCompany),
+            'companyInfo' => CompanyMapper::toArray($createdCompany),
             'taxPayerInfo' => $createdTaxPayer,
             'userInfo' => $createdUser,
         ];

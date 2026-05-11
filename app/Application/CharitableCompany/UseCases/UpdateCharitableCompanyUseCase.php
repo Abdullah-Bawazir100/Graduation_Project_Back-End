@@ -36,7 +36,7 @@ class UpdateCharitableCompanyUseCase
         $updatedCharitableCompany = $this->charitable_company_repository->update($charitableCompany , $id);
 
         return [
-            'updatedCharitableCompany' => $updatedCharitableCompany,
+            'charitableCompanyInfo' => $updatedCharitableCompany,
             'taxPayerInfo' => $taxPayer,
             'userInfo' => $user->toArray(),
         ];

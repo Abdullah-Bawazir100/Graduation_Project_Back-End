@@ -42,7 +42,7 @@ class UpdateTaxPayerUseCase
         );
         $updatedTaxPayer = $this->tax_payer_repository->update($taxPayer, $id);
         return [
-            'UpdatedTaxPayer' => $updatedTaxPayer,
+            'TaxPayerInfo' => $updatedTaxPayer,
             'userInfo' => $existingUser,
         ];
     }
