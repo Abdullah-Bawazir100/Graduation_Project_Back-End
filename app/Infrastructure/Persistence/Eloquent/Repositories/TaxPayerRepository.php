@@ -90,6 +90,12 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         return $this->mapToDomain($taxPayerModel);
     }
 
+    public function getTaxPayersWithSpecialInfo()
+    {
+        $taxPayers = TaxPayerModel::with('user')->get();
+        return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
     private function mapToDomain(TaxPayerModel $model): TaxPayer
     {
         return new TaxPayer(

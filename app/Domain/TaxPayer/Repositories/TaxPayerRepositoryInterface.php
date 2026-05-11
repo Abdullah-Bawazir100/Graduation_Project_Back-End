@@ -13,4 +13,5 @@ interface TaxPayerRepositoryInterface
     public function getAll();
     public function findByUserId(int $userId): ?TaxPayer;
     public function findByUserName(string $userName): ?TaxPayer;
+    public function getTaxPayersWithSpecialInfo();
 }

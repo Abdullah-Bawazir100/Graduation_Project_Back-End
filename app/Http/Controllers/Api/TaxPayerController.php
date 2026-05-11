@@ -10,6 +10,7 @@ use App\Application\TaxPayer\UseCases\DeleteTaxPayerUseCase;
 use App\Application\TaxPayer\UseCases\FindTaxPayerByIdUseCase;
 use App\Application\TaxPayer\UseCases\FindTaxPayerByUserIDUseCase;
 use App\Application\TaxPayer\UseCases\ListTaxPayersUseCase;
+use App\Application\TaxPayer\UseCases\ListTaxPayersWithSpecialInfoUseCase;
 use App\Application\TaxPayer\UseCases\ShowTaxPayerUseCase;
 use App\Application\TaxPayer\UseCases\UpdateTaxPayerUseCase;
 use App\Application\User\DTOs\UserDTO;
@@ -164,6 +165,12 @@ class TaxPayerController extends Controller
     {
         $useCase->execute($id);
         return ApiResponse::ok(null , "تم حذف دافع الضرائب مع ال ID [{$id}] بنجاح.");
+    }
+
+    public function getTaxPayersWithSpecialInfo(ListTaxPayersWithSpecialInfoUseCase $useCase)
+    {
+        $taxPayers = $useCase->execute();
+        return ApiResponse::ok($taxPayers , "تم جلب المستخدمين المكلفين بنجاح.");
     }
 
     private function convertToDomainUser($authUser): DomainUser

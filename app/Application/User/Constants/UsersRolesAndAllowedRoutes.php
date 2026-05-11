@@ -86,6 +86,7 @@ class UsersRolesAndAllowedRoutes
             'tax-payers.update',
             'tax-payers.destroy',
             'tax-payer-by-userId',
+            'get-tax-payers-with-special-info',
 
             // Companies
             'companies.index',

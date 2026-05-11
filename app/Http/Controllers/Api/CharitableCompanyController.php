@@ -121,7 +121,7 @@ class CharitableCompanyController extends Controller
     {
         try{
             $findCharitableCompany = $this->findCharitableCompanyByIdUseCase->execute($id);
-            $existingCharitableCompany = $findCharitableCompany['charitableCompany'];
+            $existingCharitableCompany = $findCharitableCompany['charitableCompanyInfo'];
             if (!$existingCharitableCompany) {
                 return ApiResponse::notFound([], "ملف الشركة الخيرية مع ال ID [{$id}] غير موجود.");
             }

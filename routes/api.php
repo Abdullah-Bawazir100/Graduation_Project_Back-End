@@ -60,6 +60,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
     Route::apiResource('tax-payers', TaxPayerController::class);
     Route::get('tax-payer-by-userId/{id}', [TaxPayerController::class , 'findTaxPayerByUserID'])->name('tax-payer-by-userId');
+    Route::get('get-tax-payers-with-special-info', [TaxPayerController::class , 'getTaxPayersWithSpecialInfo'])->name('get-tax-payers-with-special-info');
 
     Route::apiResource('companies', CompanyController::class);
 
