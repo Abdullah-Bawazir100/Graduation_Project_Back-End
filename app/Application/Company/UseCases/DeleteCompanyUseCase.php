@@ -17,12 +17,12 @@ class DeleteCompanyUseCase
     public function execute(int $id): void
     {
         $company = $this->company_repository->findById($id);
-        $taxPayer = $this->tax_payer_repository->findById($company->tax_payer_id);
-        $user = $this->user_repository->findById($taxPayer->userId);
         if(!$company)
         {
             throw new \DomainException("لا يوجد ملف شركة مع ال ID [{$id}].");
         }
+        $taxPayer = $this->tax_payer_repository->findById($company->tax_payer_id);
+        $user = $this->user_repository->findById($taxPayer->userId);
 
         $this->company_repository->delete($id);
         $this->tax_payer_repository->delete($taxPayer->id);

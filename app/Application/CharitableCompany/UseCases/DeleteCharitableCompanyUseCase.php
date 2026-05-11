@@ -19,12 +19,12 @@ class DeleteCharitableCompanyUseCase
     public function execute(int $id): void
     {
         $charitableCompany = $this->charitable_company_repository->findById($id);
-        $taxPayer = $this->tax_payer_repository->findById($charitableCompany->tax_payer_id);
-        $user = $this->user_repository->findById($taxPayer->userId);
         if(!$charitableCompany)
         {
             throw new DomainException("لا يوجد ملف شركة خيرية مع ال ID [{$id}].");
         }
+        $taxPayer = $this->tax_payer_repository->findById($charitableCompany->tax_payer_id);
+        $user = $this->user_repository->findById($taxPayer->userId);
         $this->charitable_company_repository->delete($id);
         $this->tax_payer_repository->delete($taxPayer->id);
         $this->user_repository->delete($user->id);
