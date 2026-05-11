@@ -41,6 +41,7 @@ class UpdateUserUseCase
             createdBy: $existingUser->createdBy,
             department: $department,
             role: $dto->role,
+            mustChangePassword: $existingUser->mustChangePassword
         );
 
         return $this->userRepository->update($updatedUser);

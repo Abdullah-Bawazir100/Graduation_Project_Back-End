@@ -12,14 +12,12 @@ class FindCharitableCompanyByIdUseCase
         private CharitableCompanyRepositoryInterface $charitable_company_repository,
         private TaxPayerRepositoryInterface $tax_payer_repository,
         private UserRepositoryInterface $user_repository
-    )
-    {}
+    ) {}
 
     public function execute(int $id)
     {
         $charitableCompany = $this->charitable_company_repository->findById($id);
-        if(!$charitableCompany)
-        {
+        if (!$charitableCompany) {
             throw new \DomainException("ملف الشركة الخيرية مع ال ID [{$id}] غير موجود.");
         }
 
