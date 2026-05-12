@@ -29,7 +29,7 @@ class UpdateJobTypeUseCase
         ) {
             throw new DomainException("نوع الوظيفة مع الأسم [ $name}] موجود بالفعل.");
         }
-
+        
         return $this->job_type_repository->update(
             new JobType($id, $name)
         );

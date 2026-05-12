@@ -71,11 +71,11 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
     Route::apiResource('tax-informations', TaxInformationController::class);
 
+    Route::apiResource('file-status' , FileStatusController::class);
+
     // Mobile App Routes
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update']);
     Route::post('tax-payer-mobile-logout' , [TaxPayerMobileController::class , 'TaxPayerMobileLogout']);
     Route::get('get-tax-payer-mobile-profile' , [TaxPayerMobileController::class , 'show']);
-
-    Route::apiResource('file-status' , FileStatusController::class);
 
 });

@@ -11,7 +11,7 @@ class UpdateFileStatusRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,20 @@ class UpdateFileStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'statusName' => ['sometimes' , 'string' , 'unique:file_status,status_name' , 'not_regex:/^\d+$/'],
+            'statusDescription' => ['nullable' , 'string' , 'not_regex:/^\d+$/'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'statusName.string' => 'اسم حالة الملف يجب ان يكون نصاً.',
+            'statusName.unique' => 'اسم حالة الملف موجود بالفعل.',
+            'statusName.not_regex' => 'لا يمكن أن يكون اسم حالة الملف أرقام فقط.',
+
+            'statusDescription.string' => 'وصف حالة الملف يجب ان يكون نصاً.',
+            'statusDescription.not_regex' => 'لا يمكن أن يكون وصف حالة الملف أرقام فقط.'
         ];
     }
 }
