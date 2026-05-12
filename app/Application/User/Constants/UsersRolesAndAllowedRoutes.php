@@ -120,6 +120,13 @@ class UsersRolesAndAllowedRoutes
             'tax-informations.update',
             'tax-informations.destroy',
 
+            // File Status
+            'file-status.index',
+            'file-status.store',
+            'file-status.show',
+            'file-status.update',
+            'file-status.destroy',
+
             // Authentication routes
             'auth.create-user',
             'auth.reset-password',
@@ -240,6 +247,13 @@ class UsersRolesAndAllowedRoutes
             'tax-informations.store',
             'tax-informations.show',
             'tax-informations.update',
+
+            // File Status
+            'file-status.index',
+            'file-status.store',
+            'file-status.show',
+            'file-status.update',
+            // Note: No destroy permission for managers
 
             // Authentication routes
             'auth.create-user',

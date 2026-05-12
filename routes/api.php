@@ -5,8 +5,9 @@ use App\Http\Controllers\Api\{
     CharitableCompanyController , CompanyController , DepartmentController ,
     DistrictController , JobTypeController , TaxCollectorController ,
     TaxPayerController , UserController , AuthController,
-    PaymentTypeController , RegionController , StatisticsController,
-    TaxInformationController , TaxPayerMobileController , TaxTypeController
+    FileStatusController , PaymentTypeController , RegionController ,
+    StatisticsController , TaxInformationController , TaxPayerMobileController ,
+    TaxTypeController
 };
 
 use App\Http\Middleware\appUsersMiddleware;
@@ -74,5 +75,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update']);
     Route::post('tax-payer-mobile-logout' , [TaxPayerMobileController::class , 'TaxPayerMobileLogout']);
     Route::get('get-tax-payer-mobile-profile' , [TaxPayerMobileController::class , 'show']);
+
+    Route::apiResource('file-status' , FileStatusController::class);
 
 });
