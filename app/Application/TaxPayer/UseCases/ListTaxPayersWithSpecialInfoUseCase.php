@@ -1,7 +1,10 @@
 <?php
 
-namespace  App\Application\TaxPayer\UseCases;
+namespace App\Application\TaxPayer\UseCases;
 
+use App\Domain\CharitableCompany\Repositories\CharitableCompanyRepositoryInterface;
+use App\Domain\Company\Repositories\CompanyRepositoryInterface;
+use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 
@@ -9,31 +12,55 @@ class ListTaxPayersWithSpecialInfoUseCase
 {
     public function __construct(
         private TaxPayerRepositoryInterface $tax_payer_repository,
-        private UserRepositoryInterface $user_repository
+        private UserRepositoryInterface $user_repository,
+        private CompanyRepositoryInterface $company_repository,
+        private CharitableCompanyRepositoryInterface $charitable_company_repository
     )
     {}
 
     public function execute()
     {
         $taxPayersInfo = $this->tax_payer_repository->getTaxPayersWithSpecialInfo();
+
         $result = [];
+
         foreach ($taxPayersInfo as $taxPayer) {
+
             $userInfo = null;
+            $companyId = null;
+            $charitableCompanyId = null;
 
             if ($taxPayer->userId) {
                 $user = $this->user_repository->findById($taxPayer->userId);
+
                 if ($user) {
-                    $userInfo = $user; // Store the user object directly instead of converting to array
+                    $userInfo = $user;
                 }
             }
 
+            // إذا الملف ليس Individual
+            if ($taxPayer->fileType !== enFileType::Individual) {
+
+                $companyInfo = $this->company_repository
+                    ->findByTaxPayerId($taxPayer->id);
+
+                $charitableCompanyInfo = $this->charitable_company_repository
+                    ->findByTaxPayerId($taxPayer->id);
+
+                $companyId = $companyInfo?->id;
+                $charitableCompanyId = $charitableCompanyInfo?->id;
+            }
+
             $result[] = [
-                'userId' => $userInfo->id,
+                'userId' => $userInfo?->id,
                 'taxPayerId' => $taxPayer->id,
-                'taxPayerName' => $userInfo->firstName . ' ' . $userInfo->lastName, // Access properties directly from user object
+                'taxPayerName' => $userInfo
+                    ? $userInfo->firstName . ' ' . $userInfo->lastName : null,
                 'tradeName' => $taxPayer->tradeName,
-                'phone' => $userInfo->phone,
+                'phone' => $userInfo?->phone,
                 'taxPayerFileType' => $taxPayer->fileType,
+                'companyId' => $companyId,
+                'charitableCompanyId' => $charitableCompanyId,
             ];
         }
 

@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 use App\Domain\CharitableCompany\Entities\CharitableCompany;
 use App\Domain\CharitableCompany\Repositories\CharitableCompanyRepositoryInterface;
 use App\Infrastructure\Persistence\Eloquent\Models\CharitableCompanyModel;
+use Override;
 
 class CharitableCompanyRepository implements CharitableCompanyRepositoryInterface
 {
@@ -52,6 +53,18 @@ class CharitableCompanyRepository implements CharitableCompanyRepositoryInterfac
     public function findById(int $id): ?CharitableCompany
     {
         $charitableCompanyModel = CharitableCompanyModel::with('taxpayer')->find($id);
+        if (!$charitableCompanyModel) {
+            return null;
+        }
+        return $this->mapToDomain($charitableCompanyModel);
+    }
+
+    #[Override]
+    public function findByTaxPayerId(int $taxPayerId): ?CharitableCompany
+    {
+        $charitableCompanyModel = CharitableCompanyModel::with('taxPayer')
+            ->where('tax_payer_id' , $taxPayerId)->first();
+
         if (!$charitableCompanyModel) {
             return null;
         }

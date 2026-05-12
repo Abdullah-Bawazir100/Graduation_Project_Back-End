@@ -70,6 +70,15 @@ class CompanyRepository implements CompanyRepositoryInterface
         return $this->mapToDomain($taxPayerModel);
     }
 
+    public function findByTaxPayerId(int $taxPayerId): ?Company
+    {
+        $taxPayerModel = CompanyModel::with('taxPayer')->where('tax_payer_id' , $taxPayerId)->first();
+        if (!$taxPayerModel) {
+            return null;
+        }
+        return $this->mapToDomain($taxPayerModel);
+    }
+
     public function delete(int $id)
     {
         CompanyModel::findOrFail($id)->delete();

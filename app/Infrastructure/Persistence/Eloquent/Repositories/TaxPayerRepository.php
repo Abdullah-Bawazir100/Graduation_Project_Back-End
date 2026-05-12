@@ -92,7 +92,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     public function getTaxPayersWithSpecialInfo()
     {
-        $taxPayers = TaxPayerModel::with('user')->get();
+        $taxPayers = TaxPayerModel::with('user' , 'companies' , 'charitable_companies')->get();
         return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
     }
 
