@@ -1,29 +1,28 @@
 <?php
 
-namespace App\Application\Company\UseCases;
+namespace App\Application\CharitableCompany\UseCases;
 
-use App\Application\Company\DTOs\CompanyDTOs;
+use App\Application\CharitableCompany\DTOs\CharitableCompanyDTOs;
 use App\Application\TaxPayer\DTOs\TaxPayerDTOs;
-use App\Domain\Company\Entities\Company;
-use App\Domain\Company\Repositories\CompanyRepositoryInterface;
+use App\Domain\CharitableCompany\Entities\CharitableCompany;
+use App\Domain\CharitableCompany\Repositories\CharitableCompanyRepositoryInterface;
 use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
-use App\Domain\TaxPayerMobile\Repositories\TaxPayerMobileRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use DomainException;
 
-class CreateCompanyFileToExistingTaxPayerUseCase
+class CreateCharitableCompanyFileToExistingTaxPayerUseCase
 {
     public function __construct(
-        private TaxPayerRepositoryInterface $tax_payer_repository,
-        private CompanyRepositoryInterface $company_repository,
-        private UserRepositoryInterface $user_repository
+        private CharitableCompanyRepositoryInterface $charitable_company_repository,
+        private UserRepositoryInterface $user_repository,
+        private TaxPayerRepositoryInterface $tax_payer_repository
     )
-    {
-    }
+    {}
 
-    public function execute(CompanyDTOs $companyDTOs , TaxPayerDTOs $taxPayerDTOs , int $userId)
+    public function execute(CharitableCompanyDTOs $charitableCompanyDTOs ,
+    TaxPayerDTOs $taxPayerDTOs , int $userId)
     {
         $existingUser = $this->user_repository->findById($userId);
         if(!$existingUser)
@@ -49,19 +48,16 @@ class CreateCompanyFileToExistingTaxPayerUseCase
 
         $createdTaxPayer = $this->tax_payer_repository->create($taxPayer);
 
-        $company = new Company(
+        $charitableCompany = new CharitableCompany(
             id: null,
             tax_payer_id: $createdTaxPayer->id,
-            articlesOfIncorporation: $companyDTOs->articlesOfIncorporation,
-            govemorLicense: $companyDTOs->govemorLicense,
-            partnersIDCards: $companyDTOs->partnersIDCards,
+            byLawsCopy:  $charitableCompanyDTOs->byLawsCopy,
         );
 
-        $createdCompany = $this->company_repository->create($company);
-
+        $createdCharitableCompany = $this->charitable_company_repository->create($charitableCompany);
         return [
+            'charitableCompanyInfo' => $createdCharitableCompany,
             'taxPayerInfo' => $createdTaxPayer,
-            'companyInfo' => $createdCompany
         ];
     }
 }

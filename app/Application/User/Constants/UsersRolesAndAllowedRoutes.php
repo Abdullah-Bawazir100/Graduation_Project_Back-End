@@ -104,6 +104,7 @@ class UsersRolesAndAllowedRoutes
             'charitable-companies.show',
             'charitable-companies.update',
             'charitable-companies.destroy',
+            'charitable-companies.create-file-to-existing',
 
             // Tax Types
             'tax-types.index',
@@ -224,6 +225,7 @@ class UsersRolesAndAllowedRoutes
             'charitable-companies.store',
             'charitable-companies.show',
             'charitable-companies.update',
+            'charitable-companies.create-file-to-existing',
             // Note: No destroy permission for managers
 
             // Tax Types

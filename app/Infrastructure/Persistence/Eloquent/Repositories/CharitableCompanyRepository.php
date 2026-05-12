@@ -18,6 +18,16 @@ class CharitableCompanyRepository implements CharitableCompanyRepositoryInterfac
         return $this->mapToDomain($charitableCompanyModel);
     }
 
+    public function createCharitableCompanyFileToExistingTaxPayer(CharitableCompany $charitableCompany, int $userId)
+    {
+        $charitableCompanyModel = CharitableCompanyModel::create([
+            'tax_payer_id' => $userId,
+            'by_laws_copy' => $charitableCompany->byLawsCopy
+        ]);
+        $charitableCompanyModel->load('taxPayer');
+        return $this->mapToDomain($charitableCompanyModel);
+    }
+
     public function update(CharitableCompany $charitableCompany , int $id): ?CharitableCompany
     {
         $charitableCompanyModel = CharitableCompanyModel::with('taxPayer')->find($id);

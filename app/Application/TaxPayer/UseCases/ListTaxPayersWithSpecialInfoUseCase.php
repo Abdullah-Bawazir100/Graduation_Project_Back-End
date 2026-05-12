@@ -28,8 +28,11 @@ class ListTaxPayersWithSpecialInfoUseCase
             }
 
             $result[] = [
+                'userId' => $userInfo->id,
                 'taxPayerId' => $taxPayer->id,
                 'taxPayerName' => $userInfo->firstName . ' ' . $userInfo->lastName, // Access properties directly from user object
+                'tradeName' => $taxPayer->tradeName,
+                'phone' => $userInfo->phone,
                 'taxPayerFileType' => $taxPayer->fileType,
             ];
         }

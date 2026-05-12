@@ -63,6 +63,8 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::post('companies/create-file-to-existing', [CompanyController::class, 'createCompanyFileToExistingTaxPayer'])->name('companies.create-file-to-existing');
 
     Route::apiResource('charitable-companies', CharitableCompanyController::class);
+    Route::post('charitable-companies/create-file-to-existing', [CharitableCompanyController::class, 'createCharitableCompanyFileToExistingTaxPayer'])
+        ->name('charitable-companies.create-file-to-existing');
 
     Route::apiResource('tax-types', TaxTypeController::class);
 

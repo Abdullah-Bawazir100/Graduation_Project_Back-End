@@ -11,5 +11,5 @@ interface CharitableCompanyRepositoryInterface
     public function findById(int $id): ?CharitableCompany;
     public function getAll();
     public function delete(int $id);
-
+    public function createCharitableCompanyFileToExistingTaxPayer(CharitableCompany $charitableCompany, int $userId);
 }

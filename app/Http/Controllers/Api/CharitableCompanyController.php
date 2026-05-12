@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Application\CharitableCompany\DTOs\CharitableCompanyDTOs;
+use App\Application\CharitableCompany\UseCases\CreateCharitableCompanyFileToExistingTaxPayerUseCase;
 use App\Application\CharitableCompany\UseCases\CreateCharitableCompanyUseCase;
 use App\Application\CharitableCompany\UseCases\DeleteCharitableCompanyUseCase;
 use App\Application\CharitableCompany\UseCases\FindCharitableCompanyByIdUseCase;
@@ -19,6 +20,7 @@ use App\Http\Responses\ApiResponse;
 use App\Domain\User\Entities\User as DomainUser;
 use App\Domain\User\Enums\UserRole;
 use App\Http\Requests\CheritableCompany\UpdateCharitableCompanyRequest;
+use App\Http\Requests\TaxPayer\StoreFileToExistingTaxPayerRequest;
 use DomainException;
 use Exception;
 use Illuminate\Http\Request;
@@ -32,18 +34,14 @@ class CharitableCompanyController extends Controller
         private FindCharitableCompanyByIdUseCase $findCharitableCompanyByIdUseCase
     )
     {}
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(ListCharitableCompaniesUseCase $useCase)
     {
         $charitableCompanies = $useCase->execute();
         return ApiResponse::ok($charitableCompanies , "تم جلب ملفات الشركات الخيرية بنجاح.");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(StoreTaxPayerRequest $request , CreateCharitableCompanyUseCase $useCase)
     {
         try {
@@ -104,9 +102,50 @@ class CharitableCompanyController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function createCharitableCompanyFileToExistingTaxPayer(
+        StoreFileToExistingTaxPayerRequest $request, CreateCharitableCompanyFileToExistingTaxPayerUseCase $useCase
+    )
+    {
+        try {
+            $authUser = Auth::user();
+
+            if(!$authUser) {
+                return ApiResponse::unauthorized();
+            }
+
+            $commercialRecordUrl = $this->uploadFileService->uploadFile($request->file('commercialRecord') , 'commercial-records');
+            $activityLicenseUrl = $this->uploadFileService->uploadFile($request->file('activityLicense') , 'activity-licenses');
+            $tradePictUrl = $this->uploadFileService->uploadFile($request->file('tradePict') , 'trade-picts');
+            $insuranceCardUrl = $this->uploadFileService->uploadFile($request->file('insuranceCard') , 'insurance-cards');
+            $propertyDocPictUrl = $this->uploadFileService->uploadFile($request->file('propertyDocPict') , 'property-docs-picts');
+
+            $byLawsCopyUrl = $this->uploadFileService->uploadFile($request->file('byLawsCopy') , 'by-laws-copy');
+
+            $taxPayerDTO = new TaxPayerDTOs(
+                userId: $request->userId,
+                tradeName: $request->tradeName,
+                commercialRecord: $commercialRecordUrl,
+                activityLicense: $activityLicenseUrl,
+                tradePict: $tradePictUrl,
+                insuranceCard: $insuranceCardUrl,
+                propertyDocPict: $propertyDocPictUrl,
+                fileType: enFileType::from($request->fileType),
+            );
+
+            $charitableCompanyDTO = new CharitableCompanyDTOs(
+                byLawsCopy: $byLawsCopyUrl,
+            );
+
+            $result = $useCase->execute($charitableCompanyDTO , $taxPayerDTO , $request->userId);
+
+            return ApiResponse::created($result , 'تم إنشاء ملف شركة خيرية لمكلف موجود بنجاح.');
+
+        } catch (Exception $e) {
+            return ApiResponse::serverError($e->getMessage());
+        }
+    }
+
+
     public function show(int $id)
     {
         $charitableCompany = $this->findCharitableCompanyByIdUseCase->execute($id);
@@ -114,9 +153,7 @@ class CharitableCompanyController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(int $id , UpdateCharitableCompanyRequest $request , UpdateCharitableCompanyUseCase $useCase)
     {
         try{
@@ -148,9 +185,7 @@ class CharitableCompanyController extends Controller
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(int $id , DeleteCharitableCompanyUseCase $useCase)
     {
         $useCase->execute($id);
