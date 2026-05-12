@@ -254,7 +254,10 @@ class UsersRolesAndAllowedRoutes
 
         // Tax Payer Permissions
         UserRole::Tax_Payer->value => [
-            // He will user the mobile app
+            // He will use the mobile app
+            'update-tax-payer-mobile',
+            'get-tax-payer-mobile-profile',
+            'tax-payer-mobile-logout'
         ],
 
         // Collectors Manager Permissions
