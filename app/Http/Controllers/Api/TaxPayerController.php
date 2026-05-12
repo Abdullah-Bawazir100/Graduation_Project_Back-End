@@ -105,7 +105,6 @@ class TaxPayerController extends Controller
                 return ApiResponse::unauthorized();
             }
 
-            // Upload files based on the fileType
             $commercialRecordUrl = $this->uploadFileService->uploadFile($request->file('commercialRecord') , 'commercial-records');
             $activityLicenseUrl = $this->uploadFileService->uploadFile($request->file('activityLicense') , 'activity-licenses');
             $tradePictUrl = $this->uploadFileService->uploadFile($request->file('tradePict') , 'trade-picts');
@@ -113,7 +112,7 @@ class TaxPayerController extends Controller
             $propertyDocPictUrl = $this->uploadFileService->uploadFile($request->file('propertyDocPict') , 'property-docs-picts');
 
             $taxPayerDTO = new TaxPayerDTOs(
-                userId: null, // Will be set from the existing taxpayer
+                userId: null,
                 tradeName: $request->tradeName,
                 commercialRecord: $commercialRecordUrl,
                 activityLicense: $activityLicenseUrl,

@@ -18,16 +18,15 @@ class CreateFileToExistingTaxPayerUseCase
 
     public function execute(TaxPayerDTOs $taxPayerDTO, int $taxPayerId)
     {
-        // Find the existing taxpayer by ID to get the user ID
         $existingTaxPayer = $this->tax_payer_repository->findById($taxPayerId);
         if (!$existingTaxPayer) {
             throw new DomainException("المكلف مع الـ ID [$taxPayerId] غير موجود.");
         }
+        $user = $this->user_repository->findById($existingTaxPayer->userId);
 
-        // Create a new taxpayer file with the same user ID as the existing taxpayer
         $newTaxPayerFile = new TaxPayer(
-            id: null, // New record, so ID should be null
-            userId: $existingTaxPayer->userId, // Same user ID as the existing taxpayer
+            id: null,
+            userId: $existingTaxPayer->userId,
             tradeName: $taxPayerDTO->tradeName,
             commercialRecord: $taxPayerDTO->commercialRecord,
             activityLicense: $taxPayerDTO->activityLicense,
@@ -47,7 +46,8 @@ class CreateFileToExistingTaxPayerUseCase
         }
 
         return [
-            'taxPayerInfo' => $createdTaxPayerFile
+            'taxPayerInfo' => $createdTaxPayerFile,
+            'userInfo' => $user->toArray()
         ];
     }
 }
