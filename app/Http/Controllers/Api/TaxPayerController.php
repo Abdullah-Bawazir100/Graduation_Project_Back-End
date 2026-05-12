@@ -104,7 +104,6 @@ class TaxPayerController extends Controller
             if(!$authUser) {
                 return ApiResponse::unauthorized();
             }
-
             $commercialRecordUrl = $this->uploadFileService->uploadFile($request->file('commercialRecord') , 'commercial-records');
             $activityLicenseUrl = $this->uploadFileService->uploadFile($request->file('activityLicense') , 'activity-licenses');
             $tradePictUrl = $this->uploadFileService->uploadFile($request->file('tradePict') , 'trade-picts');
@@ -112,7 +111,7 @@ class TaxPayerController extends Controller
             $propertyDocPictUrl = $this->uploadFileService->uploadFile($request->file('propertyDocPict') , 'property-docs-picts');
 
             $taxPayerDTO = new TaxPayerDTOs(
-                userId: null,
+                userId: $request->userId,
                 tradeName: $request->tradeName,
                 commercialRecord: $commercialRecordUrl,
                 activityLicense: $activityLicenseUrl,
@@ -121,7 +120,7 @@ class TaxPayerController extends Controller
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
             );
-            $result = $useCase->execute($taxPayerDTO, $request->taxPayerId);
+            $result = $useCase->execute($taxPayerDTO, $request->userId);
 
             return ApiResponse::created($result, 'تم إنشاء ملف فرد جديد للمكلف الحالي بنجاح.');
 

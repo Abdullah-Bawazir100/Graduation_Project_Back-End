@@ -5,6 +5,7 @@ namespace App\Application\TaxPayer\UseCases;
 use App\Application\TaxPayer\DTOs\TaxPayerDTOs;
 use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use DomainException;
 
@@ -16,17 +17,23 @@ class CreateFileToExistingTaxPayerUseCase
     )
     {}
 
-    public function execute(TaxPayerDTOs $taxPayerDTO, int $taxPayerId)
+    public function execute(TaxPayerDTOs $taxPayerDTO, int $userId)
     {
-        $existingTaxPayer = $this->tax_payer_repository->findById($taxPayerId);
-        if (!$existingTaxPayer) {
-            throw new DomainException("المكلف مع الـ ID [$taxPayerId] غير موجود.");
+        $existingUser = $this->user_repository->findById($userId);
+
+        if(!$existingUser)
+        {
+            throw new DomainException("المستخدم المكلف مع ال ID [$userId] غير موجود.");
         }
-        $user = $this->user_repository->findById($existingTaxPayer->userId);
+
+        if(!in_array($existingUser->role, [UserRole::Tax_Payer]))
+        {
+            throw new DomainException("المستخدم الموجود مع ال ID [$userId] ليس مكلف.");
+        }
 
         $newTaxPayerFile = new TaxPayer(
             id: null,
-            userId: $existingTaxPayer->userId,
+            userId: $existingUser->id,
             tradeName: $taxPayerDTO->tradeName,
             commercialRecord: $taxPayerDTO->commercialRecord,
             activityLicense: $taxPayerDTO->activityLicense,
@@ -38,7 +45,7 @@ class CreateFileToExistingTaxPayerUseCase
 
         $createdTaxPayerFile = $this->tax_payer_repository->createFileToExistingTaxPayer(
             $newTaxPayerFile,
-            $existingTaxPayer->userId // Pass the user ID instead of taxpayer ID
+            $existingUser->id
         );
 
         if (!$createdTaxPayerFile) {
@@ -47,7 +54,7 @@ class CreateFileToExistingTaxPayerUseCase
 
         return [
             'taxPayerInfo' => $createdTaxPayerFile,
-            'userInfo' => $user->toArray()
+            'userInfo' => $existingUser->toArray()
         ];
     }
 }
