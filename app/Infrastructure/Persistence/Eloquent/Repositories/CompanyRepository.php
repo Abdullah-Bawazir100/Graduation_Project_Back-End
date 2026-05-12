@@ -21,6 +21,20 @@ class CompanyRepository implements CompanyRepositoryInterface
         return $this->mapToDomain($model);
     }
 
+    public function createCompanyFileToExistingTaxPayer(Company $company, int $userId)
+    {
+        $model = CompanyModel::create([
+            'tax_payer_id' => $userId,
+            'articles_of_incorporation' => $company->articlesOfIncorporation,
+            'govemor_license' => $company->govemorLicense,
+            'partners_id_cards' => $company->partnersIDCards,
+        ]);
+
+        $model->load('taxPayer');
+
+        return $this->mapToDomain($model);
+    }
+
     public function update(Company $company, int $id): ?Company
     {
         $companyModel = CompanyModel::with('taxPayer')->find($id);

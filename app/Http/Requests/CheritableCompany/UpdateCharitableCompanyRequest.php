@@ -22,6 +22,7 @@ class UpdateCharitableCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
+            
             'byLawsCopy' => [
                 'sometimes',
                 'file',

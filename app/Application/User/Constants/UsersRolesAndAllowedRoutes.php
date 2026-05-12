@@ -95,6 +95,8 @@ class UsersRolesAndAllowedRoutes
             'companies.show',
             'companies.update',
             'companies.destroy',
+            'companies.create-file-to-existing',
+
 
             // Charitable Companies
             'charitable-companies.index',
@@ -214,6 +216,7 @@ class UsersRolesAndAllowedRoutes
             'companies.store',
             'companies.show',
             'companies.update',
+            'companies.create-file-to-existing',
             // Note: No destroy permission for managers
 
             // Charitable Companies

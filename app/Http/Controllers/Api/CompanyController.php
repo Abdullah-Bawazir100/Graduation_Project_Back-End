@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Application\Company\DTOs\CompanyDTOs;
+use App\Application\Company\UseCases\CreateCompanyFileToExistingTaxPayerUseCase;
 use App\Application\Company\UseCases\CreateCompanyUseCase;
 use App\Application\Company\UseCases\DeleteCompanyUseCase;
 use App\Application\Company\UseCases\FindByIdUseCase;
@@ -18,6 +19,7 @@ use App\Http\Requests\TaxPayer\StoreTaxPayerRequest;
 use App\Domain\User\Entities\User as DomainUser;
 use App\Domain\User\Enums\UserRole;
 use App\Http\Requests\Company\UpdateCompanyRequest;
+use App\Http\Requests\TaxPayer\StoreFileToExistingTaxPayerRequest;
 use App\Http\Responses\ApiResponse;
 use DomainException;
 use Exception;
@@ -97,6 +99,53 @@ class CompanyController extends Controller
             $result = $useCase->execute($companyDTO , $taxPayerDTO , $userDTO , $actor);
 
             return ApiResponse::created($result , 'تم إنشاء مكلف مع ملف شركة بنجاح.');
+
+        } catch (Exception $e) {
+            return ApiResponse::serverError($e->getMessage());
+        }
+    }
+
+    public function createCompanyFileToExistingTaxPayer(
+        StoreFileToExistingTaxPayerRequest $request , CreateCompanyFileToExistingTaxPayerUseCase $useCase)
+    {
+        try {
+            $authUser = Auth::user();
+
+            if(!$authUser) {
+                return ApiResponse::unauthorized();
+            }
+
+            $commercialRecordUrl = $this->uploadFileService->uploadFile($request->file('commercialRecord') , 'commercial-records');
+            $activityLicenseUrl = $this->uploadFileService->uploadFile($request->file('activityLicense') , 'activity-licenses');
+            $tradePictUrl = $this->uploadFileService->uploadFile($request->file('tradePict') , 'trade-picts');
+            $insuranceCardUrl = $this->uploadFileService->uploadFile($request->file('insuranceCard') , 'insurance-cards');
+            $propertyDocPictUrl = $this->uploadFileService->uploadFile($request->file('propertyDocPict') , 'property-docs-picts');
+
+            $articlesOfIncorporationUrl = $this->uploadFileService->uploadFile($request->file('articlesOfIncorporation') , 'articles-of-incorporation');
+            $govemorLicenseUrl = $this->uploadFileService->uploadFile($request->file('govemorLicense') , 'govemor-license');
+            $partnersIDCardsUrl = $this->uploadFileService->uploadFile($request->file('partnersIDCards') , 'partners-id-cards');
+
+            // Map Arabic label back to enum value
+            $taxPayerDTO = new TaxPayerDTOs(
+                userId: $request->userId,
+                tradeName: $request->tradeName,
+                commercialRecord: $commercialRecordUrl,
+                activityLicense: $activityLicenseUrl,
+                tradePict: $tradePictUrl,
+                insuranceCard: $insuranceCardUrl,
+                propertyDocPict: $propertyDocPictUrl,
+                fileType: enFileType::from($request->fileType),
+            );
+
+            $companyDTO = new CompanyDTOs(
+                articlesOfIncorporation: $articlesOfIncorporationUrl,
+                govemorLicense: $govemorLicenseUrl,
+                partnersIDCards: $partnersIDCardsUrl,
+            );
+
+            $result = $useCase->execute($companyDTO , $taxPayerDTO , $request->userId);
+
+            return ApiResponse::created($result , 'تم إنشاء ملف شركة لمكلف موجود بنجاح.');
 
         } catch (Exception $e) {
             return ApiResponse::serverError($e->getMessage());

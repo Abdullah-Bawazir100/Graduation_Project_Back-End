@@ -22,6 +22,5 @@ class DeleteTaxPayerUseCase
             throw new DomainException("دافع الضرائب مع ال ID [{$id}] غير موجود.");
         }
         $this->tax_payer_repository->delete($id);
-        $this->user_repository->delete($taxPayer->userId);
     }
 }

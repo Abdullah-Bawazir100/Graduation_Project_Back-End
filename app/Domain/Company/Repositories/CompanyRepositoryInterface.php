@@ -11,5 +11,6 @@ interface CompanyRepositoryInterface
     public function findById(int $id): ?Company;
     public function getAll();
     public function delete(int $id);
+    public function createCompanyFileToExistingTaxPayer(Company $company , int $userId);
 
 }

@@ -24,9 +24,8 @@ class DeleteCharitableCompanyUseCase
             throw new DomainException("لا يوجد ملف شركة خيرية مع ال ID [{$id}].");
         }
         $taxPayer = $this->tax_payer_repository->findById($charitableCompany->tax_payer_id);
-        $user = $this->user_repository->findById($taxPayer->userId);
+
         $this->charitable_company_repository->delete($id);
         $this->tax_payer_repository->delete($taxPayer->id);
-        $this->user_repository->delete($user->id);
     }
 }

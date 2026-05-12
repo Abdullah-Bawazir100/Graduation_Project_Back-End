@@ -21,7 +21,7 @@ class CreateFileToExistingTaxPayerUseCase
     {
         $existingUser = $this->user_repository->findById($userId);
 
-        if(!in_array($existingUser->role, [UserRole::Tax_Payer]))
+        if($existingUser->role !== UserRole::Tax_Payer)
         {
             throw new DomainException("المستخدم الموجود مع ال ID [$userId] ليس مكلف.");
         }

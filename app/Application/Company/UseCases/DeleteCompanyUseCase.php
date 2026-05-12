@@ -22,10 +22,8 @@ class DeleteCompanyUseCase
             throw new \DomainException("لا يوجد ملف شركة مع ال ID [{$id}].");
         }
         $taxPayer = $this->tax_payer_repository->findById($company->tax_payer_id);
-        $user = $this->user_repository->findById($taxPayer->userId);
 
         $this->company_repository->delete($id);
         $this->tax_payer_repository->delete($taxPayer->id);
-        $this->user_repository->delete($user->id);
     }
 }
