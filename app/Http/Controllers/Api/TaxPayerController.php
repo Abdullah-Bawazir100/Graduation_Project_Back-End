@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaxPayer\StoreTaxPayerRequest;
+use App\Http\Requests\TaxPayer\StoreFileToExistingTaxPayerRequest;
 use App\Application\TaxPayer\DTOs\TaxPayerDTOs;
 use App\Application\TaxPayer\UseCases\CreateTaxPayerWithUserUseCase;
+use App\Application\TaxPayer\UseCases\CreateFileToExistingTaxPayerUseCase;
 use App\Application\TaxPayer\UseCases\DeleteTaxPayerUseCase;
 use App\Application\TaxPayer\UseCases\FindTaxPayerByIdUseCase;
 use App\Application\TaxPayer\UseCases\FindTaxPayerByUserIDUseCase;
 use App\Application\TaxPayer\UseCases\ListTaxPayersUseCase;
+use App\Application\TaxPayer\UseCases\ListTaxPayersWithSpecialInfoUseCase;
 use App\Application\TaxPayer\UseCases\ShowTaxPayerUseCase;
 use App\Application\TaxPayer\UseCases\UpdateTaxPayerUseCase;
 use App\Application\User\DTOs\UserDTO;
@@ -93,6 +96,40 @@ class TaxPayerController extends Controller
         }
     }
 
+    public function createFileToExistingTaxPayer(StoreFileToExistingTaxPayerRequest $request, CreateFileToExistingTaxPayerUseCase $useCase): ApiResponse
+    {
+        try {
+            $authUser = Auth::user();
+
+            if(!$authUser) {
+                return ApiResponse::unauthorized();
+            }
+
+            $commercialRecordUrl = $this->uploadFileService->uploadFile($request->file('commercialRecord') , 'commercial-records');
+            $activityLicenseUrl = $this->uploadFileService->uploadFile($request->file('activityLicense') , 'activity-licenses');
+            $tradePictUrl = $this->uploadFileService->uploadFile($request->file('tradePict') , 'trade-picts');
+            $insuranceCardUrl = $this->uploadFileService->uploadFile($request->file('insuranceCard') , 'insurance-cards');
+            $propertyDocPictUrl = $this->uploadFileService->uploadFile($request->file('propertyDocPict') , 'property-docs-picts');
+
+            $taxPayerDTO = new TaxPayerDTOs(
+                userId: null,
+                tradeName: $request->tradeName,
+                commercialRecord: $commercialRecordUrl,
+                activityLicense: $activityLicenseUrl,
+                tradePict: $tradePictUrl,
+                insuranceCard: $insuranceCardUrl,
+                propertyDocPict: $propertyDocPictUrl,
+                fileType: enFileType::from($request->fileType),
+            );
+            $result = $useCase->execute($taxPayerDTO, $request->taxPayerId);
+
+            return ApiResponse::created($result, 'تم إنشاء ملف فرد جديد للمكلف الحالي بنجاح.');
+
+        } catch (Exception $e) {
+            return ApiResponse::serverError($e->getMessage());
+        }
+    }
+
     public function update(int $id , UpdateTaxPayerRequest $request , UpdateTaxPayerUseCase $useCase)
     {
         try {
@@ -164,6 +201,12 @@ class TaxPayerController extends Controller
     {
         $useCase->execute($id);
         return ApiResponse::ok(null , "تم حذف دافع الضرائب مع ال ID [{$id}] بنجاح.");
+    }
+
+    public function getTaxPayersWithSpecialInfo(ListTaxPayersWithSpecialInfoUseCase $useCase)
+    {
+        $taxPayers = $useCase->execute();
+        return ApiResponse::ok($taxPayers , "تم جلب المستخدمين المكلفين بنجاح.");
     }
 
     private function convertToDomainUser($authUser): DomainUser

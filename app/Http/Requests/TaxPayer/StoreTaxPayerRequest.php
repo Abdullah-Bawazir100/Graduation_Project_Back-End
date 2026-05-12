@@ -114,23 +114,23 @@ class StoreTaxPayerRequest extends FormRequest
             'tradeName.unique' => 'السجل التجاري موجود بالفعل.',
             'tradeName.not_regex' => 'السجل التجاري لا يمكن أن يكون أرقام فقط',
 
-            'commercial_record.file' => 'يجب أن يكون السجل تجاري ملفًا',
-            'activity_license.file' => 'يجب أن يكون ترخيص مزاولة النشاط ملفًا',
-            'trade_pict.file' => ' أن يكون قيد تسجيل الإسم التجاري ملفًا',
-            'insurance_card.file' => 'يجب أن تكون البطاقة التأمينية ملفًا',
-            'property_doc_pict.file' => 'يجب أن يكو يكون عقد الإيجار ملفًا',
+            // commercialRecord
+            'commercialRecord.required' => 'السجل التجاري مطلوب.',
+            'commercialRecord.file'     => 'يجب أن يكون السجل التجاري ملفًا.',
+            'commercialRecord.mimes'    => 'يجب أن يكون السجل التجاري من نوع: jpeg, png, jpg أو pdf.',
+            'commercialRecord.max'      => 'يجب ألا يتجاوز حجم السجل التجاري 10 MB.',
 
-            'commercial_record.mimes' => 'يجب أن يكون السجل من نوع: jpeg, png, jpg أو pdf',
-            'activity_license.mimes' => 'يجب أن يكون ترخيص مزاولة النشاط من نوع: jpeg, png, jpg أو pdf',
-            'trade_pict.mimes' => 'يجب أن يكون قيد تسجيل الإسم التجاري من نوع: jpeg, png, jpg أو pdf',
-            'insurance_card.mimes' => 'يجب أن تكون البطاقة التأمينية من نوع: jpeg, png, jpg أو pdf',
-            'property_doc_pict.mimes' => 'يجب أن يكون عقد الإيجار من نوع: jpeg, png, jpg أو pdf',
+            // activityLicense
+            'activityLicense.required' => 'ترخيص مزاولة النشاط مطلوب.',
+            'activityLicense.file'     => 'يجب أن يكون ترخيص مزاولة النشاط ملفًا.',
+            'activityLicense.mimes'    => 'يجب أن يكون ترخيص مزاولة النشاط من نوع: jpeg, png, jpg أو pdf.',
+            'activityLicense.max'      => 'يجب ألا يتجاوز حجم ترخيص مزاولة النشاط 10 MB.',
 
-            'commercial_record.max' => 'يجب ألا يتجاوز حجم السجل التجاري 10 MB',
-            'activity_license.max' => 'يجب ألا يتجاوز حجم ترخيص مزاولة النشاط 10 MB',
-            'trade_pict.max' => 'يجب ألا يتجاوز حجم قيد تسجيل الإسم التجاري 10 MB',
-            'insurance_card.max' => 'يجب ألا يتجاوز حجم البطاقة التأمينية 10 MB',
-            'property_doc_pict.max' => 'يجب ألا يتجاوز حجم عقد الإيجار 10 MB',
+            // tradePict
+            'tradePict.required' => 'قيد تسجيل الإسم التجاري مطلوب.',
+            'tradePict.file'     => 'يجب أن يكون قيد تسجيل الإسم التجاري ملفًا.',
+            'tradePict.mimes'    => 'يجب أن يكون قيد تسجيل الإسم التجاري من نوع: jpeg, png, jpg أو pdf.',
+            'tradePict.max'      => 'يجب ألا يتجاوز حجم قيد تسجيل الإسم التجاري 10 MB.',
 
             'fileType.required' => 'نوع الملف مطلوب',
             'fileType.in' => 'يجب أن يكون نوع الملف واحدًا من: ملف فرد، ملف شركة، ملف شركة خيرية',

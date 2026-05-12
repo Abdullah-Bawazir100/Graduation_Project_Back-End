@@ -90,6 +90,31 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         return $this->mapToDomain($taxPayerModel);
     }
 
+    public function getTaxPayersWithSpecialInfo()
+    {
+        $taxPayers = TaxPayerModel::with('user')->get();
+        return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
+    public function createFileToExistingTaxPayer(TaxPayer $taxPayer , int $userId): ?TaxPayer
+    {
+
+        $model = TaxPayerModel::create([
+            'user_id' => $userId,
+            'trade_name' => $taxPayer->tradeName,
+            'commercial_record' => $taxPayer->commercialRecord,
+            'activity_license' => $taxPayer->activityLicense,
+            'trade_pict' => $taxPayer->tradePict,
+            'insurance_card' => $taxPayer->insuranceCard,
+            'property_doc_pict' => $taxPayer->propertyDocPict,
+            'file_type' => $taxPayer->fileType->value,
+        ]);
+
+        $model->load('user');
+
+        return $this->mapToDomain($model);
+    }
+
     private function mapToDomain(TaxPayerModel $model): TaxPayer
     {
         return new TaxPayer(

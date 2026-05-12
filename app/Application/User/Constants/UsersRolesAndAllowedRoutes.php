@@ -86,6 +86,8 @@ class UsersRolesAndAllowedRoutes
             'tax-payers.update',
             'tax-payers.destroy',
             'tax-payer-by-userId',
+            'get-tax-payers-with-special-info',
+            'tax-payers.create-file-to-existing',
 
             // Companies
             'companies.index',
@@ -203,6 +205,8 @@ class UsersRolesAndAllowedRoutes
             'tax-payers.show',
             'tax-payers.update',
             'tax-payer-by-userId',
+            'get-tax-payers-with-special-info',
+            'tax-payers.create-file-to-existing',
             // Note: No destroy permission for managers
 
             // Companies
@@ -250,7 +254,10 @@ class UsersRolesAndAllowedRoutes
 
         // Tax Payer Permissions
         UserRole::Tax_Payer->value => [
-            // He will user the mobile app
+            // He will use the mobile app
+            'update-tax-payer-mobile',
+            'get-tax-payer-mobile-profile',
+            'tax-payer-mobile-logout'
         ],
 
         // Collectors Manager Permissions
