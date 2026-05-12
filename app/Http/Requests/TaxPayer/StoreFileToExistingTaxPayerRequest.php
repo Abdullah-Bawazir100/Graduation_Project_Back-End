@@ -24,9 +24,8 @@ class StoreFileToExistingTaxPayerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // TaxPayer ID to identify the existing taxpayer
-            'taxPayerId' => 'required|integer|exists:tax_payers,id',
-            
+            'userId' => 'required|integer|exists:app_users,id',
+
             // Taxpayer fields
             'tradeName' => 'required|string|max:255|unique:tax_payers,trade_name|not_regex:/^\d+$/',
             'commercialRecord' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240', // Max 10MB
@@ -71,9 +70,9 @@ class StoreFileToExistingTaxPayerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'taxPayerId.required' => 'معرّف المكلف مطلوب.',
-            'taxPayerId.integer' => 'معرّف المكلف يجب أن يكون رقماً صحيحاً.',
-            'taxPayerId.exists' => 'المكلف المحدد غير موجود.',
+            'userId.required' => ' المستخدم المكلف مطلوب.',
+            'userId.integer' => 'المستخدم يجب أن يكون رقما صحيحا.',
+            'userId.exists' => 'المستخدم المحدد غير موجود.',
 
             'tradeName.required' => 'السجل التجاري مطلوب.',
             'tradeName.string' => 'السجل التجاري يجب أن يكون نصاً.',
