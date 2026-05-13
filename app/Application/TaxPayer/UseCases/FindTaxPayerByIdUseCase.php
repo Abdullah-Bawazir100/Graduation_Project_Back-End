@@ -17,7 +17,7 @@ class FindTaxPayerByIdUseCase
         $taxPayer = $this->tax_payer_repository->findById($id);
         if(!$taxPayer)
         {
-            throw new DomainException("لا يوجد مكلف مع ال ID [{$id}].");
+            return null;
         }
         return $taxPayer;
     }

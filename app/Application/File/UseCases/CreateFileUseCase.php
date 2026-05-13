@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Application\File\UseCases;
+namespace App\Application\UseCases;
 
-use App\Application\File\DTOs\FileDTOs;
+use App\Application\DTOs\FileDTOs;
 use App\Domain\Activity_Type\Repositories\Activity_Type_RepositoryInterface;
 use App\Domain\File\Entities\File;
 use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Domain\FileStatus\Repositories\FileStatusRepositoryInterface;
+use App\Domain\ActivityType\Repositories\ActivityTypeRepositoryInterface;
 use App\Domain\PaymentType\Repositories\PaymentTypeRepositoryInterface;
 use App\Domain\Region\Repositories\RegionRepositoryInterface;
 use App\Domain\District\Repositories\DistrictRepositoryInterface;
@@ -100,7 +101,7 @@ class CreateFileUseCase
         }
 
         return [
-            'fileInfo' => $createdFile->toArray(),
+            'fileInfo' => $createdFile,
         ];
     }
 }

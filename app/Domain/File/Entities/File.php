@@ -32,26 +32,4 @@ class File
         public District $district,
         public ?User $creator,
     ) {}
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->id,
-            'taxNumber' => $this->taxNumber,
-            'inventoryNumber' => $this->inventoryNumber,
-            'activityStartDate' => $this->activityStartDate,
-            'docsCount' => $this->docsCount,
-            'note' => $this->note,
-            'fullAddress' => $this->fullAddress,
-            'taxPayer' => $this->taxPayer,
-            'department' => $this->department,
-            'fileStatus' => $this->fileStatus,
-            'activityType' => $this->activityType,
-            'paymentType' => $this->paymentType,
-            'region' => $this->region,
-            'district' => $this->district,
-            'createdBy' => $this->creator?->id,
-            'creator' => $this->creator ? $this->creator->toArray() : null,
-        ];
-    }
 }
