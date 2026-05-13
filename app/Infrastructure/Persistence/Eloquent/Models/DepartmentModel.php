@@ -17,6 +17,12 @@ class DepartmentModel extends Model
         return $this->hasMany(UserModel::class, 'department_id');
     }
 
+
+    public function files()
+    {
+        return $this->hasMany(FileModel::class, 'department_id');
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

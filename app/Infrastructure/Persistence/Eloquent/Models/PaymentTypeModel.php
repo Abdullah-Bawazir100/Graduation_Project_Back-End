@@ -11,6 +11,11 @@ class PaymentTypeModel extends Model
     protected $table = 'payment_types';
     protected $fillable = ['name' , 'note'];
 
+    public function files()
+    {
+        return $this->hasMany(FileModel::class , 'payment_type_id');
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

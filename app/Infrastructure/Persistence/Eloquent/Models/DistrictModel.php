@@ -19,6 +19,14 @@ class DistrictModel extends Model
         );
     }
 
+    public function files()
+    {
+        return $this->hasMany(
+            FileModel::class,
+            'district_id'
+        );
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

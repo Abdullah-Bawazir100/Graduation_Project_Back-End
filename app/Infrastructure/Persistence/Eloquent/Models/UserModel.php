@@ -60,6 +60,14 @@ class UserModel extends Authenticatable
         );
     }
 
+    public function files()
+    {
+        return $this->hasMany(
+            FileModel::class,
+            'created_by'
+        );
+    }
+
     protected $hidden = [
         'password',
         'remember_token',

@@ -11,6 +11,12 @@ class ActivityTypeModel extends Model
     protected $table = 'activity_types';
     protected $fillable = ['name'];
 
+    public function files()
+    {
+        return $this->hasMany(FileModel::class , 'activity_type_id');
+
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

@@ -127,6 +127,13 @@ class UsersRolesAndAllowedRoutes
             'file-status.update',
             'file-status.destroy',
 
+            // Files
+            'files.index',
+            'files.store',
+            'files.show',
+            'files.update',
+            'files.destroy',
+
             // Authentication routes
             'auth.create-user',
             'auth.reset-password',
@@ -254,6 +261,12 @@ class UsersRolesAndAllowedRoutes
             'file-status.show',
             'file-status.update',
             // Note: No destroy permission for managers
+
+            // Files
+            'files.index',
+            'files.store',
+            'files.show',
+            'files.update',
 
             // Authentication routes
             'auth.create-user',

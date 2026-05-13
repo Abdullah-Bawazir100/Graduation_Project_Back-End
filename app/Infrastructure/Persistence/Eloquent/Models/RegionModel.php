@@ -19,6 +19,15 @@ class RegionModel extends Model
         );
     }
 
+    public function files()
+    {
+        return $this->hasMany(
+            FileModel::class,
+            'region_id',
+        );
+    }
+
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

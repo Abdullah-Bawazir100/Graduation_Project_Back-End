@@ -3,11 +3,10 @@
 use App\Http\Controllers\Api\{
     ActivityLogController , ActivityTypeController , AddressController ,
     CharitableCompanyController , CompanyController , DepartmentController ,
-    DistrictController , JobTypeController , TaxCollectorController ,
-    TaxPayerController , UserController , AuthController,
-    FileStatusController , PaymentTypeController , RegionController ,
-    StatisticsController , TaxInformationController , TaxPayerMobileController ,
-    TaxTypeController
+    DistrictController , FileController, FileStatusController , JobTypeController ,
+    TaxCollectorController , TaxPayerController , UserController , AuthController,
+    PaymentTypeController , RegionController , StatisticsController ,
+    TaxInformationController , TaxPayerMobileController , TaxTypeController
 };
 
 use App\Http\Middleware\appUsersMiddleware;
@@ -73,6 +72,8 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
     Route::apiResource('file-status' , FileStatusController::class);
 
+    // File Management Routes
+    Route::apiResource('/files', FileController::class);
     // Mobile App Routes
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update']);
     Route::post('tax-payer-mobile-logout' , [TaxPayerMobileController::class , 'TaxPayerMobileLogout']);

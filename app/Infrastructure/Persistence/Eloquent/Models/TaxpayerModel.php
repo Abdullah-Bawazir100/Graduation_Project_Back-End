@@ -52,6 +52,11 @@ class TaxPayerModel extends Model
         return $this->hasOne(TaxInformationModel::class , 'tax_payer_id');
     }
 
+    public function file()
+    {
+        return $this->hasOne(FileModel::class , 'tax_payer_id');
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

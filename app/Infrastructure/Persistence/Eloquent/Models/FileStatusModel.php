@@ -11,6 +11,10 @@ class FileStatusModel extends Model
     protected $table = 'file_status';
     protected $fillable = ['status_name' , 'status_description'];
 
+    public function file()
+    {
+        return $this->hasMany(FileModel::class , 'file_status_id');
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
