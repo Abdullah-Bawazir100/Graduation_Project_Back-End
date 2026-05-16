@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Application\UseCases;
+namespace App\Application\File\UseCases;
 
-use App\Application\DTOs\FileDTOs;
+use App\Application\File\DTOs\FileDTOs;
 use App\Domain\Activity_Type\Repositories\Activity_Type_RepositoryInterface;
 use App\Domain\File\Entities\File;
 use App\Domain\File\Repositories\FileRepositoryInterface;
@@ -81,7 +81,7 @@ class CreateFileUseCase
             activityStartDate: $dto->activityStartDate,
             docsCount: $dto->docsCount,
             note: $dto->note,
-            fullAddress: $region->name .'-' . $district->name,
+            fullAddress: $region->name . '-' . $district->name,
             taxPayer: $taxPayer,
             department: $department,
             fileStatus: $fileStatus,
