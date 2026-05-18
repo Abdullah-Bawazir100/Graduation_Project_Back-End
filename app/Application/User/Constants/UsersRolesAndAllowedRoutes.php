@@ -280,8 +280,10 @@ class UsersRolesAndAllowedRoutes
 
         // Employee Permissions
         UserRole::Employee->value => [
-            // Employees have limited access - only read operations
-            // Just Permissions in Files Section
+            // Files
+            'files.index',
+            'files.store',
+            'files.show',
         ],
 
         // Tax Payer Permissions

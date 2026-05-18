@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Application\File\DTOs\FileDTOs;
 use App\Application\File\UseCases\CreateFileUseCase;
+use App\Application\File\UseCases\ListFilesUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\File\StoreFileRequest;
 use App\Http\Responses\ApiResponse;
@@ -15,17 +16,13 @@ class FileController extends Controller
     public function __construct(
     ) {}
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function index(ListFilesUseCase $useCase)
     {
-        //
+        $files = $useCase->execute();
+        return ApiResponse::ok($files , "تم جلب الملفات بنجاح.");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreFileRequest $request , CreateFileUseCase $useCase)
     {
         try {
@@ -73,25 +70,19 @@ class FileController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update()
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         //

@@ -90,9 +90,9 @@ class FileModel extends Model
             ])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
-                'created' => 'إنشاء حي ',
-                'updated' => 'تحديث حي',
-                'deleted' => 'حذف حي',
+                'created' => 'إنشاء ملف ',
+                'updated' => 'تحديث ملف',
+                'deleted' => 'حذف ملف',
             });
     }
 }

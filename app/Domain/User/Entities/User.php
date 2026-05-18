@@ -28,21 +28,21 @@ class User {
     }
 
     public function toArray(): array
-{
-    return [
-        'id' => $this->id,
-        'firstName' => $this->firstName,
-        'lastName' => $this->lastName,
-        'idCard' => $this->idCard,
-        'userName' => $this->userName,
-        'phone' => $this->phone,
-        'image' => $this->image,
-        'createdBy' => $this->createdBy,
-        'department' => $this->department,
-        'role' => $this->role,
-        'mustChangePassword' => $this->mustChangePassword,
-    ];
-}
+    {
+        return [
+            'id' => $this->id,
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'idCard' => $this->idCard,
+            'userName' => $this->userName,
+            'phone' => $this->phone,
+            'image' => $this->image,
+            'createdBy' => $this->createdBy,
+            'department' => $this->department,
+            'role' => $this->role,
+            'mustChangePassword' => $this->mustChangePassword,
+        ];
+    }
 
     /*
     public function changePassword(string $newPassword): void

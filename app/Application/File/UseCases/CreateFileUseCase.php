@@ -73,6 +73,8 @@ class CreateFileUseCase
             throw new DomainException("الحي المحدد غير موجود.");
         }
 
+        $fullAddress = $region->name . '-' . $district->name;
+
         // Create the file entity
         $file = new File(
             id: null,
@@ -81,7 +83,7 @@ class CreateFileUseCase
             activityStartDate: $dto->activityStartDate,
             docsCount: $dto->docsCount,
             note: $dto->note,
-            fullAddress: $region->name . '-' . $district->name,
+            fullAddress: $fullAddress,
             taxPayer: $taxPayer,
             department: $department,
             fileStatus: $fileStatus,
