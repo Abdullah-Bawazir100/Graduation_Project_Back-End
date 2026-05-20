@@ -9,7 +9,6 @@ use App\Application\District\UseCases\DeleteDistrictUseCase;
 use App\Application\District\UseCases\ListDistrictsUseCase;
 use App\Application\District\UseCases\ShowDistrictUseCase;
 use App\Application\District\UseCases\UpdateDistrictUseCase;
-use App\Application\District\UseCases\CountDistrictsUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\District\StoreDistrictRequest;
 use App\Http\Requests\District\UpdateDistrictRequest;

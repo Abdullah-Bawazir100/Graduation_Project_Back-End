@@ -62,7 +62,55 @@ class FileRepository implements FileRepositoryInterface
         );
     }
 
-    #[Override]
+    public function update(File $file, int $id): ?File
+    {
+        $fileModel = FileModel::with(
+            'taxPayer',
+            'department',
+            'fileStatus',
+            'activityType',
+            'paymentType',
+            'region',
+            'district',
+            'creator'
+        )->find($id);
+
+        if (!$fileModel) {
+            return null;
+        }
+
+        $fileModel->update([
+            'tax_number' => $file->taxNumber,
+            'inventory_number' => $file->inventoryNumber,
+            'activity_start_date' => $file->activityStartDate,
+            'docs_count' => $file->docsCount,
+            'note' => $file->note,
+            'tax_payer_id' => $file->taxPayer->id,
+            'department_id' => $file->department->id,
+            'file_status_id' => $file->fileStatus->id,
+            'activity_type_id' => $file->activityType->id,
+            'payment_type_id' => $file->paymentType->id,
+            'region_id' => $file->region->id,
+            'district_id' => $file->district->id,
+            'created_by' => $file->creator?->id,
+        ]);
+
+        $fileModel->refresh();
+
+        $fileModel->load(
+            'taxPayer',
+            'department',
+            'fileStatus',
+            'activityType',
+            'paymentType',
+            'region',
+            'district',
+            'creator'
+        );
+
+        return $this->mapToDomain($fileModel);
+    }
+
     public function getAll()
     {
         $files = FileModel::with(
@@ -76,6 +124,21 @@ class FileRepository implements FileRepositoryInterface
             'creator'
         )->get();
         return $files->map(fn(FileModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
+    public function findById(int $id): ?File
+    {
+        $file = FileModel::find($id);
+        if(!$file)
+        {
+            return null;
+        }
+        return $this->mapToDomain($file);
+    }
+
+    public function delete(int $id): void
+    {
+        FileModel::findOrFail($id)->delete();
     }
 
     private function mapToDomain(FileModel $model): File
