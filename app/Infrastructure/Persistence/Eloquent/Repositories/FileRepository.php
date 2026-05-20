@@ -27,7 +27,6 @@ class FileRepository implements FileRepositoryInterface
             'activity_start_date' => $file->activityStartDate,
             'docs_count' => $file->docsCount,
             'note' => $file->note,
-            'full_address' => $file->fullAddress,
             'tax_payer_id' => $file->taxPayer->id,
             'department_id' => $file->department->id,
             'file_status_id' => $file->fileStatus->id,
@@ -52,7 +51,6 @@ class FileRepository implements FileRepositoryInterface
             activityStartDate: $fileModel->activity_start_date,
             docsCount: $fileModel->docs_count,
             note: $fileModel->note,
-            fullAddress: $fileModel->full_address,
             taxPayer: $file->taxPayer,
             department: $file->department,
             fileStatus: $file->fileStatus,
@@ -99,7 +97,6 @@ class FileRepository implements FileRepositoryInterface
             activityStartDate: $model->activity_start_date,
             docsCount: $model->docs_count,
             note: $model->note,
-            fullAddress: $model->full_address,
 
             taxPayer: new TaxPayer(
                 id: $model->taxPayer->id,

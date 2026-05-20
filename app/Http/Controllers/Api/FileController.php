@@ -42,7 +42,6 @@ class FileController extends Controller
                 activityStartDate: $request->activityStartDate,
                 docsCount: $request->docsCount,
                 note: $request->note,
-                fullAddress: null,
                 taxPayerId: $request->taxPayerId,
                 departmentId:  $request->departmentId,
                 fileStatusId:  $request->fileStatusId,

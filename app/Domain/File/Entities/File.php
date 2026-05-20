@@ -22,7 +22,6 @@ class File
         public ?string $activityStartDate,
         public int $docsCount,
         public ?string $note,
-        public ?string $fullAddress,
         public TaxPayer $taxPayer,
         public Department $department,
         public FileStatus $fileStatus,

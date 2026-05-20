@@ -10,7 +10,6 @@ class FileDTOs
         public ?string $activityStartDate,
         public int $docsCount,
         public ?string $note,
-        public ?string $fullAddress,
         public int $taxPayerId,
         public int $departmentId,
         public int $fileStatusId,

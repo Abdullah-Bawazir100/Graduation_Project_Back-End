@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('activity_start_date')->nullable();
             $table->integer('docs_count');
             $table->string('note')->nullable();
-            $table->string('full_address');
 
             $table->foreignId('tax_payer_id')->constrained('tax_payers')->cascadeOnDelete();
             $table->foreignId('department_id')->constrained('departments')->cascadeOnDelete();

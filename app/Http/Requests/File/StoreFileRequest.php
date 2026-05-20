@@ -27,7 +27,6 @@ class StoreFileRequest extends FormRequest
             'activityStartDate' => ['nullable', 'string'],
             'docsCount' => ['required', 'integer', 'min:0'],
             'note' => ['nullable', 'string'],
-            'fullAddress' => ['nullable', 'string'],
             'taxPayerId' => ['required', 'integer', 'exists:tax_payers,id'],
             'departmentId' => ['required', 'integer', 'exists:departments,id'],
             'fileStatusId' => ['required', 'integer', 'exists:file_status,id'],
@@ -56,8 +55,6 @@ class StoreFileRequest extends FormRequest
             'docsCount.min' => 'عدد المستندات يجب أن يكون 0 على الأقل.',
 
             'note.string' => 'الملاحظة يجب أن تكون نصاً.',
-
-            'fullAddress.string' => 'العنوان الكامل يجب أن يكون نصاً.',
 
             'taxPayerId.required' => 'معرف المكلف مطلوب.',
             'taxPayerId.integer' => 'معرف المكلف يجب أن يكون رقماً صحيحاً.',

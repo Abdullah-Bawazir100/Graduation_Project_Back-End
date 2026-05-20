@@ -15,7 +15,6 @@ class FileModel extends Model
         'activity_start_date',
         'docs_count',
         'note',
-        'full_address',
 
         'tax_payer_id',
         'department_id',
@@ -78,7 +77,6 @@ class FileModel extends Model
                 'activity_start_date',
                 'docs_count',
                 'note',
-                'full_address',
                 'tax_payer_id',
                 'department_id',
                 'file_status_id',
