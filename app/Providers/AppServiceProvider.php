@@ -107,6 +107,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Persistence\Eloquent\Repositories\FileRepository::class
         );
 
+        $this->app->bind(
+            \App\Domain\FileMovement\Repositories\FileMovementRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\FileMovementRepository::class
+        );
+
     }
 
     /**

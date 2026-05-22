@@ -67,11 +67,11 @@ class FileController extends Controller
                 message: 'تم إنشاء الملف بنجاح.'
             );
 
-        } catch (\DomainException $e) {
+        } catch (DomainException $e) {
             return response()->json([
                 'error' => $e->getMessage()
             ], 400);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'error' => 'حدث خطأ في الخادم، يرجى المحاولة لاحقاً.'
             ], 500);

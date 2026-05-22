@@ -134,6 +134,13 @@ class UsersRolesAndAllowedRoutes
             'files.update',
             'files.destroy',
 
+            // File Movement
+            'file-movement.store',
+            'file-movement.update',
+            'file-movement.index',
+            'file-movement.show',
+            'file-movement.destroy',
+
             // Authentication routes
             'auth.create-user',
             'auth.reset-password',
@@ -267,6 +274,12 @@ class UsersRolesAndAllowedRoutes
             'files.store',
             'files.show',
             'files.update',
+
+            // File Movement
+            'file-movement.store',
+            'file-movement.update',
+            'file-movement.index',
+            'file-movement.show',
 
             // Authentication routes
             'auth.create-user',
