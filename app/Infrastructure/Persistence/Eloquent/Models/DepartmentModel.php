@@ -23,6 +23,11 @@ class DepartmentModel extends Model
         return $this->hasMany(FileModel::class, 'department_id');
     }
 
+    public function fileMovement()
+    {
+        return $this->hasMany(FileMovementModel::class, 'department_id');
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

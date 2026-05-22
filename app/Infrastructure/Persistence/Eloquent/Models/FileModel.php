@@ -67,6 +67,11 @@ class FileModel extends Model
         return $this->belongsTo(DistrictModel::class, 'district_id');
     }
 
+    public function fileMovement()
+    {
+        return $this->hasMany(FileMovementModel::class, 'file_id');
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -88,7 +93,7 @@ class FileModel extends Model
             ])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
-                'created' => 'إنشاء ملف ',
+                'created' => 'إنشاء ملف',
                 'updated' => 'تحديث ملف',
                 'deleted' => 'حذف ملف',
             });

@@ -33,6 +33,11 @@ class TaxCollectorModel extends Model
         return $this->belongsTo(DepartmentModel::class, 'dept_id');
     }
 
+    public function fileMovement()
+    {
+        return $this->hasMany(FileMovementModel::class, 'tax_collector_id');
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

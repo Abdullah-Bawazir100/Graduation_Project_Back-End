@@ -68,6 +68,11 @@ class UserModel extends Authenticatable
         );
     }
 
+    public function fileMovement()
+    {
+        return $this->hasMany(FileMovementModel::class, 'created_by');
+    }
+
     protected $hidden = [
         'password',
         'remember_token',
