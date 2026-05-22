@@ -18,9 +18,9 @@ class ListTaxPayersWithSpecialInfoUseCase
     )
     {}
 
-    public function execute()
+    public function execute(?string $search = null)
     {
-        $taxPayersInfo = $this->tax_payer_repository->getTaxPayersWithSpecialInfo();
+        $taxPayersInfo = $this->tax_payer_repository->getTaxPayersWithSpecialInfo($search);
 
         $result = [];
 

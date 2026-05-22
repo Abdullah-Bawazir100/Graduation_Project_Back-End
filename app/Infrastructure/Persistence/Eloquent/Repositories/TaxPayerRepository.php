@@ -90,10 +90,21 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         return $this->mapToDomain($taxPayerModel);
     }
 
-    public function getTaxPayersWithSpecialInfo()
+    public function getTaxPayersWithSpecialInfo(?string $search = null)
     {
-        $taxPayers = TaxPayerModel::with('user' , 'companies' , 'charitable_companies')->get();
-        return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
+        $query = TaxPayerModel::with('user', 'companies', 'charitable_companies');
+
+        // اذا يوجد بحث
+        if ($search) {
+            $query->where('trade_name', 'LIKE', '%' . $search . '%');
+        }
+
+        $taxPayers = $query->get();
+
+        return $taxPayers
+            ->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))
+            ->toArray();
+        
     }
 
     public function createFileToExistingTaxPayer(TaxPayer $taxPayer , int $userId): ?TaxPayer

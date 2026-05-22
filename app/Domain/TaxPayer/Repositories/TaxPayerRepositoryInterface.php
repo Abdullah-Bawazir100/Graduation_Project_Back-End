@@ -13,6 +13,6 @@ interface TaxPayerRepositoryInterface
     public function getAll();
     public function findByUserId(int $userId): ?TaxPayer;
     public function findByUserName(string $userName): ?TaxPayer;
-    public function getTaxPayersWithSpecialInfo();
+    public function getTaxPayersWithSpecialInfo(?string $search = null);
     public function createFileToExistingTaxPayer(TaxPayer $taxPayer , int $userId): ?TaxPayer;
 }

@@ -25,6 +25,7 @@ use App\Domain\User\Enums\UserRole;
 use App\Http\Requests\TaxPayer\UpdateTaxPayerRequest;
 use App\Http\Responses\ApiResponse;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -202,9 +203,13 @@ class TaxPayerController extends Controller
         return ApiResponse::ok(null , "تم حذف دافع الضرائب مع ال ID [{$id}] بنجاح.");
     }
 
-    public function getTaxPayersWithSpecialInfo(ListTaxPayersWithSpecialInfoUseCase $useCase)
+    public function getTaxPayersWithSpecialInfo(
+        Request $request
+        , ListTaxPayersWithSpecialInfoUseCase $useCase)
     {
-        $taxPayers = $useCase->execute();
+        $search = $request->query('search');
+        $taxPayers = $useCase->execute($search);
+        
         return ApiResponse::ok($taxPayers , "تم جلب المستخدمين المكلفين بنجاح.");
     }
 
