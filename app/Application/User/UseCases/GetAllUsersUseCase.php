@@ -10,9 +10,9 @@ class GetAllUsersUseCase
 {
     public function __construct(private UserRepositoryInterface $repository) {}
 
-    public function execute(): array
+    public function execute(?string $search = null): array
     {
-        $users = $this->repository->getAll();
+        $users = $this->repository->getAll($search);
 
         return array_map(fn(User $user) => new UserResponseDTO(
             id: $user->id,

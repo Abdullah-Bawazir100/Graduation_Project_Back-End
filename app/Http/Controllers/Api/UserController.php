@@ -18,6 +18,7 @@ use App\Domain\Department\Entities\Department;
 use App\Domain\User\Enums\UserRole;
 use Illuminate\Auth\AuthenticationException;
 use DomainException;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -30,9 +31,11 @@ class UserController extends Controller
     ) {}
 
    // GET /users
-    public function index(): ApiResponse
+    public function index(Request $request): ApiResponse
     {
-        $users = $this->getUsers->execute();
+        $search = $request->query('search');
+
+        $users = $this->getUsers->execute($search);
         return ApiResponse::ok($users, 'تم جلب المستخدمين بنجاح.');
     }
 
