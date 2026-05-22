@@ -48,6 +48,10 @@ class CreateFileMovementUseCase
             throw new DomainException("لا يوجد قسم مع ال ID [$fileMovementDTOs->departmentId].");
         }
 
+        if ($creator->department->id !== $department->id) {
+            throw new DomainException("لا يمكنك انشاء حركة ملف في قسم لا تعمل فيه.");
+        }
+
         $fileMovement = new FileMovement(
             id: null,
             status: $fileMovementDTOs->status,

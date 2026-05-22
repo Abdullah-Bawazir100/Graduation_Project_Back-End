@@ -73,6 +73,15 @@ class CreateFileUseCase
             throw new DomainException("الحي المحدد غير موجود.");
         }
 
+        if (
+            !$creator->department ||
+            $creator->department->id !== $department->id
+        ) {
+            throw new DomainException(
+                "لا يمكنك إنشاء ملف في قسم لا تنتمي إليه."
+            );
+        }
+
         // Create the file entity
         $file = new File(
             id: null,

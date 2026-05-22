@@ -74,7 +74,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
     Route::apiResource('/files', FileController::class);
 
-    Route::apiResource('/file-movement', FileMovementController::class);
+    Route::apiResource('/files-movements', FileMovementController::class);
 
     // Mobile App Routes
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update']);

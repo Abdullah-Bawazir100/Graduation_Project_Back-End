@@ -135,11 +135,11 @@ class UsersRolesAndAllowedRoutes
             'files.destroy',
 
             // File Movement
-            'file-movement.store',
-            'file-movement.update',
-            'file-movement.index',
-            'file-movement.show',
-            'file-movement.destroy',
+            'files-movements.store',
+            'files-movements.update',
+            'files-movements.index',
+            'files-movements.show',
+            'files-movements.destroy',
 
             // Authentication routes
             'auth.create-user',
@@ -276,10 +276,10 @@ class UsersRolesAndAllowedRoutes
             'files.update',
 
             // File Movement
-            'file-movement.store',
-            'file-movement.update',
-            'file-movement.index',
-            'file-movement.show',
+            'files-movements.store',
+            'files-movements.update',
+            'files-movements.index',
+            'files-movements.show',
 
             // Authentication routes
             'auth.create-user',
