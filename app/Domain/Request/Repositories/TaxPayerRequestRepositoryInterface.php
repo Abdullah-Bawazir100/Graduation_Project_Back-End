@@ -9,4 +9,5 @@ interface TaxPayerRequestRepositoryInterface
     public function create(TaxPayerRequest $request): TaxPayerRequest;
     public function getPendingRequests(): array;
     public function findRequestById(int $id);
+    public function acceptRequest(int $requestId): ?TaxPayerRequest;
 }

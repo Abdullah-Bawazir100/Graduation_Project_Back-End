@@ -43,7 +43,6 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
         return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
     }
 
-    #[Override]
     public function findRequestById(int $id)
     {
         $request = RequestModel::find($id);
@@ -52,6 +51,22 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
             return null;
         }
         return $this->mapToDomain($request);
+    }
+
+    public function acceptRequest(int $requestId): ?TaxPayerRequest
+    {
+        $request = RequestModel::with('user')->find($requestId);
+        if(!$request)
+        {
+            return null;
+        }
+
+        $request->update([
+            'status' => EnRequestStatus::Confirmed
+        ]);
+        $request->refresh();
+        return $this->mapToDomain($request);
+
     }
 
     private function mapToDomain(RequestModel $model): TaxPayerRequest

@@ -8,6 +8,7 @@ use App\Http\Requests\TaxPayerRequest\StoreRequestOfTaxPayerRequest;
 use DomainException;
 use Illuminate\Http\Request;
 use App\Application\Request\DTOs\TaxPayerRequestDTOs;
+use App\Application\Request\UseCases\AcceptRequestUseCase;
 use App\Application\Request\UseCases\FindRequestByIdUseCase;
 use App\Application\Request\UseCases\ListPendingRequestsUseCase;
 use App\Domain\TaxPayer\Enums\enFileType;
@@ -15,6 +16,7 @@ use App\Domain\Request\Enums\EnRequestStatus;
 use App\Http\Responses\ApiResponse;
 use App\Application\User\Services\UploadFileService;
 use App\Domain\User\Enums\UserRole;
+use App\Http\Requests\TaxPayerRequest\AcceptRequestOfTaxPayerRequest;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -110,6 +112,23 @@ class RequestController extends Controller
             return ApiResponse::created($result, 'تم إرسال طلب فتح الملف بنجاح.');
 
         } catch (Exception $e) {
+            return ApiResponse::serverError([], $e->getMessage());
+        }
+    }
+
+    public function acceptRequest(AcceptRequestOfTaxPayerRequest $request ,
+    AcceptRequestUseCase $useCase)
+    {
+        try {
+            $requestId = $request->requestId;
+
+            $result = $useCase->execute($requestId);
+            return ApiResponse::ok(
+                data: $result,
+                message: "تم قبول الطلب مع ال ID [$requestId] بنجاح."
+            );
+
+        } catch (DomainException $e) {
             return ApiResponse::serverError([], $e->getMessage());
         }
     }
