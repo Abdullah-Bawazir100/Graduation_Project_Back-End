@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 use App\Application\Request\DTOs\TaxPayerRequestDTOs;
 use App\Application\Request\UseCases\AcceptRequestUseCase;
 use App\Application\Request\UseCases\FindRequestByIdUseCase;
+use App\Application\Request\UseCases\ListConfirmedRequestsUseCase;
 use App\Application\Request\UseCases\ListPendingRequestsUseCase;
+use App\Application\Request\UseCases\ListRequestsUseCase;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\Request\Enums\EnRequestStatus;
 use App\Http\Responses\ApiResponse;
@@ -26,9 +28,13 @@ class RequestController extends Controller
         private UploadFileService $uploadFileService
     ) {}
 
-    public function index()
+    public function index(ListRequestsUseCase $useCase)
     {
-        //
+        $allRequests = $useCase->execute();
+        return ApiResponse::ok(
+            data: $allRequests,
+            message: "تم جلب جميع الطلبات بنجاح."
+        );
     }
 
     public function getPendingRequests(ListPendingRequestsUseCase $useCase)
@@ -37,6 +43,15 @@ class RequestController extends Controller
         return ApiResponse::ok(
             data: $pendingRequests,
             message: "تم جلب الطلبات قيد الإنتظار بنجاح."
+        );
+    }
+
+    public function getConfirmedRequests(ListConfirmedRequestsUseCase $useCase)
+    {
+        $confirmedRequests = $useCase->execute();
+        return ApiResponse::ok(
+            data: $confirmedRequests,
+            message: "تم جلب الطلبات المؤكدة بنجاح."
         );
     }
 

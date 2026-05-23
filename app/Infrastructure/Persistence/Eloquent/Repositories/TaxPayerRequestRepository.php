@@ -43,6 +43,21 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
         return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
     }
 
+    public function getConfirmedRequests(): array
+    {
+        $models = RequestModel::where('status', EnRequestStatus::Confirmed->value)
+            ->with('user')
+            ->get();
+
+        return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
+    public function getAllRequests(): array
+    {
+        $models = RequestModel::with('user')->get();
+        return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
     public function findRequestById(int $id)
     {
         $request = RequestModel::find($id);

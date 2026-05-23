@@ -143,8 +143,10 @@ class UsersRolesAndAllowedRoutes
 
             // Requests
             'requests.show',
+            'requests.index',
             'get-pending-requests',
             'accept-request',
+            'get-confirmed-requests',
 
 
             // Authentication routes
@@ -289,8 +291,11 @@ class UsersRolesAndAllowedRoutes
 
             // Requests
             'requests.show',
+            'requests.index',
             'get-pending-requests',
             'accept-request',
+            'get-confirmed-requests',
+
 
             // Authentication routes
             'auth.create-user',

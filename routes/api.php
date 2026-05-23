@@ -81,6 +81,9 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::get('/get-pending-requests', [RequestController::class , 'getPendingRequests'])
     ->name('get-pending-requests');
 
+    Route::get('/get-confirmed-requests', [RequestController::class , 'getConfirmedRequests'])
+    ->name('get-confirmed-requests');
+
     Route::put('/accept-request', [RequestController::class , 'acceptRequest'])
     ->name('accept-request');
 
