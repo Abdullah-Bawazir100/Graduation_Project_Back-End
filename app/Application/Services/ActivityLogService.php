@@ -13,7 +13,7 @@ class ActivityLogService
             ->whereIn('log_name', ['user', 'department','activity_type',
                         'payment_type' , 'region' , 'district' , 'job_type',
                         'tax_collector' , 'tax_payer' , 'company' , 'charitable_company'
-                        , 'tax_type' , 'tax_information' , 'file']);
+                        , 'tax_type' , 'tax_information' , 'file' , 'file_movement']);
 
         // Filters
         if (!empty($filters['user_id'])) {
@@ -152,6 +152,14 @@ class ActivityLogService
             'إنشاء ملف' => "تم إنشاء ملف." . ($new['name'] ?? ''),
             'تحديث ملف' => "تم تحديث ملف." . ($new['name'] ?? ''),
             'حذف ملف'  => "تم حذف ملف." . ($old['name'] ?? ''),
+
+            'إنشاء حركة ملف' => "تم إنشاء حركة ملف." . ($new['name'] ?? ''),
+            'تحديث حركة ملف' => "تم تحديث حركة ملف." . ($new['name'] ?? ''),
+            'حذف حركة ملف'  => "تم حذف حركة ملف." . ($old['name'] ?? ''),
+
+            'إنشاء طلب' => "تم إنشاء طلب" . ($new['name'] ?? ''),
+            'تحديث طلب' => "تم تحديث طلب" . ($new['name'] ?? ''),
+            'حذف طلب'  => "تم حذف طلب" . ($old['name'] ?? ''),
 
             default => $description,
         };

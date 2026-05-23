@@ -112,6 +112,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Persistence\Eloquent\Repositories\FileMovementRepository::class
         );
 
+        $this->app->bind(
+            \App\Domain\Request\Repositories\TaxPayerRequestRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\TaxPayerRequestRepository::class
+        );
+
     }
 
     /**

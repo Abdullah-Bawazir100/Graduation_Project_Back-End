@@ -13,9 +13,7 @@ use App\Domain\User\Entities\User;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Interfaces\PasswordHashInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
-use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use DomainException;
-use Illuminate\Support\Facades\Hash;
 
 class CreateTaxPayerWithUserUseCase
 {

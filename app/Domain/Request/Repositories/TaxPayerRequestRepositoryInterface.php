@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Domain\Request\Repositories;
+
+use App\Domain\Request\Entities\TaxPayerRequest;
+
+interface TaxPayerRequestRepositoryInterface
+{
+    public function create(TaxPayerRequest $request): TaxPayerRequest;
+    public function getPendingRequests(): array;
+    public function findRequestById(int $id);
+}

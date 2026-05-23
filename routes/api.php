@@ -5,8 +5,9 @@ use App\Http\Controllers\Api\{
     CharitableCompanyController , CompanyController , DepartmentController ,
     DistrictController , FileController, FileStatusController , JobTypeController ,
     TaxCollectorController , TaxPayerController , UserController , AuthController,
-    FileMovementController , PaymentTypeController , RegionController , StatisticsController ,
-    TaxInformationController , TaxPayerMobileController , TaxTypeController
+    FileMovementController , PaymentTypeController , RegionController , RequestController,
+    StatisticsController , TaxInformationController , TaxPayerMobileController ,
+    TaxTypeController
 };
 
 use App\Http\Middleware\appUsersMiddleware;
@@ -75,6 +76,10 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::apiResource('/files', FileController::class);
 
     Route::apiResource('/files-movements', FileMovementController::class);
+
+    Route::apiResource('/requests', RequestController::class);
+    Route::get('/get-pending-requests', [RequestController::class , 'getPendingRequests'])
+    ->name('get-pending-requests');
 
     // Mobile App Routes
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update']);

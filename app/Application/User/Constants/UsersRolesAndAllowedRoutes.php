@@ -141,6 +141,10 @@ class UsersRolesAndAllowedRoutes
             'files-movements.show',
             'files-movements.destroy',
 
+            // Requests
+            'requests.show',
+            'get-pending-requests',
+
             // Authentication routes
             'auth.create-user',
             'auth.reset-password',
@@ -281,6 +285,10 @@ class UsersRolesAndAllowedRoutes
             'files-movements.index',
             'files-movements.show',
 
+            // Requests
+            'requests.show',
+            'get-pending-requests',
+
             // Authentication routes
             'auth.create-user',
             'auth.reset-password',
@@ -304,7 +312,13 @@ class UsersRolesAndAllowedRoutes
             // He will use the mobile app
             'update-tax-payer-mobile',
             'get-tax-payer-mobile-profile',
-            'tax-payer-mobile-logout'
+            'tax-payer-mobile-logout',
+
+            // Requests
+            'requests.store',
+            'requests.update',
+            'requests.index',
+            'requests.show',
         ],
 
         // Collectors Manager Permissions
