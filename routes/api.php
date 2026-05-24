@@ -86,14 +86,14 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::get('/get-confirmed-requests', [RequestController::class , 'getConfirmedRequests'])
     ->name('get-confirmed-requests');
 
-    Route::get('/get-rejected-requests', [RequestController::class , 'getRejectedRequests'])
-    ->name('get-rejected-requests');
+    Route::get('/get-archived-requests', [RequestController::class , 'getArchivedRequests'])
+    ->name('get-archived-requests');
 
     Route::put('/accept-request', [RequestController::class , 'acceptRequest'])
     ->name('accept-request');
 
-    Route::post('/reject-request', [RequestController::class , 'storeRejectedRequestToFilesTable'])
-    ->name('reject-request');
+    Route::post('/archive-request', [RequestController::class , 'storeArchivedRequestToFilesTable'])
+    ->name('archive-request');
 
     // Mobile App Routes
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update']);

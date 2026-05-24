@@ -148,8 +148,8 @@ class UsersRolesAndAllowedRoutes
             'get-pending-requests',
             'accept-request',
             'get-confirmed-requests',
-            'reject-request',
-            'get-rejected-requests',
+            'archive-request',
+            'get-archived-requests',
 
 
             // Authentication routes
@@ -299,8 +299,8 @@ class UsersRolesAndAllowedRoutes
             'get-pending-requests',
             'accept-request',
             'get-confirmed-requests',
-            'reject-request',
-            'get-rejected-requests',
+            'archive-request',
+            'get-archived-requests',
 
 
             // Authentication routes
@@ -319,7 +319,7 @@ class UsersRolesAndAllowedRoutes
             'files.index',
             'files.store',
             'files.show',
-            'reject-request',
+            'archive-request',
 
         ],
 

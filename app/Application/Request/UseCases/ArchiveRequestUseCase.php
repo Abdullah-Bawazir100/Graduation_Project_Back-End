@@ -26,7 +26,7 @@ use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use DomainException;
 
-class RejectRequestUseCase
+class ArchiveRequestUseCase
 {
     public function __construct(
         private TaxPayerRequestRepositoryInterface $tax_payer_request_repository,
@@ -99,14 +99,14 @@ class RejectRequestUseCase
             );
         }
 
-        if($request->requestStatus === EnRequestStatus::Rejected)
+        if($request->requestStatus === EnRequestStatus::Archived)
         {
             throw new DomainException("تم ترحيل هذا الملف من قبل.");
         }
 
         if($request->requestStatus === EnRequestStatus::Confirmed)
         {
-            $rejectedRequest = $this->tax_payer_request_repository->rejectRequest($requestId);
+            $rejectedRequest = $this->tax_payer_request_repository->archiveRequest($requestId);
             $user = $this->user_repository->findById($request->userId);
             $this->storeRequestToFilesTable($fileDTOs , $creator ,
             $department , $taxPayer , $fileStatus , $activityType , $paymentType , $region , $district);

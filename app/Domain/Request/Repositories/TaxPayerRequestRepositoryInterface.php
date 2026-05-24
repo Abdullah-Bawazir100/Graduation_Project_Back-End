@@ -10,8 +10,8 @@ interface TaxPayerRequestRepositoryInterface
     public function getPendingRequests(): array;
     public function getConfirmedRequests(): array;
     public function getAllRequests(): array;
-    public function getRejectedRequests(): array;
+    public function getArchivedRequests(): array;
     public function findRequestById(int $id);
     public function acceptRequest(int $requestId): ?TaxPayerRequest;
-    public function rejectRequest(int $requestId);
+    public function archiveRequest(int $requestId);
 }

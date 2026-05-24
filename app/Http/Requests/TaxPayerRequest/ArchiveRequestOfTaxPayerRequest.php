@@ -4,7 +4,7 @@ namespace App\Http\Requests\TaxPayerRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RejectRequestOfTaxPayerRequest extends FormRequest
+class ArchiveRequestOfTaxPayerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

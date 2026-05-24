@@ -10,12 +10,12 @@ use DomainException;
 use Illuminate\Http\Request;
 use App\Application\Request\DTOs\TaxPayerRequestDTOs;
 use App\Application\Request\UseCases\AcceptRequestUseCase;
+use App\Application\Request\UseCases\ArchiveRequestUseCase;
 use App\Application\Request\UseCases\FindRequestByIdUseCase;
+use App\Application\Request\UseCases\ListArchivedRequestsUseCase;
 use App\Application\Request\UseCases\ListConfirmedRequestsUseCase;
 use App\Application\Request\UseCases\ListPendingRequestsUseCase;
-use App\Application\Request\UseCases\ListRejectedRequestsUseCase;
 use App\Application\Request\UseCases\ListRequestsUseCase;
-use App\Application\Request\UseCases\RejectRequestUseCase;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\Request\Enums\enRequestStatus;
 use App\Http\Responses\ApiResponse;
@@ -23,7 +23,7 @@ use App\Application\User\Services\UploadFileService;
 use App\Domain\User\Enums\UserRole;
 use App\Http\Requests\File\StoreFileRequest;
 use App\Http\Requests\TaxPayerRequest\AcceptRequestOfTaxPayerRequest;
-use App\Http\Requests\TaxPayerRequest\RejectRequestOfTaxPayerRequest;
+use App\Http\Requests\TaxPayerRequest\ArchiveRequestOfTaxPayerRequest;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,7 +60,7 @@ class RequestController extends Controller
         );
     }
 
-    public function getRejectedRequests(ListRejectedRequestsUseCase $useCase)
+    public function getArchivedRequests(ListArchivedRequestsUseCase $useCase)
     {
         $confirmedRequests = $useCase->execute();
         return ApiResponse::ok(
@@ -175,9 +175,9 @@ class RequestController extends Controller
         );
     }
 
-    public function storeRejectedRequestToFilesTable(RejectRequestOfTaxPayerRequest $rejectedRequest
+    public function storeArchivedRequestToFilesTable(ArchiveRequestOfTaxPayerRequest $rejectedRequest
     , StoreFileRequest $request ,
-    RejectRequestUseCase $useCase)
+    ArchiveRequestUseCase $useCase)
     {
         try {
             $requestId = $rejectedRequest->requestId;

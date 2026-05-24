@@ -5,7 +5,7 @@ namespace App\Application\Request\UseCases;
 use App\Domain\Request\Repositories\TaxPayerRequestRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 
-class ListRejectedRequestsUseCase
+class ListArchivedRequestsUseCase
 {
     public function __construct(
         private TaxPayerRequestRepositoryInterface $tax_payer_request_repository,
@@ -15,7 +15,7 @@ class ListRejectedRequestsUseCase
 
     public function execute(): array
     {
-        $pendingRequests = $this->tax_payer_request_repository->getRejectedRequests();
+        $pendingRequests = $this->tax_payer_request_repository->getArchivedRequests();
 
         $response = [];
         foreach ($pendingRequests as $request) {
