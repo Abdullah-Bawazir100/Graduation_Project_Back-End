@@ -14,4 +14,5 @@ interface TaxPayerRequestRepositoryInterface
     public function findRequestById(int $id);
     public function acceptRequest(int $requestId): ?TaxPayerRequest;
     public function archiveRequest(int $requestId);
+    public function findRequestByUserId(int $userId): ?TaxPayerRequest;
 }

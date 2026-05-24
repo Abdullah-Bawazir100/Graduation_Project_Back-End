@@ -9,10 +9,11 @@ use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Domain\FileStatus\Repositories\FileStatusRepositoryInterface;
-use App\Domain\ActivityType\Repositories\ActivityTypeRepositoryInterface;
 use App\Domain\PaymentType\Repositories\PaymentTypeRepositoryInterface;
 use App\Domain\Region\Repositories\RegionRepositoryInterface;
 use App\Domain\District\Repositories\DistrictRepositoryInterface;
+use App\Domain\Request\Enums\enRequestStatus;
+use App\Domain\Request\Repositories\TaxPayerRequestRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use DomainException;
 
@@ -27,7 +28,8 @@ class CreateFileUseCase
         private PaymentTypeRepositoryInterface $payment_type_repository,
         private RegionRepositoryInterface $region_repository,
         private DistrictRepositoryInterface $district_repository,
-        private UserRepositoryInterface $user_repository
+        private UserRepositoryInterface $user_repository,
+        private TaxPayerRequestRepositoryInterface $tax_payer_request_repository
     ) {}
 
     public function execute(FileDTOs $dto, int $authenticatedUserId): array
@@ -100,16 +102,36 @@ class CreateFileUseCase
             creator: $creator
         );
 
+        if($taxPayer->source === 'Requests')
+        {
+            $request = $this->tax_payer_request_repository->findRequestByUserId($taxPayer->userId);
+            if(!$request)
+            {
+                throw new DomainException("لا يوجد طلب مربوط بهذا المكلف.");
+            }
 
-        // Persist the file
-        $createdFile = $this->file_repository->create($file);
+            if($request->requestStatus === enRequestStatus::Archived)
+            {
+                throw new DomainException("لقد تم ترحيل هذا الملف مسبقا.");
+            }
 
-        if (!$createdFile) {
-            throw new DomainException("فشل إنشاء الملف.");
+            $createdFile = $this->file_repository->create($file);
+            $this->tax_payer_request_repository->archiveRequest($request->id);
+            return [
+                'fileInfo' => $createdFile
+            ];
         }
+        else{
+            // Persist the file
+            $createdFile = $this->file_repository->create($file);
 
-        return [
-            'fileInfo' => $createdFile,
-        ];
+            if (!$createdFile) {
+                throw new DomainException("فشل إنشاء الملف.");
+            }
+
+            return [
+                'fileInfo' => $createdFile,
+            ];
+        }
     }
 }
