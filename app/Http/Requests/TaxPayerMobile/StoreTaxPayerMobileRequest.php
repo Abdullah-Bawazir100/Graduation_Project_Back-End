@@ -49,8 +49,8 @@ class StoreTaxPayerMobileRequest extends FormRequest
             'lastName.not_regex' => 'لا يمكن أن يكون الأسم الأخير أرقام فقط.',
 
             'idCard.required' => 'ملف البطاقة الشخصية مطلوب.',
-            'idCard.file'     => 'يجب أن يكون الملف المرفوع صحيحًا.',
-            'idCard.mimes'    => 'يجب أن يكون الملف بصيغة PDF فقط.',
+            'idCard.image'     => 'يجب أن تكون البطاقة الشخصية صورة صحيحة.',
+            'idCard.mimes' => 'يجب أن يكون الملف بصيغة PNG أو JPG أو JPEG أو GIF أو PDF.',
             'idCard.max'     => 'يجب أن لا يتجاوز حجم الملف 5 MB.',
 
             'phone.required' => 'رقم الهاتف مطلوب.',

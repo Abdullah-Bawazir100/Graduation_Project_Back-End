@@ -87,6 +87,16 @@ class FileMovementRepository implements FileMovementRepositoryInterface
         return $this->mapToDomain($fileMovement);
     }
 
+    public function findFileMovementByFileId(int $fileId): ?FileMovement
+    {
+        $fileMovement = FileMovementModel::with('file')
+            ->where('file_id', $fileId)
+            ->latest('id')
+            ->first();
+
+        return $fileMovement ? $this->mapToDomain($fileMovement) : null;
+    }
+
     public function getAll()
     {
         $filesMovements = FileMovementModel::with(

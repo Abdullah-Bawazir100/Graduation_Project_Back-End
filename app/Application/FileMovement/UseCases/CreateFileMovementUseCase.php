@@ -37,11 +37,6 @@ class CreateFileMovementUseCase
             throw new DomainException("لا يوجد ملف مع ال ID [$fileMovementDTOs->fileId].");
         }
 
-        if($file->fileStatus !== enFileMovement::InsideArchive)
-        {
-            throw new DomainException("لا يمكن إنشاء حركة ملف لهذا الملف ، لأن الملف ليس داخل الأرشيف.");
-        }
-
         $taxCollector = $this->tax_collector_repository->findById($fileMovementDTOs->taxCollectorId);
         if(!$taxCollector)
         {
@@ -58,6 +53,15 @@ class CreateFileMovementUseCase
             throw new DomainException("لا يمكنك انشاء حركة ملف في قسم لا تعمل فيه.");
         }
 
+        $lastMovement = $this->file_movement_repository
+            ->findFileMovementByFileId($file->id);
+
+        if ($lastMovement && $lastMovement->status === enFileMovement::OutsideArchive) {
+            throw new DomainException(
+                "لا يمكن إنشاء حركة ملف لأن الملف خارج الأرشيف."
+            );
+        }
+
         $fileMovement = new FileMovement(
             id: null,
             status: $fileMovementDTOs->status,
@@ -70,7 +74,7 @@ class CreateFileMovementUseCase
 
         $createdFileMovement = $this->file_movement_repository->create($fileMovement);
         return [
-            'fileMovementInfo' => $createdFileMovement
+            'fileMovementInfo' => $createdFileMovement,
         ];
 
 
