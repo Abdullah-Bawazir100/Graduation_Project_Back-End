@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Application\File\DTOs\FileDTOs;
 use App\Application\Request\UseCases\CreateRequestUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaxPayerRequest\StoreRequestOfTaxPayerRequest;
@@ -12,13 +13,17 @@ use App\Application\Request\UseCases\AcceptRequestUseCase;
 use App\Application\Request\UseCases\FindRequestByIdUseCase;
 use App\Application\Request\UseCases\ListConfirmedRequestsUseCase;
 use App\Application\Request\UseCases\ListPendingRequestsUseCase;
+use App\Application\Request\UseCases\ListRejectedRequestsUseCase;
 use App\Application\Request\UseCases\ListRequestsUseCase;
+use App\Application\Request\UseCases\RejectRequestUseCase;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\Request\Enums\enRequestStatus;
 use App\Http\Responses\ApiResponse;
 use App\Application\User\Services\UploadFileService;
 use App\Domain\User\Enums\UserRole;
+use App\Http\Requests\File\StoreFileRequest;
 use App\Http\Requests\TaxPayerRequest\AcceptRequestOfTaxPayerRequest;
+use App\Http\Requests\TaxPayerRequest\RejectRequestOfTaxPayerRequest;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,6 +57,15 @@ class RequestController extends Controller
         return ApiResponse::ok(
             data: $confirmedRequests,
             message: "تم جلب الطلبات المؤكدة بنجاح."
+        );
+    }
+
+    public function getRejectedRequests(ListRejectedRequestsUseCase $useCase)
+    {
+        $confirmedRequests = $useCase->execute();
+        return ApiResponse::ok(
+            data: $confirmedRequests,
+            message: "تم جلب الطلبات المرحلة بنجاح."
         );
     }
 
@@ -161,17 +175,52 @@ class RequestController extends Controller
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    public function storeRejectedRequestToFilesTable(RejectRequestOfTaxPayerRequest $rejectedRequest
+    , StoreFileRequest $request ,
+    RejectRequestUseCase $useCase)
+    {
+        try {
+            $requestId = $rejectedRequest->requestId;
+            $authenticatedUser = Auth::user();
+
+            if (!$authenticatedUser) {
+                return response()->json([
+                    'error' => 'المستخدم غير مسجل الدخول'
+                ], 401);
+            }
+
+            $dto = new FileDTOs(
+                taxNumber: $request->taxNumber,
+                inventoryNumber: $request->inventoryNumber,
+                activityStartDate: $request->activityStartDate,
+                docsCount: $request->docsCount,
+                note: $request->note,
+                taxPayerId: $request->taxPayerId,
+                departmentId:  $request->departmentId,
+                fileStatusId:  $request->fileStatusId,
+                activityTypeId: $request->activityTypeId,
+                paymentTypeId: $request->paymentTypeId,
+                regionId: $request->regionId,
+                districtId:  $request->districtId
+            );
+            $result = $useCase->execute($requestId , $dto , $authenticatedUser->id);
+            return ApiResponse::ok(
+                data: $result,
+                message: "تم ترحيل الطلب مع ال ID [$requestId] بنجاح."
+            );
+
+        } catch (DomainException $e) {
+            return ApiResponse::serverError([], $e->getMessage());
+        }
+    }
+
+
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         //

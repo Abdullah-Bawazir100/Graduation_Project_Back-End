@@ -52,6 +52,14 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
 
         return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
     }
+    public function getRejectedRequests(): array
+    {
+        $models = RequestModel::where('status', EnRequestStatus::Rejected->value)
+            ->with('user')
+            ->get();
+
+        return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
+    }
 
     public function getAllRequests(): array
     {
@@ -83,6 +91,21 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
         $request->refresh();
         return $this->mapToDomain($request);
 
+    }
+
+    public function rejectRequest(int $requestId)
+    {
+        $request = RequestModel::with('user')->find($requestId);
+        if(!$request)
+        {
+            return null;
+        }
+
+        $request->update([
+            'status' => EnRequestStatus::Rejected
+        ]);
+        $request->refresh();
+        return $this->mapToDomain($request);
     }
 
 

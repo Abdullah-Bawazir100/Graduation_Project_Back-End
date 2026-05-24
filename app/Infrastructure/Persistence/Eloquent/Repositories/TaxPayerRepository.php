@@ -95,6 +95,20 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
     public function findByUserName(string $userName): ?TaxPayer
     {
         $taxPayerModel = TaxPayerModel::with('user')->where('user_name', $userName)->first();
+        if(!$taxPayerModel)
+        {
+            return null;
+        }
+        return $this->mapToDomain($taxPayerModel);
+    }
+
+    public function findByTradeName(string $tradeName): ?TaxPayer
+    {
+        $taxPayerModel = TaxPayerModel::with('user')->where('trade_name', $tradeName)->first();
+        if(!$taxPayerModel)
+        {
+            return null;
+        }
         return $this->mapToDomain($taxPayerModel);
     }
 

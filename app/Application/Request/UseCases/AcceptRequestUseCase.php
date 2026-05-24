@@ -53,6 +53,14 @@ class AcceptRequestUseCase
 
     private function storeRequestToTaxPayerTable(TaxPayerRequest $request)
     {
+        $existingTaxPayer = $this->tax_payer_repository->findByTradeName($request->tradeName);
+
+        if ($existingTaxPayer) {
+            throw new DomainException(
+                "يوجد ملف مسجل مسبقاً بهذا الاسم التجاري."
+            );
+        }
+        
         switch($request->fileType)
         {
             case enFileType::Individual :
@@ -70,8 +78,8 @@ class AcceptRequestUseCase
                     source: $request->source
                 );
 
-                return $this->tax_payer_repository->create($taxPayer);
 
+                return $this->tax_payer_repository->create($taxPayer);
             }
 
             case enFileType::Company :
@@ -98,8 +106,9 @@ class AcceptRequestUseCase
                     partnersIDCards: $request->partnersIDCards,
                 );
                 $this->company_repository->create($company);
-
+                break;
             }
+
             case enFileType::CharitableCompany :
             {
                 $taxPayer = new TaxPayer(
@@ -122,7 +131,7 @@ class AcceptRequestUseCase
                     byLawsCopy: $request->byLawsCopy,
                 );
                 $this->charitable_company_repository->create($charitableCompany);
-
+                break;
             }
         }
     }
