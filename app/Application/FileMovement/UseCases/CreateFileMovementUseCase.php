@@ -6,6 +6,7 @@ use App\Application\FileMovement\DTOs\FileMovementDTOs;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Domain\FileMovement\Entities\FileMovement;
+use App\Domain\FileMovement\Enums\enFileMovement;
 use App\Domain\FileMovement\Repositories\FileMovementRepositoryInterface;
 use App\Domain\TaxCollector\Repositories\TaxCollectorRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
@@ -34,6 +35,11 @@ class CreateFileMovementUseCase
         if(!$file)
         {
             throw new DomainException("لا يوجد ملف مع ال ID [$fileMovementDTOs->fileId].");
+        }
+
+        if($file->fileStatus !== enFileMovement::InsideArchive)
+        {
+            throw new DomainException("لا يمكن إنشاء حركة ملف لهذا الملف ، لأن الملف ليس داخل الأرشيف.");
         }
 
         $taxCollector = $this->tax_collector_repository->findById($fileMovementDTOs->taxCollectorId);

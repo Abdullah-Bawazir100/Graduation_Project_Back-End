@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\FileMovement;
 
+use App\Domain\FileMovement\Enums\enFileMovement;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Override;
 
 class StoreFileMovementRequest extends FormRequest
@@ -23,7 +25,7 @@ class StoreFileMovementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required' , 'string' , 'not_regex:/^\d+$/'],
+            'status' => ['required' , Rule::in(array_map(fn($r) => $r->value, enFileMovement::cases()))],
             'date' => ['required' , 'string'],
             'fileId' => ['required' , 'integer' , 'exists:files,id'],
             'taxCollectorId' => ['required' , 'integer' , 'exists:tax_collectors,id'],
@@ -35,9 +37,8 @@ class StoreFileMovementRequest extends FormRequest
     public function messages()
     {
         return [
-            'status.required' => "حالة حركة الملف مطلوبة.",
-            'status.string' => "حالة حركة الملف يجب أن تكون نصا.",
-            'status.not_regex' => "حالة حركة الملف  لا يجب أن تكون أرقام فقط.",
+            'status.required' => 'حالة الملف مطلوبة.',
+            'status.in' => 'يجب أن تكون حالة الملف واحدة من : داخل الأرشيف ، خارج الأرشيف ، مفقود.',
 
             'date.required' => "تاريخ انشاء حركة الملف مطلوب.",
 

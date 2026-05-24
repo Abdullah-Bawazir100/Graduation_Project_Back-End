@@ -23,7 +23,7 @@ class FileMovementRepository implements FileMovementRepositoryInterface
         $fileMovementModel = FileMovementModel::create([
             'file_id' => $fileMovement->file->id,
             'tax_collector_id' => $fileMovement->taxCollector->id,
-            'status' => $fileMovement->status,
+            'status' => $fileMovement->status->value,
             'date' => $fileMovement->date,
             'department_id' => $fileMovement->department->id,
             'created_by' => $fileMovement->creator?->id,
@@ -33,7 +33,7 @@ class FileMovementRepository implements FileMovementRepositoryInterface
 
         return new FileMovement(
             id: $fileMovementModel->id,
-            status: $fileMovement->status,
+            status: $fileMovementModel->status,
             date: $fileMovement->date,
 
             file: $fileMovement->file,
@@ -160,6 +160,7 @@ class FileMovementRepository implements FileMovementRepositoryInterface
                     insuranceCard: $model->file->taxPayer->insurance_card,
                     propertyDocPict: $model->file->taxPayer->property_doc_pict,
                     fileType: $model->file->taxPayer->file_type,
+                    source: $model->file->taxPayer->source,
                 ),
 
                 department: $fileDepartment,

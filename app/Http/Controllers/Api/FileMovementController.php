@@ -8,6 +8,7 @@ use App\Application\FileMovement\UseCases\DeleteFileMovementUseCase;
 use App\Application\FileMovement\UseCases\FindFileMovementByIdUseCase;
 use App\Application\FileMovement\UseCases\ListFilesMovementsUseCase;
 use App\Application\FileMovement\UseCases\UpdateFileMovementUseCase;
+use App\Domain\FileMovement\Enums\enFileMovement;
 use App\Domain\FileMovement\Repositories\FileMovementRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FileMovement\StoreFileMovementRequest;
@@ -52,7 +53,7 @@ class FileMovementController extends Controller
 
             // Prepare DTO from request data
             $dto = new FileMovementDTOs(
-                status: $request->status,
+                status: enFileMovement::from($request->status),
                 date: $request->date,
                 fileId: $request->fileId,
                 taxCollectorId: $request->taxCollectorId,
@@ -101,7 +102,7 @@ class FileMovementController extends Controller
             }
 
             $dto = new FileMovementDTOs(
-                status: $request->status,
+                status: enFileMovement::from($request->status),
                 date: $request->date,
                 fileId: $request->fileId,
                 taxCollectorId: $request->taxCollectorId,

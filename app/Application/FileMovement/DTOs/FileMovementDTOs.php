@@ -2,9 +2,11 @@
 
 namespace App\Application\FileMovement\DTOs;
 
+use App\Domain\FileMovement\Enums\enFileMovement;
+
 class FileMovementDTOs{
     public function __construct(
-        public ?string $status,
+        public enFileMovement $status,
         public ?string $date,
 
         public ?int $fileId,

@@ -171,6 +171,7 @@ class FileRepository implements FileRepositoryInterface
                 insuranceCard: $model->taxPayer->insurance_card,
                 propertyDocPict: $model->taxPayer->property_doc_pict,
                 fileType: $model->taxPayer->file_type,
+                source: $model->taxPayer->source,
             ),
 
             department: $department,

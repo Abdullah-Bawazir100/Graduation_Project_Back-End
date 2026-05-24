@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Infrastructure\Persistence\Eloquent\Models;
+
+use App\Domain\FileMovement\Enums\enFileMovement;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
@@ -38,6 +40,10 @@ class FileMovementModel extends Model
     {
         return $this->belongsTo(UserModel::class, 'created_by');
     }
+
+    protected $casts = [
+        'status' => enFileMovement::class
+    ];
 
 
     public function getActivitylogOptions(): LogOptions

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\FileMovement;
 
+use App\Domain\FileMovement\Enums\enFileMovement;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateFileMovementRequest extends FormRequest
 {
@@ -22,7 +24,7 @@ class UpdateFileMovementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['sometimes' , 'string' , 'not_regex:/^\d+$/'],
+            'status' => ['sometimes' , Rule::in(array_map(fn($r) => $r->value, enFileMovement::cases()))],
             'date' => ['sometimes' , 'string'],
             'fileId' => ['sometimes' , 'integer' , 'exists:files,id'],
             'taxCollectorId' => ['sometimes' , 'integer' , 'exists:tax_collectors,id'],
@@ -33,8 +35,7 @@ class UpdateFileMovementRequest extends FormRequest
     public function messages()
     {
         return [
-            'status.string' => "حالة حركة الملف يجب أن تكون نصا.",
-            'status.not_regex' => "حالة حركة الملف  لا يجب أن تكون أرقام فقط.",
+            'status.in' => 'يجب أن تكون حالة الملف واحدة من : داخل الأرشيف ، خارج الأرشيف ، مفقود.',
 
             'fileId.integer' => "الملف يجب أن يكون رقما صحيحا.",
             'fileId.exists' => "الملف المحدد غير موجود.",

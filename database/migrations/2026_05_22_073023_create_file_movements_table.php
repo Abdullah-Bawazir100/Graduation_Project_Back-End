@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('file_id')->constrained('files')->cascadeOnDelete();
             $table->foreignId('tax_collector_id')->constrained('tax_collectors')->cascadeOnDelete();
 
-            $table->string('status');
+            $table->enum('status', ['InsideArchive', 'OutsideArchive' , 'Missing'])->default('InsideArchive');
             $table->string('date');
 
             $table->foreignId('department_id')->constrained('departments')->cascadeOnDelete();
