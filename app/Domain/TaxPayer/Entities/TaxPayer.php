@@ -16,5 +16,6 @@ class TaxPayer
         public ?string $insuranceCard,
         public ?string $propertyDocPict,
         public enFileType $fileType,
+        public ?string $source
     ) {}
 }

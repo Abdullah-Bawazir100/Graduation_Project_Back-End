@@ -11,6 +11,7 @@ use App\Application\TaxPayer\UseCases\CreateFileToExistingTaxPayerUseCase;
 use App\Application\TaxPayer\UseCases\DeleteTaxPayerUseCase;
 use App\Application\TaxPayer\UseCases\FindTaxPayerByIdUseCase;
 use App\Application\TaxPayer\UseCases\FindTaxPayerByUserIDUseCase;
+use App\Application\TaxPayer\UseCases\ListAllTaxPayersWithSourceUseCase;
 use App\Application\TaxPayer\UseCases\ListTaxPayersUseCase;
 use App\Application\TaxPayer\UseCases\ListTaxPayersWithSpecialInfoUseCase;
 use App\Application\TaxPayer\UseCases\ShowTaxPayerUseCase;
@@ -86,6 +87,7 @@ class TaxPayerController extends Controller
                 insuranceCard: $insuranceCardUrl,
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
+                source: 'Manually'
             );
 
             $result = $useCase->execute($taxPayerDTO , $userDTO , $actor);
@@ -120,6 +122,7 @@ class TaxPayerController extends Controller
                 insuranceCard: $insuranceCardUrl,
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
+                source: 'Manually'
             );
             $result = $useCase->execute($taxPayerDTO, $request->userId);
 
@@ -173,6 +176,7 @@ class TaxPayerController extends Controller
                 insuranceCard: $insuranceCardUrl ?? $existingTaxPayer->insuranceCard,
                 propertyDocPict: $propertyDocPictUrl ?? $existingTaxPayer->propertyDocPict,
                 fileType: $existingTaxPayer->fileType,
+                source: 'Manually'
             );
 
             $updatedTaxPayer = $useCase->execute($taxPayerDTO, $existingTaxPayer->id);
@@ -209,8 +213,14 @@ class TaxPayerController extends Controller
     {
         $search = $request->query('search');
         $taxPayers = $useCase->execute($search);
-        
+
         return ApiResponse::ok($taxPayers , "تم جلب المستخدمين المكلفين بنجاح.");
+    }
+
+    public function getAllTaxPayersWithSource(ListAllTaxPayersWithSourceUseCase $useCase)
+    {
+        $taxPayers = $useCase->execute();
+        return ApiResponse::ok($taxPayers , 'تم جلب المكلفين بنجاح.');
     }
 
     private function convertToDomainUser($authUser): DomainUser

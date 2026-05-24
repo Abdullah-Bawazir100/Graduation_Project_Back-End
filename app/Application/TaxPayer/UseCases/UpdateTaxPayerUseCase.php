@@ -39,6 +39,7 @@ class UpdateTaxPayerUseCase
             insuranceCard: $taxPayerDTO->insuranceCard,
             propertyDocPict: $taxPayerDTO->propertyDocPict,
             fileType: $taxPayerDTO->fileType,
+            source: $taxPayerDTO->source
         );
         $updatedTaxPayer = $this->tax_payer_repository->update($taxPayer, $id);
         return [

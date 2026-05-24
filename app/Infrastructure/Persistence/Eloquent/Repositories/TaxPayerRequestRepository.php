@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 
 use App\Domain\Request\Entities\TaxPayerRequest;
-use App\Domain\Request\Enums\EnRequestStatus;
+use App\Domain\Request\Enums\enRequestStatus;
 use App\Domain\Request\Repositories\TaxPayerRequestRepositoryInterface;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Infrastructure\Persistence\Eloquent\Models\RequestModel;
@@ -28,6 +28,7 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
             'by_laws_copy' => $request->byLawsCopy,
             'status' => $request->requestStatus->value,
             'note' => $request->note,
+            'source' => $request->source
         ]);
 
         $model->load('user');
@@ -84,6 +85,7 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
 
     }
 
+
     private function mapToDomain(RequestModel $model): TaxPayerRequest
     {
         return new TaxPayerRequest(
@@ -101,7 +103,8 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
             partnersIDCards: $model->partners_id_cards,
             byLawsCopy: $model->by_laws_copy,
             requestStatus: is_string($model->status) ? EnRequestStatus::from($model->status) : $model->status,
-            note: $model->note
+            note: $model->note,
+            source: $model->source
         );
     }
 }

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('tax_payers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('app_users')->cascadeOnDelete();
             $table->string('trade_name')->unique();
             $table->string('commercial_record')->nullable();
             $table->string('activity_license')->nullable();
@@ -20,10 +21,8 @@ return new class extends Migration
             $table->string('insurance_card')->nullable();
             $table->string('property_doc_pict')->nullable();
             $table->enum('file_type' , ['Individual', 'Company', 'CharitableCompany'])->default('Individual');
+            $table->string('source')->nullable();
             $table->timestamps();
-
-            // Adding foreign key constraint for user_id
-            $table->foreignId('user_id')->constrained('app_users')->cascadeOnDelete();
         });
     }
 

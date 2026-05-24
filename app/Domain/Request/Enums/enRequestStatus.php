@@ -4,7 +4,7 @@ namespace App\Domain\Request\Enums;
 
 use Illuminate\Validation\Rules\Enum;
 
-enum EnRequestStatus: string
+enum enRequestStatus: string
 {
     case Pending = 'Pending';
     case Confirmed = 'Confirmed';

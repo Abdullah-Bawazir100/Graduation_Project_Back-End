@@ -2,12 +2,10 @@
 
 namespace App\Infrastructure\Persistence\Eloquent\Models;
 
-use App\Domain\Request\Enums\EnRequestStatus;
+use App\Domain\Request\Enums\enRequestStatus;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
-use App\Infrastructure\Persistence\Eloquent\Models\JobTypeModel;
-use App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
@@ -31,7 +29,8 @@ class RequestModel extends Model
         'partners_id_cards',
         'by_laws_copy',
         'status',
-        'note'
+        'note',
+        'source'
     ];
 
     public function  user()
@@ -40,7 +39,7 @@ class RequestModel extends Model
     }
 
     protected $casts = [
-        'status' => EnRequestStatus::class
+        'status' => enRequestStatus::class,
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -61,7 +60,8 @@ class RequestModel extends Model
                 'partners_id_cards',
                 'by_laws_copy',
                 'status',
-                'note'
+                'note',
+                'source'
             ])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {

@@ -36,6 +36,7 @@ class CreateFileToExistingTaxPayerUseCase
             insuranceCard: $taxPayerDTO->insuranceCard,
             propertyDocPict: $taxPayerDTO->propertyDocPict,
             fileType: $taxPayerDTO->getFileType(),
+            source: $taxPayerDTO->source
         );
 
         $createdTaxPayerFile = $this->tax_payer_repository->createFileToExistingTaxPayer(

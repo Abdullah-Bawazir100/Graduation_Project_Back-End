@@ -16,6 +16,7 @@ class TaxPayerDTOs
         public ?string $insuranceCard,
         public ?string $propertyDocPict,
         public enFileType $fileType,
+        public ?string $source
     )
     {}
 

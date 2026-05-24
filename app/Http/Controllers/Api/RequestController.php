@@ -14,7 +14,7 @@ use App\Application\Request\UseCases\ListConfirmedRequestsUseCase;
 use App\Application\Request\UseCases\ListPendingRequestsUseCase;
 use App\Application\Request\UseCases\ListRequestsUseCase;
 use App\Domain\TaxPayer\Enums\enFileType;
-use App\Domain\Request\Enums\EnRequestStatus;
+use App\Domain\Request\Enums\enRequestStatus;
 use App\Http\Responses\ApiResponse;
 use App\Application\User\Services\UploadFileService;
 use App\Domain\User\Enums\UserRole;
@@ -118,8 +118,9 @@ class RequestController extends Controller
                 govemorLicense: $govemorLicenseUrl,
                 partnersIDCards: $partnersIDCardsUrl,
                 byLawsCopy: $byLawsCopyUrl,
-                requestStatus: EnRequestStatus::Pending,
-                note: $request->note
+                requestStatus: enRequestStatus::Pending,
+                note: $request->note,
+                source: 'Requests'
             );
 
             $result = $useCase->execute($taxPayerDTO);

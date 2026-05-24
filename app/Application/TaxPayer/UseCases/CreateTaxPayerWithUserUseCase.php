@@ -63,6 +63,7 @@ class CreateTaxPayerWithUserUseCase
             insuranceCard: $taxPayerDTO->insuranceCard,
             propertyDocPict: $taxPayerDTO->propertyDocPict,
             fileType: $taxPayerDTO->getFileType(),
+            source: $taxPayerDTO->source
         );
 
         $createdTaxPayer = $this->tax_payer_repository->create($taxPayer);

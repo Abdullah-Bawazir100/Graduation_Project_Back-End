@@ -23,7 +23,8 @@ class TaxPayerModel extends Model
         'trade_pict',
         'insurance_card',
         'property_doc_pict',
-        'file_type'
+        'file_type',
+        'source'
     ];
 
     protected $casts = [
@@ -70,6 +71,7 @@ class TaxPayerModel extends Model
                 'insurance_card',
                 'property_doc_pict',
                 'file_type',
+                'source'
             ])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {

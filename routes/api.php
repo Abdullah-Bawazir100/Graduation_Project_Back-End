@@ -58,6 +58,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::apiResource('tax-payers', TaxPayerController::class);
     Route::get('tax-payer-by-userId/{id}', [TaxPayerController::class , 'findTaxPayerByUserID'])->name('tax-payer-by-userId');
     Route::get('get-tax-payers-with-special-info', [TaxPayerController::class , 'getTaxPayersWithSpecialInfo'])->name('get-tax-payers-with-special-info');
+    Route::get('get-tax-payers-with-source', [TaxPayerController::class , 'getAllTaxPayersWithSource'])->name('get-tax-payers-with-source');
     Route::post('tax-payers/create-file-to-existing', [TaxPayerController::class, 'createFileToExistingTaxPayer'])->name('tax-payers.create-file-to-existing');
 
     Route::apiResource('companies', CompanyController::class);
@@ -78,6 +79,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::apiResource('/files-movements', FileMovementController::class);
 
     Route::apiResource('/requests', RequestController::class);
+
     Route::get('/get-pending-requests', [RequestController::class , 'getPendingRequests'])
     ->name('get-pending-requests');
 

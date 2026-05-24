@@ -21,6 +21,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             'insurance_card' => $taxPayer->insuranceCard,
             'property_doc_pict' => $taxPayer->propertyDocPict,
             'file_type' => $taxPayer->fileType->value,
+            'source' => $taxPayer->source
         ]);
 
         $model->load('user');
@@ -44,6 +45,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             'insurance_card' => $taxPayer->insuranceCard,
             'property_doc_pict' => $taxPayer->propertyDocPict,
             'file_type' => $taxPayer->fileType->value,
+            'source' => $taxPayer->source
         ]);
 
         $taxPayerModel->load('user');
@@ -78,6 +80,12 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
     }
 
+    public function getAllTaxPayers()
+    {
+        $taxPayers = TaxPayerModel::with('user')->get();
+        return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
     public function findByUserId(int $userId): ?TaxPayer
     {
         $taxPayerModel = TaxPayerModel::with('user')->where('user_id', $userId)->first();
@@ -104,7 +112,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         return $taxPayers
             ->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))
             ->toArray();
-        
+
     }
 
     public function createFileToExistingTaxPayer(TaxPayer $taxPayer , int $userId): ?TaxPayer
@@ -119,6 +127,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             'insurance_card' => $taxPayer->insuranceCard,
             'property_doc_pict' => $taxPayer->propertyDocPict,
             'file_type' => $taxPayer->fileType->value,
+            'source' => $taxPayer->source
         ]);
 
         $model->load('user');
@@ -138,6 +147,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             insuranceCard: $model->insurance_card,
             propertyDocPict: $model->property_doc_pict,
             fileType: $model->file_type,
+            source: $model->source
         );
     }
 }

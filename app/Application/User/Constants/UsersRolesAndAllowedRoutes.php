@@ -87,6 +87,7 @@ class UsersRolesAndAllowedRoutes
             'tax-payers.destroy',
             'tax-payer-by-userId',
             'get-tax-payers-with-special-info',
+            'get-tax-payers-with-source',
             'tax-payers.create-file-to-existing',
 
             // Companies
@@ -238,6 +239,7 @@ class UsersRolesAndAllowedRoutes
             'tax-payers.update',
             'tax-payer-by-userId',
             'get-tax-payers-with-special-info',
+            'get-tax-payers-with-source',
             'tax-payers.create-file-to-existing',
             // Note: No destroy permission for managers
 

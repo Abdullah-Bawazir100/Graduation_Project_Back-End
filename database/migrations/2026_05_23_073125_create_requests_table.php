@@ -31,6 +31,7 @@ return new class extends Migration
 
             $table->enum('status' , ['Pending', 'Confirmed', 'Archived' , 'Rejected'])->default('Pending');
             $table->string('note')->nullable();
+            $table->string('source')->nullable();
             $table->timestamps();
         });
     }

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Request\Entities;
 
-use App\Domain\Request\Enums\EnRequestStatus;
+use App\Domain\Request\Enums\enRequestStatus;
 use App\Domain\TaxPayer\Enums\enFileType;
 
 class TaxPayerRequest
@@ -21,8 +21,9 @@ class TaxPayerRequest
         public ?string $govemorLicense,
         public ?string $partnersIDCards,
         public ?string $byLawsCopy,
-        public EnRequestStatus $requestStatus,
+        public enRequestStatus $requestStatus,
         public ?string $note,
+        public ?string $source
     )
     {}
 }

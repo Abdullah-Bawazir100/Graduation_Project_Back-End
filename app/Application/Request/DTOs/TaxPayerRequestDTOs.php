@@ -23,21 +23,22 @@ class TaxPayerRequestDTOs
 
         public ?string $byLawsCopy,
 
-        public EnRequestStatus $requestStatus,
-        public ?string $note
+        public enRequestStatus $requestStatus,
+        public ?string $note,
+        public ?string $source
     )
     {}
 
-    public function getRequestStatus(): EnRequestStatus
+    public function getRequestStatus(): enRequestStatus
     {
         if ($this->requestStatus instanceof EnRequestStatus) {
             return $this->requestStatus;
         }
 
         if ($this->requestStatus !== null) {
-            return EnRequestStatus::from($this->requestStatus);
+            return enRequestStatus::from($this->requestStatus);
         }
 
-        return EnRequestStatus::Pending;
+        return enRequestStatus::Pending;
     }
 }

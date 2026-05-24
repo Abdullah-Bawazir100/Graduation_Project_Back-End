@@ -6,7 +6,7 @@ use App\Domain\CharitableCompany\Entities\CharitableCompany;
 use App\Domain\CharitableCompany\Repositories\CharitableCompanyRepositoryInterface;
 use App\Domain\Company\Repositories\CompanyRepositoryInterface;
 use App\Domain\Request\Entities\TaxPayerRequest;
-use App\Domain\Request\Enums\EnRequestStatus;
+use App\Domain\Request\Enums\enRequestStatus;
 use App\Domain\Request\Repositories\TaxPayerRequestRepositoryInterface;
 use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Domain\Company\Entities\Company;
@@ -67,6 +67,7 @@ class AcceptRequestUseCase
                     insuranceCard: $request->insuranceCard,
                     propertyDocPict: $request->propertyDocPict,
                     fileType: $request->fileType,
+                    source: $request->source
                 );
 
                 return $this->tax_payer_repository->create($taxPayer);
@@ -85,6 +86,7 @@ class AcceptRequestUseCase
                     insuranceCard: $request->insuranceCard,
                     propertyDocPict: $request->propertyDocPict,
                     fileType: $request->fileType,
+                    source: $request->source
                 );
                 $createdTaxPayer = $this->tax_payer_repository->create($taxPayer);
 
@@ -110,6 +112,7 @@ class AcceptRequestUseCase
                     insuranceCard: $request->insuranceCard,
                     propertyDocPict: $request->propertyDocPict,
                     fileType: $request->fileType,
+                    source: $request->source
                 );
                 $createdTaxPayer = $this->tax_payer_repository->create($taxPayer);
 
@@ -119,7 +122,7 @@ class AcceptRequestUseCase
                     byLawsCopy: $request->byLawsCopy,
                 );
                 $this->charitable_company_repository->create($charitableCompany);
-                
+
             }
         }
     }

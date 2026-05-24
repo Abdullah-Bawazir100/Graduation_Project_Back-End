@@ -4,7 +4,7 @@ namespace App\Application\Request\UseCases;
 
 use App\Application\Request\DTOs\TaxPayerRequestDTOs;
 use App\Domain\Request\Entities\TaxPayerRequest;
-use App\Domain\Request\Enums\EnRequestStatus;
+use App\Domain\Request\Enums\enRequestStatus;
 use App\Domain\Request\Repositories\TaxPayerRequestRepositoryInterface;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\User\Enums\UserRole;
@@ -68,8 +68,9 @@ class CreateRequestUseCase
             govemorLicense: $specificData['govemorLicense'],
             partnersIDCards: $specificData['partnersIDCards'],
             byLawsCopy: $specificData['byLawsCopy'],
-            requestStatus: EnRequestStatus::Pending,
-            note: $dto->note
+            requestStatus: enRequestStatus::Pending,
+            note: $dto->note,
+            source: $dto->source
         );
     }
 
