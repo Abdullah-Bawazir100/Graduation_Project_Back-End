@@ -56,9 +56,10 @@ class CreateFileMovementUseCase
         $lastMovement = $this->file_movement_repository
             ->findFileMovementByFileId($file->id);
 
-        if ($lastMovement && $lastMovement->status === enFileMovement::OutsideArchive) {
+        if ($lastMovement && ($lastMovement->status === enFileMovement::OutsideArchive ||
+        $lastMovement->status === enFileMovement::Missing)) {
             throw new DomainException(
-                "لا يمكن إنشاء حركة ملف لأن الملف خارج الأرشيف."
+                "لا يمكن إنشاء حركة ملف لأن الملف خارج الأرشيف أو مفقود."
             );
         }
 
