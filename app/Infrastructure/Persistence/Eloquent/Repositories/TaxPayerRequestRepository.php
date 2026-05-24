@@ -79,8 +79,7 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
 
     public function findRequestByUserId(int $userId): ?TaxPayerRequest
     {
-        $request = RequestModel::with('user')->where('user_id' , $userId)
-        ->where('status' , enRequestStatus::Confirmed)
+        $request = RequestModel::with('user')->where('user_id' , $userId)->latest()
         ->first();
         if(!$request)
         {
