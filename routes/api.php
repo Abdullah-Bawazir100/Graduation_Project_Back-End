@@ -83,27 +83,28 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::get('/get-pending-requests', [RequestController::class , 'getPendingRequests'])
     ->name('get-pending-requests');
 
+    Route::put('/accept-request', [RequestController::class , 'acceptRequest'])
+    ->name('accept-request');
     Route::get('/get-confirmed-requests', [RequestController::class , 'getConfirmedRequests'])
     ->name('get-confirmed-requests');
 
+    Route::post('/archive-request', [RequestController::class , 'storeArchivedRequestToFilesTable'])
+    ->name('archive-request');
     Route::get('/get-archived-requests', [RequestController::class , 'getArchivedRequests'])
     ->name('get-archived-requests');
 
+    Route::put('/reject-request', [RequestController::class , 'rejectRequest'])
+    ->name('reject-request');
     Route::get('/get-rejected-requests', [RequestController::class , 'getRejectedRequests'])
     ->name('get-rejected-requests');
 
-    Route::put('/accept-request', [RequestController::class , 'acceptRequest'])
-    ->name('accept-request');
-
-    Route::put('/reject-request', [RequestController::class , 'rejectRequest'])
-    ->name('reject-request');
-
-    Route::post('/archive-request', [RequestController::class , 'storeArchivedRequestToFilesTable'])
-    ->name('archive-request');
 
     // Mobile App Routes
-    Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update']);
-    Route::post('tax-payer-mobile-logout' , [TaxPayerMobileController::class , 'TaxPayerMobileLogout']);
-    Route::get('get-tax-payer-mobile-profile' , [TaxPayerMobileController::class , 'show']);
+    Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update'])
+    ->name('update-tax-payer-mobile');
+    Route::post('tax-payer-mobile-logout' , [TaxPayerMobileController::class , 'TaxPayerMobileLogout'])
+    ->name('tax-payer-mobile-logout');
+    Route::get('get-tax-payer-mobile-profile' , [TaxPayerMobileController::class , 'show'])
+    ->name('get-tax-payer-mobile-profile');
 
 });
