@@ -3,6 +3,7 @@
 namespace App\Domain\File\Repositories;
 
 use App\Domain\File\Entities\File;
+use App\Domain\TaxPayer\Enums\enFileType;
 
 interface FileRepositoryInterface
 {
@@ -12,4 +13,5 @@ interface FileRepositoryInterface
     public function findById(int $fileId): ?File;
     public function delete(int $fileId): void;
     public function countFiles(): int;
+    public function countFilesByType(enFileType $type): int;
 }

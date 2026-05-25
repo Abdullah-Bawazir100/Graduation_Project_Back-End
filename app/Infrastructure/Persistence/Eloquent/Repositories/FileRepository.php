@@ -15,6 +15,7 @@ use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Enums\UserRole;
 use App\Infrastructure\Persistence\Eloquent\Models\FileModel;
+use App\Infrastructure\Persistence\Eloquent\Models\TaxPayerModel;
 use Override;
 
 class FileRepository implements FileRepositoryInterface
@@ -144,6 +145,11 @@ class FileRepository implements FileRepositoryInterface
     public function countFiles(): int
     {
         return FileModel::count();
+    }
+
+    public function countFilesByType(enFileType $type): int
+    {
+        return TaxPayerModel::where('file_type', $type->value)->count();
     }
 
     private function mapToDomain(FileModel $model): File

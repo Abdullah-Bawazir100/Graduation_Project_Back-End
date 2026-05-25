@@ -13,4 +13,5 @@ interface DepartmentRepositoryInterface
     public function existsByName(string $name);
     public function moveUsersToAnotherDepartment(int $oldDepartmentId, int $newDepartmentId);
     public function countDepartments(): int;
+    public function getDepartmentsWithStatistics(): array;
 }

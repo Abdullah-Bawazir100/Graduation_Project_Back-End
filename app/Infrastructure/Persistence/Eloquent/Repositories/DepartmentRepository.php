@@ -83,4 +83,33 @@ class DepartmentRepository implements DepartmentRepositoryInterface
         // Update all users from old department to new department
         TaxCollectorModel::where('dept_id', $oldDepartmentId)->update(['dept_id' => $newDepartmentId]);
     }
+
+    public function getDepartmentsWithStatistics(): array
+    {
+        $departments = DepartmentModel::withCount([
+            'users',
+            'files',
+        ])->get();
+
+        return $departments->map(function ($department) {
+            return [
+                'department_id' => $department->id,
+                'department_name' => $department->name,
+                'users_count' => $department->users_count,
+                'files_count' => $department->files_count,
+                'individual_files_count' => \App\Infrastructure\Persistence\Eloquent\Models\TaxPayerModel::where('file_type', \App\Domain\TaxPayer\Enums\enFileType::Individual->value)
+                    ->whereHas('file', function ($q) use ($department) {
+                        $q->where('department_id', $department->id);
+                    })->count(),
+                'company_files_count' => \App\Infrastructure\Persistence\Eloquent\Models\TaxPayerModel::where('file_type', \App\Domain\TaxPayer\Enums\enFileType::Company->value)
+                    ->whereHas('file', function ($q) use ($department) {
+                        $q->where('department_id', $department->id);
+                    })->count(),
+                'charitable_company_files_count' => \App\Infrastructure\Persistence\Eloquent\Models\TaxPayerModel::where('file_type', \App\Domain\TaxPayer\Enums\enFileType::CharitableCompany->value)
+                    ->whereHas('file', function ($q) use ($department) {
+                        $q->where('department_id', $department->id);
+                    })->count(),
+            ];
+        })->toArray();
+    }
 }
