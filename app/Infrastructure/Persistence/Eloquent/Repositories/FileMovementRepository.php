@@ -113,6 +113,12 @@ class FileMovementRepository implements FileMovementRepositoryInterface
         FileMovementModel::findOrFail($id)->delete();
     }
 
+    public function getFileMovementCount(): int
+    {
+        return FileMovementModel::count();
+    }
+
+
     private function mapToDomain(FileMovementModel $model): FileMovement
     {
         $department = new Department(
