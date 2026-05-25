@@ -30,7 +30,6 @@ class ActivityLogService
         $startOfWeek = $now->copy()->startOfWeek(Carbon::SATURDAY);
         $endOfWeek   = $startOfWeek->copy()->addDays(6)->endOfDay();
 
-        // جلب العمليات مجمّعة حسب اليوم ونوع الحدث
         $activities = Activity::whereBetween('created_at', [$startOfWeek, $endOfWeek])
             ->whereIn('log_name', [
                 'user', 'department', 'activity_type',

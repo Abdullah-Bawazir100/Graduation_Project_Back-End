@@ -59,8 +59,8 @@ class StatisticsController
                 'file_movement_count' => $this->countFileMovementsUseCase->execute(),
                 'last_6_months_statistics' => $this->getFileMovementsStatisticsUseCase->execute(),
             ],
-            'departments_statistics' => $this->getDepartmentsStatisticsUseCase->execute(),
             'weekly_activity_statistics' => $this->getWeeklyActivityStatisticsUseCase->execute(),
+            'departments_statistics' => $this->getDepartmentsStatisticsUseCase->execute(),
         ];
 
         return ApiResponse::ok(
