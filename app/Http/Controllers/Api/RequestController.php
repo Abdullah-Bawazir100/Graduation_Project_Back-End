@@ -11,11 +11,14 @@ use Illuminate\Http\Request;
 use App\Application\Request\DTOs\TaxPayerRequestDTOs;
 use App\Application\Request\UseCases\AcceptRequestUseCase;
 use App\Application\Request\UseCases\ArchiveRequestUseCase;
+use App\Application\Request\UseCases\DeleteRequestUseCase;
 use App\Application\Request\UseCases\FindRequestByIdUseCase;
 use App\Application\Request\UseCases\ListArchivedRequestsUseCase;
 use App\Application\Request\UseCases\ListConfirmedRequestsUseCase;
 use App\Application\Request\UseCases\ListPendingRequestsUseCase;
+use App\Application\Request\UseCases\ListRejectedRequestsUseCase;
 use App\Application\Request\UseCases\ListRequestsUseCase;
+use App\Application\Request\UseCases\RejectRequestUseCase;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\Request\Enums\enRequestStatus;
 use App\Http\Responses\ApiResponse;
@@ -24,6 +27,7 @@ use App\Domain\User\Enums\UserRole;
 use App\Http\Requests\File\StoreFileRequest;
 use App\Http\Requests\TaxPayerRequest\AcceptRequestOfTaxPayerRequest;
 use App\Http\Requests\TaxPayerRequest\ArchiveRequestOfTaxPayerRequest;
+use App\Http\Requests\TaxPayerRequest\RejectRequestOfTaxPayerRequest;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,6 +70,15 @@ class RequestController extends Controller
         return ApiResponse::ok(
             data: $confirmedRequests,
             message: "تم جلب الطلبات المرحلة بنجاح."
+        );
+    }
+
+    public function getRejectedRequests(ListRejectedRequestsUseCase $useCase)
+    {
+        $confirmedRequests = $useCase->execute();
+        return ApiResponse::ok(
+            data: $confirmedRequests,
+            message: "تم جلب الطلبات المرفوضة بنجاح."
         );
     }
 
@@ -163,9 +176,24 @@ class RequestController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function rejectRequest(RejectRequestOfTaxPayerRequest $request ,
+    RejectRequestUseCase $useCase)
+    {
+        try {
+            $requestId = $request->requestId;
+            $note = $request->note ?? null;
+
+            $result = $useCase->execute($requestId , $note);
+            return ApiResponse::ok(
+                data: $result,
+                message: "تم رفض الطلب مع ال ID [$requestId]."
+            );
+
+        } catch (DomainException $e) {
+            return ApiResponse::serverError([], $e->getMessage());
+        }
+    }
+
     public function show(int $id , FindRequestByIdUseCase $useCase)
     {
         $request = $useCase->execute($id);
@@ -215,14 +243,18 @@ class RequestController extends Controller
     }
 
 
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    // public function update(Request $request, string $id)
+    // {
+    //     //
+    // }
 
 
-    public function destroy(string $id)
+    public function destroy(int $requestId , DeleteRequestUseCase $useCase)
     {
-        //
+        $useCase->execute($requestId);
+        return ApiResponse::ok(
+            data: [],
+            message: "تم حذف الطلب مع ال ID [$requestId] بنجاح."
+        );
     }
 }

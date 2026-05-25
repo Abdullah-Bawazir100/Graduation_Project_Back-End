@@ -145,11 +145,14 @@ class UsersRolesAndAllowedRoutes
             // Requests
             'requests.show',
             'requests.index',
+            'requests.destroy',
             'get-pending-requests',
             'accept-request',
             'get-confirmed-requests',
             'archive-request',
             'get-archived-requests',
+            'reject-request',
+            'get-rejected-requests',
 
 
             // Authentication routes
@@ -301,12 +304,15 @@ class UsersRolesAndAllowedRoutes
             'get-confirmed-requests',
             'archive-request',
             'get-archived-requests',
+            'reject-request',
+            'get-rejected-requests',
 
 
             // Authentication routes
             'auth.create-user',
             'auth.reset-password',
             'auth.logout',
+
 
             // Other routes
             'users.show',

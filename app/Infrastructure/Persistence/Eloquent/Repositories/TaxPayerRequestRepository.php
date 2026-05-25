@@ -52,9 +52,19 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
 
         return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
     }
+
     public function getArchivedRequests(): array
     {
         $models = RequestModel::where('status', EnRequestStatus::Archived->value)
+            ->with('user')
+            ->get();
+
+        return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
+    public function getRejectedRequests(): array
+    {
+        $models = RequestModel::where('status', EnRequestStatus::Rejected->value)
             ->with('user')
             ->get();
 
@@ -117,6 +127,28 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
         ]);
         $request->refresh();
         return $this->mapToDomain($request);
+    }
+
+    public function rejectRequest(int $requestId , ?string $note): ?TaxPayerRequest
+    {
+        $request = RequestModel::with('user')->find($requestId);
+        if(!$request)
+        {
+            return null;
+        }
+
+        $request->update([
+            'note' => $note ?? null,
+            'status' => EnRequestStatus::Rejected
+        ]);
+        $request->refresh();
+        return $this->mapToDomain($request);
+    }
+
+    public function delete(int $requestId): void
+    {
+        $request = RequestModel::findOrFail($requestId);
+        $request->delete();
     }
 
 
