@@ -186,7 +186,7 @@ class TaxPayerMobileController extends Controller
 
             $useCase->execute($token);
 
-            return ApiResponse::ok('تم تسجيل الخروج بنجاح.');
+            return ApiResponse::ok([] , 'تم تسجيل الخروج بنجاح.');
 
         } catch(\Throwable $e)
         {
