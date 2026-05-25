@@ -42,7 +42,8 @@ class FileMovementModel extends Model
     }
 
     protected $casts = [
-        'status' => enFileMovement::class
+        'status' => enFileMovement::class,
+        'date' => 'date'
     ];
 
 

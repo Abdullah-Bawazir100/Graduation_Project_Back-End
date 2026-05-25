@@ -31,6 +31,7 @@ class StatisticsController
         private CountFilesByTypeUseCase $countFilesByTypeUseCase,
         private CountUsersUseCase $countUsersUseCase,
         private CountFileMovementsUseCase $countFileMovementsUseCase,
+        private GetFileMovementsStatisticsUseCase $getFileMovementsStatisticsUseCase,
     ) {}
 
     public function getStatistics()
@@ -54,6 +55,7 @@ class StatisticsController
             ],
             'file_movements_statistics' => [
                 'file_movement_count' => $this->countFileMovementsUseCase->execute(),
+                'last_6_months_statistics' => $this->getFileMovementsStatisticsUseCase->execute(),
             ],
             'departments_statistics' => $this->getDepartmentsStatisticsUseCase->execute(),
         ];

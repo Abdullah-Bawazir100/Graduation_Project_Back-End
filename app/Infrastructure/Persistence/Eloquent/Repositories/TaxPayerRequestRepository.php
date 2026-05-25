@@ -171,8 +171,8 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
             requestStatus: is_string($model->status) ? EnRequestStatus::from($model->status) : $model->status,
             note: $model->note,
             source: $model->source,
-            createdAt: $model->created_at?->format('Y-m-d H:i:s'),
-            updatedAt: $model->updated_at?->format('Y-m-d H:i:s')
+            createdAt: $model->created_at?->format('Y-m-d'),
+            updatedAt: $model->updated_at?->format('Y-m-d')
         );
     }
 }

@@ -92,7 +92,7 @@ class TaxPayerController extends Controller
 
             $result = $useCase->execute($taxPayerDTO , $userDTO , $actor);
 
-            return ApiResponse::created($result , 'تم إنشاء مكلف مع بنجاح.');
+            return ApiResponse::created($result , 'تم إنشاء مكلف مع  ملف فرد بنجاح.');
 
         } catch (Exception $e) {
             return ApiResponse::serverError($e->getMessage());

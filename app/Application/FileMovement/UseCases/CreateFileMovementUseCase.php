@@ -66,7 +66,7 @@ class CreateFileMovementUseCase
         $fileMovement = new FileMovement(
             id: null,
             status: $fileMovementDTOs->status,
-            date: $fileMovementDTOs->date,
+            date: $fileMovementDTOs->getDateAsCarbon(),
             file: $file,
             taxCollector: $taxCollector,
             department: $department,

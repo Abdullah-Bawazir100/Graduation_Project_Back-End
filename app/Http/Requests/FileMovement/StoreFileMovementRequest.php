@@ -26,7 +26,7 @@ class StoreFileMovementRequest extends FormRequest
     {
         return [
             'status' => ['required' , Rule::in(array_map(fn($r) => $r->value, enFileMovement::cases()))],
-            'date' => ['required' , 'string'],
+            'date' => ['required' , 'date'],
             'fileId' => ['required' , 'integer' , 'exists:files,id'],
             'taxCollectorId' => ['required' , 'integer' , 'exists:tax_collectors,id'],
             'departmentId' => ['required' , 'integer' , 'exists:departments,id'],
@@ -41,6 +41,7 @@ class StoreFileMovementRequest extends FormRequest
             'status.in' => 'يجب أن تكون حالة الملف واحدة من : داخل الأرشيف ، خارج الأرشيف ، مفقود.',
 
             'date.required' => "تاريخ انشاء حركة الملف مطلوب.",
+            'date.date' => "تاريخ انشاء حركة الملف يجب أن يكون تاريخ.",
 
             'fileId.required' => "الملف مطلوب.",
             'fileId.integer' => "الملف يجب أن يكون رقما صحيحا.",

@@ -3,7 +3,6 @@
 namespace App\Domain\FileMovement\Repositories;
 
 use App\Domain\FileMovement\Entities\FileMovement;
-use IntlDatePatternGenerator;
 
 interface FileMovementRepositoryInterface
 {
@@ -14,4 +13,5 @@ interface FileMovementRepositoryInterface
     public function getAll();
     public function delete(int $id): void;
     public function getFileMovementCount(): int;
+    public function getFileMovementsStatistics(): array;
 }

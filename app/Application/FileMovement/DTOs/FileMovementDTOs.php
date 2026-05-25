@@ -3,6 +3,7 @@
 namespace App\Application\FileMovement\DTOs;
 
 use App\Domain\FileMovement\Enums\enFileMovement;
+use Illuminate\Support\Carbon;
 
 class FileMovementDTOs{
     public function __construct(
@@ -14,4 +15,9 @@ class FileMovementDTOs{
         public ?int $departmentId,
     )
     {}
+
+    public function getDateAsCarbon(): ?Carbon
+    {
+        return $this->date ? Carbon::parse($this->date) : null;
+    }
 }

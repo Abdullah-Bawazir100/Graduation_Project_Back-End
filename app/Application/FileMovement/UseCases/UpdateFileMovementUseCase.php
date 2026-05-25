@@ -58,7 +58,7 @@ class UpdateFileMovementUseCase
         $fileMovement = new FileMovement(
             id: $id,
             status: $dto->status ?? $existingFileMovement->status,
-            date: $dto->date ?? $existingFileMovement->date,
+            date: $dto->getDateAsCarbon() ?? $existingFileMovement->date,
 
             file: $newFile,
             taxCollector: $newTaxCollector,

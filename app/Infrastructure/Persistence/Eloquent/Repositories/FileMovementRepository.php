@@ -15,6 +15,7 @@ use App\Domain\TaxCollector\Entities\TaxCollector;
 use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Domain\User\Entities\User;
 use App\Infrastructure\Persistence\Eloquent\Models\FileMovementModel;
+use Illuminate\Support\Carbon;
 
 class FileMovementRepository implements FileMovementRepositoryInterface
 {
@@ -29,18 +30,9 @@ class FileMovementRepository implements FileMovementRepositoryInterface
             'created_by' => $fileMovement->creator?->id,
         ]);
 
-        $fileMovementModel->load('file' , 'taxCollector' , 'department' , 'creator');
+        $fileMovementModel->load('file', 'taxCollector', 'department', 'creator');
 
-        return new FileMovement(
-            id: $fileMovementModel->id,
-            status: $fileMovementModel->status,
-            date: $fileMovement->date,
-
-            file: $fileMovement->file,
-            taxCollector: $fileMovement->taxCollector,
-            department: $fileMovement->department,
-            creator: $fileMovement->creator
-        );
+        return $this->mapToDomain($fileMovementModel);
     }
 
     public function update(FileMovement $fileMovement , int $id): ?FileMovement
@@ -116,6 +108,72 @@ class FileMovementRepository implements FileMovementRepositoryInterface
     public function getFileMovementCount(): int
     {
         return FileMovementModel::count();
+    }
+
+    public function getFileMovementsStatistics(): array
+    { 
+        $sixMonthsAgo = Carbon::now()->subMonths(6)->startOfMonth();
+
+        $movements = FileMovementModel::where('date', '>=', $sixMonthsAgo)
+            ->selectRaw("
+                DATE_FORMAT(date, '%Y-%m') as month,
+                status,
+                COUNT(*) as count
+            ")
+            ->groupBy('month', 'status')
+            ->orderBy('month')
+            ->get();
+
+        $monthlyData = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $key = $month->format('Y-m');
+            $monthlyData[$key] = [
+                'month' => $key,
+                'month_name' => $month->translatedFormat('F Y'),
+                'inside_archive' => 0,
+                'outside_archive' => 0,
+                'missing' => 0,
+                'total' => 0,
+            ];
+        }
+
+        foreach ($movements as $movement) {
+            if (!isset($monthlyData[$movement->month])) {
+                continue;
+            }
+
+            $statusKey = match ($movement->status->value ?? $movement->status) {
+                'InsideArchive' => 'inside_archive',
+                'OutsideArchive' => 'outside_archive',
+                'Missing' => 'missing',
+                default => null,
+            };
+
+            if ($statusKey) {
+                $monthlyData[$movement->month][$statusKey] = $movement->count;
+                $monthlyData[$movement->month]['total'] += $movement->count;
+            }
+        }
+
+        $totalInsideArchive = array_sum(array_column($monthlyData, 'inside_archive'));
+        $totalOutsideArchive = array_sum(array_column($monthlyData, 'outside_archive'));
+        $totalMissing = array_sum(array_column($monthlyData, 'missing'));
+        $totalAll = $totalInsideArchive + $totalOutsideArchive + $totalMissing;
+
+        return [
+            'period' => [
+                'from' => $sixMonthsAgo->format('Y-m-d'),
+                'to' => Carbon::now()->format('Y-m-d'),
+            ],
+            'status_totals' => [
+                'inside_archive' => $totalInsideArchive,
+                'outside_archive' => $totalOutsideArchive,
+                'missing' => $totalMissing,
+                'total' => $totalAll,
+            ],
+            'monthly_breakdown' => array_values($monthlyData),
+        ];
     }
 
 
