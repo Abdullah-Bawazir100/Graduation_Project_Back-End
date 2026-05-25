@@ -72,6 +72,10 @@ class TaxCollectorRepository implements TaxCollectorRepositoryInterface
         return $this->mapToDomain($taxCollectorModel);
     }
 
+    public function countTaxCollectors(): int
+    {
+        return TaxCollectorModel::count();
+    }
 
     private function mapToDomain(TaxCollectorModel $model): TaxCollector
     {

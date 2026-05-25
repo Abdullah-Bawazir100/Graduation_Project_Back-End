@@ -23,7 +23,9 @@ class TaxPayerRequest
         public ?string $byLawsCopy,
         public enRequestStatus $requestStatus,
         public ?string $note,
-        public ?string $source
+        public ?string $source,
+        public ?string $createdAt = null,
+        public ?string $updatedAt = null
     )
     {}
 }

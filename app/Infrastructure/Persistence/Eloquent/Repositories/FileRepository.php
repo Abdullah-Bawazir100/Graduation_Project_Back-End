@@ -141,6 +141,11 @@ class FileRepository implements FileRepositoryInterface
         FileModel::findOrFail($id)->delete();
     }
 
+    public function countFiles(): int
+    {
+        return FileModel::count();
+    }
+
     private function mapToDomain(FileModel $model): File
     {
         $region = new Region(

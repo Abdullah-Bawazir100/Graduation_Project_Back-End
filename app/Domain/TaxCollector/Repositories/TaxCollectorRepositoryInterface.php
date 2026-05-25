@@ -12,5 +12,5 @@ interface TaxCollectorRepositoryInterface
     public function findById(int $id): ?TaxCollector;
     public function getAll();
     public function findByName(string $name): ?TaxCollector;
-
+    public function countTaxCollectors(): int;
 }

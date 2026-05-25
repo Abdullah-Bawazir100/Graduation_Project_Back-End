@@ -11,4 +11,5 @@ interface FileRepositoryInterface
     public function getAll();
     public function findById(int $fileId): ?File;
     public function delete(int $fileId): void;
+    public function countFiles(): int;
 }
