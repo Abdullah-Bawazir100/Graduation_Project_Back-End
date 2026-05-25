@@ -7,7 +7,7 @@ use App\Domain\User\Entities\User;
 use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\Department\Entities\Department;
-
+use App\Infrastructure\Persistence\Eloquent\Models\TaxCollectorModel;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -138,10 +138,24 @@ class UserRepository implements UserRepositoryInterface
         return $this->mapToDomain($userData);
     }
 
-    public function countUsers(): int
-    {
-        return UserModel::count();
-    }
+    public function countUsers(): array
+{
+    return [
+        'total_users' => UserModel::count(),
+
+        'admin_count' => UserModel::where('role', UserRole::Admin->value)->count(),
+
+        'manager_count' => UserModel::where('role', UserRole::Manager->value)->count(),
+
+        'employee_count' => UserModel::where('role', UserRole::Employee->value)->count(),
+
+        'tax_payer_count' => UserModel::where('role', UserRole::Tax_Payer->value)->count(),
+
+        'collectors_manager_count' => UserModel::where('role', UserRole::Collectors_Manager->value)->count(),
+
+        'tax_collector_count' => TaxCollectorModel::count(),
+    ];
+}
 
     private function mapToDomain(UserModel $userData): User
     {

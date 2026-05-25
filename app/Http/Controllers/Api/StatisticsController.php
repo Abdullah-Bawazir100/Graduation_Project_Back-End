@@ -30,7 +30,6 @@ class StatisticsController
         private CountFilesUseCase $countFilesUseCase,
         private CountFilesByTypeUseCase $countFilesByTypeUseCase,
         private CountUsersUseCase $countUsersUseCase,
-        private CountTaxCollectorsUseCase $countTaxCollectorsUseCase,
         private CountFileMovementsUseCase $countFileMovementsUseCase,
     ) {}
 
@@ -52,7 +51,6 @@ class StatisticsController
             ],
             'users_statistics' => [
                 'total_users_count' => $this->countUsersUseCase->execute(),
-                'total_tax_collectors_count' => $this->countTaxCollectorsUseCase->execute(),
             ],
             'file_movements_statistics' => [
                 'file_movement_count' => $this->countFileMovementsUseCase->execute(),

@@ -10,7 +10,7 @@ class CountUsersUseCase
         private UserRepositoryInterface $repository
     ) {}
 
-    public function execute(): int
+    public function execute(): array
     {
         return $this->repository->countUsers();
     }
