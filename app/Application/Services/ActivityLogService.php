@@ -4,9 +4,81 @@ namespace App\Application\Services;
 
 use Spatie\Activitylog\Models\Activity;
 use App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ActivityLogService
 {
+    /**
+     * إحصائية عدد العمليات (إنشاء، تعديل، حذف) لكل يوم من أيام الأسبوع الحالي
+     */
+    public function getWeeklyActivityStatistics(): array
+    {
+        // أيام الأسبوع بالعربي (السبت = بداية الأسبوع)
+        $daysMap = [
+            'Saturday'  => 'السبت',
+            'Sunday'    => 'الأحد',
+            'Monday'    => 'الاثنين',
+            'Tuesday'   => 'الثلاثاء',
+            'Wednesday' => 'الأربعاء',
+            'Thursday'  => 'الخميس',
+            'Friday'    => 'الجمعة',
+        ];
+
+        // حساب بداية ونهاية الأسبوع الحالي (السبت - الجمعة)
+        $now = Carbon::now();
+        $startOfWeek = $now->copy()->startOfWeek(Carbon::SATURDAY);
+        $endOfWeek   = $startOfWeek->copy()->addDays(6)->endOfDay();
+
+        // جلب العمليات مجمّعة حسب اليوم ونوع الحدث
+        $activities = Activity::whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            ->whereIn('log_name', [
+                'user', 'department', 'activity_type',
+                'payment_type', 'region', 'district', 'job_type',
+                'tax_collector', 'tax_payer', 'company', 'charitable_company',
+                'tax_type', 'tax_information', 'file', 'file_movement',
+            ])
+            ->select(
+                DB::raw("DAYNAME(created_at) as day_name"),
+                DB::raw("DATE(created_at) as date"),
+                'event',
+                DB::raw("COUNT(*) as count")
+            )
+            ->groupBy('day_name', 'date', 'event')
+            ->get();
+
+        $result = [];
+        foreach ($daysMap as $englishDay => $arabicDay) {
+            $dayDate = $startOfWeek->copy();
+            while ($dayDate->format('l') !== $englishDay) {
+                $dayDate->addDay();
+            }
+
+            $dayActivities = $activities->where('day_name', $englishDay);
+
+            $created  = $dayActivities->where('event', 'created')->sum('count');
+            $updated  = $dayActivities->where('event', 'updated')->sum('count');
+            $deleted  = $dayActivities->where('event', 'deleted')->sum('count');
+            $total    = $created + $updated + $deleted;
+
+            $result[] = [
+                'day'      => $arabicDay,
+                'date'     => $dayDate->format('Y-m-d'),
+                'created'  => (int) $created,
+                'updated'  => (int) $updated,
+                'deleted'  => (int) $deleted,
+                'total'    => (int) $total,
+            ];
+        }
+
+        return [
+            'week_start' => $startOfWeek->format('Y-m-d'),
+            'week_end'   => $endOfWeek->format('Y-m-d'),
+            'days'       => $result,
+            'week_total' => array_sum(array_column($result, 'total')),
+        ];
+    }
+
     public function getActivities($filters = [])
     {
         $query = Activity::with('causer')
