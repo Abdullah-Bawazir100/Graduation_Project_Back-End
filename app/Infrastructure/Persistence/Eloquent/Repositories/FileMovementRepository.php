@@ -111,7 +111,7 @@ class FileMovementRepository implements FileMovementRepositoryInterface
     }
 
     public function getFileMovementsStatistics(): array
-    { 
+    {
         $sixMonthsAgo = Carbon::now()->subMonths(6)->startOfMonth();
 
         $movements = FileMovementModel::where('date', '>=', $sixMonthsAgo)
@@ -176,6 +176,76 @@ class FileMovementRepository implements FileMovementRepositoryInterface
         ];
     }
 
+    public function getTopDepartmentsMovementsPerDay(?int $month = null, ?int $year = null): array
+    {
+        $month = $month ?? Carbon::now()->month;
+        $year = $year ?? Carbon::now()->year;
+
+        // Find the top 2 departments by movement count in this month
+        $topDepartments = FileMovementModel::whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->selectRaw('department_id, COUNT(*) as count')
+            ->groupBy('department_id')
+            ->orderByDesc('count')
+            ->take(2)
+            ->with('department')
+            ->get();
+
+        if ($topDepartments->isEmpty()) {
+            return [];
+        }
+
+        $dept1 = $topDepartments->get(0);
+        $dept2 = $topDepartments->get(1);
+
+        $dept1Name = $dept1->department->name ?? 'Dept 1';
+        $dept1Id = $dept1->department_id;
+
+        $dept2Name = $dept2 ? ($dept2->department->name ?? 'Dept 2') : null;
+        $dept2Id = $dept2 ? $dept2->department_id : null;
+
+        // Get movements per day for these departments in this month
+        $departmentIds = array_filter([$dept1Id, $dept2Id]);
+
+        $movements = FileMovementModel::whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->whereIn('department_id', $departmentIds)
+            ->selectRaw("DATE(date) as day, department_id, COUNT(*) as count")
+            ->groupBy('day', 'department_id')
+            ->get();
+
+        // Organize the data by day
+        $daysInMonth = Carbon::createFromDate($year, $month, 1)->daysInMonth;
+
+        $result = [];
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $dateString = Carbon::createFromDate($year, $month, $day)->format('Y-m-d');
+
+            $dayData = [
+                'date' => $dateString,
+                $dept1Name => 0,
+            ];
+
+            if ($dept2Name) {
+                $dayData[$dept2Name] = 0;
+            }
+
+            $result[$dateString] = $dayData;
+        }
+
+        foreach ($movements as $movement) {
+            $dateString = Carbon::parse($movement->day)->format('Y-m-d');
+            if (isset($result[$dateString])) {
+                if ($movement->department_id == $dept1Id) {
+                    $result[$dateString][$dept1Name] = $movement->count;
+                } elseif ($dept2Id && $movement->department_id == $dept2Id) {
+                    $result[$dateString][$dept2Name] = $movement->count;
+                }
+            }
+        }
+
+        return array_values($result);
+    }
 
     private function mapToDomain(FileMovementModel $model): FileMovement
     {
@@ -295,77 +365,6 @@ class FileMovementRepository implements FileMovementRepositoryInterface
 
             creator: $creator,
         );
-    }
-
-    public function getTopDepartmentsMovementsPerDay(?int $month = null, ?int $year = null): array
-    {
-        $month = $month ?? Carbon::now()->month;
-        $year = $year ?? Carbon::now()->year;
-
-        // Find the top 2 departments by movement count in this month
-        $topDepartments = FileMovementModel::whereMonth('date', $month)
-            ->whereYear('date', $year)
-            ->selectRaw('department_id, COUNT(*) as count')
-            ->groupBy('department_id')
-            ->orderByDesc('count')
-            ->take(2)
-            ->with('department')
-            ->get();
-
-        if ($topDepartments->isEmpty()) {
-            return [];
-        }
-
-        $dept1 = $topDepartments->get(0);
-        $dept2 = $topDepartments->get(1);
-
-        $dept1Name = $dept1->department->name ?? 'Dept 1';
-        $dept1Id = $dept1->department_id;
-
-        $dept2Name = $dept2 ? ($dept2->department->name ?? 'Dept 2') : null;
-        $dept2Id = $dept2 ? $dept2->department_id : null;
-
-        // Get movements per day for these departments in this month
-        $departmentIds = array_filter([$dept1Id, $dept2Id]);
-
-        $movements = FileMovementModel::whereMonth('date', $month)
-            ->whereYear('date', $year)
-            ->whereIn('department_id', $departmentIds)
-            ->selectRaw("DATE(date) as day, department_id, COUNT(*) as count")
-            ->groupBy('day', 'department_id')
-            ->get();
-
-        // Organize the data by day
-        $daysInMonth = Carbon::createFromDate($year, $month, 1)->daysInMonth;
-        
-        $result = [];
-        for ($day = 1; $day <= $daysInMonth; $day++) {
-            $dateString = Carbon::createFromDate($year, $month, $day)->format('Y-m-d');
-            
-            $dayData = [
-                'date' => $dateString,
-                $dept1Name => 0,
-            ];
-            
-            if ($dept2Name) {
-                $dayData[$dept2Name] = 0;
-            }
-            
-            $result[$dateString] = $dayData;
-        }
-
-        foreach ($movements as $movement) {
-            $dateString = Carbon::parse($movement->day)->format('Y-m-d');
-            if (isset($result[$dateString])) {
-                if ($movement->department_id == $dept1Id) {
-                    $result[$dateString][$dept1Name] = $movement->count;
-                } elseif ($dept2Id && $movement->department_id == $dept2Id) {
-                    $result[$dateString][$dept2Name] = $movement->count;
-                }
-            }
-        }
-
-        return array_values($result);
     }
 }
 
