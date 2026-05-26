@@ -160,6 +160,13 @@ class UserRepository implements UserRepositoryInterface
         ];
     }
 
+    public function hasAdminInDepartment(int $departmentId): bool
+    {
+        return UserModel::where('department_id', $departmentId)
+            ->where('role', UserRole::Admin->value)
+            ->exists();
+    }
+
     private function mapToDomain(UserModel $userData): User
     {
         $department = new Department(

@@ -177,7 +177,6 @@ class UsersRolesAndAllowedRoutes
 
             // Departments
             'departments.index',
-            'departments.store',
             'departments.show',
             'departments.update',
             'departments.move-users',

@@ -17,4 +17,5 @@ interface UserRepositoryInterface {
     public function updatePassword(int $id , string $newPassword , bool $mustChangePassword);
     public function findByUserNameAndPhone(string $userName, string $phone): ?User;
     public function countUsers(): array;
+    public function hasAdminInDepartment(int $departmentId): bool;
 }

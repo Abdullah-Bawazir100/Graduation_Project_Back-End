@@ -15,12 +15,17 @@ use App\Http\Requests\Department\UpdateDepartmentRequest;
 use App\Http\Requests\Department\MoveUsersRequest;
 use App\Application\Department\DTOs\DepartmentDTO;
 use App\Http\Responses\ApiResponse;
+use App\Domain\User\Entities\User as DomainUser;
+use App\Domain\Department\Entities\Department;
+use App\Domain\User\Enums\UserRole;
+use Illuminate\Support\Facades\Auth;
 
 class DepartmentController extends Controller
 {
     public function index(ListDepartmentUseCase $useCase)
     {
-        $departments = $useCase->execute();
+        $actor = $this->getActor();
+        $departments = $useCase->execute($actor);
 
         return ApiResponse::ok(
             data: $departments,
@@ -44,7 +49,8 @@ class DepartmentController extends Controller
 
     public function show(int $id, ShowDepartmentUseCase $useCase)
     {
-        $department = $useCase->execute($id);
+        $actor = $this->getActor();
+        $department = $useCase->execute($actor , $id);
 
         return ApiResponse::ok(
             data: $department,
@@ -57,11 +63,13 @@ class DepartmentController extends Controller
         UpdateDepartmentRequest $request,
         UpdateDepartmentUseCase $useCase
     ) {
+        $actor = $this->getActor();
+
         $dto = new DepartmentDTO(
             name: $request->validated('name')
         );
 
-        $department = $useCase->execute($id, $dto);
+        $department = $useCase->execute($actor, $id, $dto);
 
         return ApiResponse::ok(
             data: $department,
@@ -85,13 +93,39 @@ class DepartmentController extends Controller
         MoveUsersRequest $request,
         MoveUsersUseCase $useCase
     ) {
+        $actor = $this->getActor();
         $newDepartmentId = $request->departmentID;
 
-        $useCase->execute($id, $newDepartmentId);
+        $useCase->execute($actor , $id, $newDepartmentId);
 
         return ApiResponse::ok(
             data: null,
             message: 'تم نقل جميع المستخدمين من القسم [' . $id . '] إلى القسم [' . $newDepartmentId . '] بنجاح.'
+        );
+    }
+
+    private function getActor(): DomainUser
+    {
+        $authUser = Auth::user() ?? throw new \Illuminate\Auth\AuthenticationException();
+
+        $department = new Department(
+            id: $authUser->department_id,
+            name: $authUser->department?->name ?? ''
+        );
+
+        return new DomainUser(
+            id: $authUser->id,
+            firstName: $authUser->first_name,
+            lastName: $authUser->last_name,
+            idCard: $authUser->id_card,
+            userName: $authUser->user_name,
+            phone: $authUser->phone,
+            image: $authUser->image,
+            password: $authUser->password,
+            createdBy: $authUser->created_by,
+            department: $department,
+            role: $authUser->role,
+            mustChangePassword: $authUser->must_change_password,
         );
     }
 }

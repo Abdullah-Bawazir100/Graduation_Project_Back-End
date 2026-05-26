@@ -5,6 +5,8 @@ namespace App\Application\Department\UseCases;
 use App\Application\Department\DTOs\DepartmentDTO;
 use App\Domain\Department\Entities\Department;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
+use App\Domain\User\Entities\User;
+use App\Domain\User\Enums\UserRole;
 
 class UpdateDepartmentUseCase
 {
@@ -12,8 +14,15 @@ class UpdateDepartmentUseCase
         private DepartmentRepositoryInterface $departmentRepository
     ) {}
 
-    public function execute(int $id, DepartmentDTO $departmentDTO): Department
+    public function execute(User $actor, int $id, DepartmentDTO $departmentDTO): Department
     {
+        $isAdmin = $actor->role === UserRole::Admin;
+
+        // Non-admin can only update their own department
+        if (!$isAdmin && (int)$actor->department->id !== $id) {
+            throw new \DomainException('غير مصرح لك بتعديل قسم غير القسم الذي تعمل فيه.');
+        }
+
         $department = $this->departmentRepository->findById($id);
 
         if (!$department) {
