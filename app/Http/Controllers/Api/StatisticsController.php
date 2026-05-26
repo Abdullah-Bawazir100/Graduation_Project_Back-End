@@ -16,6 +16,7 @@ use App\Application\TaxCollector\UseCases\CountTaxCollectorsUseCase;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Application\FileMovement\UseCases\GetFileMovementsStatisticsUseCase;
 use App\Application\ActivityLog\UseCases\GetWeeklyActivityStatisticsUseCase;
+use App\Application\FileStatus\UseCases\CountFileStatusUseCase;
 use App\Http\Responses\ApiResponse;
 use MessageFormatter;
 
@@ -34,6 +35,7 @@ class StatisticsController
         private CountFileMovementsUseCase $countFileMovementsUseCase,
         private GetFileMovementsStatisticsUseCase $getFileMovementsStatisticsUseCase,
         private GetWeeklyActivityStatisticsUseCase $getWeeklyActivityStatisticsUseCase,
+        private CountFileStatusUseCase $countFileStatusUseCase
     ) {}
 
     public function getStatistics()
@@ -45,6 +47,7 @@ class StatisticsController
                 'payments_types_count' => $this->countPaymentsTypesUseCase->execute(),
                 'regions_count' => $this->countRegionsUseCase->execute(),
                 'districts_count' => $this->countDistrictsUseCase->execute(),
+                'file_status_count' => $this->countFileStatusUseCase->execute()
             ],
             'files_statistics' => [
                 'total_files_count' => $this->countFilesUseCase->execute(),

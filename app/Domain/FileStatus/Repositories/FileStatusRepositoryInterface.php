@@ -11,4 +11,5 @@ interface FileStatusRepositoryInterface
     public function findById(int $id): ?FileStatus;
     public function delete(int $id): void;
     public function getAll();
+    public function getFileStatusCount(): int;
 }

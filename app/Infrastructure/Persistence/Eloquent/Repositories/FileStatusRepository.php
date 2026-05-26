@@ -76,4 +76,9 @@ class FileStatusRepository implements RepositoriesFileStatusRepositoryInterface
     {
         FileStatusModel::findOrFail($id)->delete();
     }
+
+    public function getFileStatusCount(): int
+    {
+        return FileStatusModel::count();
+    }
 }
