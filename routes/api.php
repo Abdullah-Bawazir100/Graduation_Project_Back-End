@@ -80,6 +80,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
     Route::apiResource('/requests', RequestController::class);
 
+
     Route::get('/get-pending-requests', [RequestController::class , 'getPendingRequests'])
     ->name('get-pending-requests');
 

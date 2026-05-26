@@ -15,6 +15,7 @@ use App\Application\User\UseCases\CountUsersUseCase;
 use App\Application\TaxCollector\UseCases\CountTaxCollectorsUseCase;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Application\FileMovement\UseCases\GetFileMovementsStatisticsUseCase;
+use App\Application\FileMovement\UseCases\GetTopDepartmentsMovementsStatisticsUseCase;
 use App\Application\ActivityLog\UseCases\GetWeeklyActivityStatisticsUseCase;
 use App\Application\FileStatus\UseCases\CountFileStatusUseCase;
 use App\Http\Responses\ApiResponse;
@@ -35,7 +36,8 @@ class StatisticsController
         private CountFileMovementsUseCase $countFileMovementsUseCase,
         private GetFileMovementsStatisticsUseCase $getFileMovementsStatisticsUseCase,
         private GetWeeklyActivityStatisticsUseCase $getWeeklyActivityStatisticsUseCase,
-        private CountFileStatusUseCase $countFileStatusUseCase
+        private CountFileStatusUseCase $countFileStatusUseCase,
+        private GetTopDepartmentsMovementsStatisticsUseCase $getTopDepartmentsMovementsStatisticsUseCase
     ) {}
 
     public function getStatistics()
@@ -61,6 +63,7 @@ class StatisticsController
             'file_movements_statistics' => [
                 'file_movement_count' => $this->countFileMovementsUseCase->execute(),
                 'last_6_months_statistics' => $this->getFileMovementsStatisticsUseCase->execute(),
+                'top_departments_statistics' => $this->getTopDepartmentsMovementsStatisticsUseCase->execute(),
             ],
             'weekly_activity_statistics' => $this->getWeeklyActivityStatisticsUseCase->execute(),
             'departments_statistics' => $this->getDepartmentsStatisticsUseCase->execute(),

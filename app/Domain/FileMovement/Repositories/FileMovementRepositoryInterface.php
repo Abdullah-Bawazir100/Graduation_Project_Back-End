@@ -14,4 +14,5 @@ interface FileMovementRepositoryInterface
     public function delete(int $id): void;
     public function getFileMovementCount(): int;
     public function getFileMovementsStatistics(): array;
+    public function getTopDepartmentsMovementsPerDay(?int $month = null, ?int $year = null): array;
 }
