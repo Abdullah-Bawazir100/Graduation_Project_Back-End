@@ -7,6 +7,7 @@ use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Domain\User\Entities\User;
 use App\Application\User\DTOs\UserDTO;
 use App\Domain\User\Interfaces\PasswordHashInterface;
+use App\Domain\User\Enums\UserRole;
 use DomainException;
 
 class CreateUserUseCase
@@ -24,6 +25,26 @@ class CreateUserUseCase
 
     public function execute(User $actor, UserDTO $userDTO)
     {
+        $isAdmin = $actor->role === UserRole::Admin;
+
+        if (
+            !$isAdmin &&
+            $userDTO->getRole() === UserRole::Admin
+        ) {
+            throw new DomainException(
+                'غير مصرح لك بإنشاء مستخدم أدمن.'
+            );
+        }
+
+        if (
+            !$isAdmin &&
+            $actor->department->id !== $userDTO->departmentID
+        ) {
+            throw new DomainException(
+                'لا يمكنك إضافة مستخدمين لقسم غير القسم الذي تعمل فيه.'
+            );
+        }
+
         // Check if department exists
         $department = $this->departmentRepository->findById($userDTO->departmentID);
         if (!$department) {
