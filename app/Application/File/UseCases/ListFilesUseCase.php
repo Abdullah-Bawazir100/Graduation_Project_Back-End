@@ -10,9 +10,9 @@ class ListFilesUseCase
         private FileRepositoryInterface $file_repository,
     ){}
 
-    public function execute()
+    public function execute(?string $search = null)
     {
-        $files = $this->file_repository->getAll();
+        $files = $this->file_repository->getAll($search);
         return $files;
     }
 }

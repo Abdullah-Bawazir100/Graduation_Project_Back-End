@@ -16,6 +16,7 @@ use App\Http\Responses\ApiResponse;
 use DomainException;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -26,9 +27,10 @@ class FileController extends Controller
     ) {}
 
 
-    public function index(ListFilesUseCase $useCase)
+    public function index(Request $request , ListFilesUseCase $useCase)
     {
-        $files = $useCase->execute();
+        $search = $request->query('search');
+        $files = $useCase->execute($search);
         return ApiResponse::ok($files , "تم جلب الملفات بنجاح.");
     }
 

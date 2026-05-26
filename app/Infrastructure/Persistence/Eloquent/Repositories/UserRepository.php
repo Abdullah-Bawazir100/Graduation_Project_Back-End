@@ -98,7 +98,6 @@ class UserRepository implements UserRepositoryInterface
             });
         }
 
-
         $userData = $query->get();
 
         return $userData->map(fn(UserModel $model) => $this->mapToDomain($model))->toArray();
@@ -139,23 +138,23 @@ class UserRepository implements UserRepositoryInterface
     }
 
     public function countUsers(): array
-{
-    return [
-        'total_users' => UserModel::count(),
+    {
+        return [
+            'total_users' => UserModel::count(),
 
-        'admin_count' => UserModel::where('role', UserRole::Admin->value)->count(),
+            'admin_count' => UserModel::where('role', UserRole::Admin->value)->count(),
 
-        'manager_count' => UserModel::where('role', UserRole::Manager->value)->count(),
+            'manager_count' => UserModel::where('role', UserRole::Manager->value)->count(),
 
-        'employee_count' => UserModel::where('role', UserRole::Employee->value)->count(),
+            'employee_count' => UserModel::where('role', UserRole::Employee->value)->count(),
 
-        'tax_payer_count' => UserModel::where('role', UserRole::Tax_Payer->value)->count(),
+            'tax_payer_count' => UserModel::where('role', UserRole::Tax_Payer->value)->count(),
 
-        'collectors_manager_count' => UserModel::where('role', UserRole::Collectors_Manager->value)->count(),
+            'collectors_manager_count' => UserModel::where('role', UserRole::Collectors_Manager->value)->count(),
 
-        'tax_collector_count' => TaxCollectorModel::count(),
-    ];
-}
+            'tax_collector_count' => TaxCollectorModel::count(),
+        ];
+    }
 
     private function mapToDomain(UserModel $userData): User
     {
