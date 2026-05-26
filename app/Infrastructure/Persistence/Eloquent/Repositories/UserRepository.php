@@ -86,9 +86,13 @@ class UserRepository implements UserRepositoryInterface
         return $this->mapToDomain($userData);
     }
 
-    public function getAll(?string $search = null): array
+    public function getAll(?string $search = null, ?int $departmentId = null): array
     {
         $query = UserModel::with('department');
+
+        if ($departmentId !== null) {
+            $query->where('department_id', $departmentId);
+        }
 
         // اذا يوجد بحث
         if ($search) {

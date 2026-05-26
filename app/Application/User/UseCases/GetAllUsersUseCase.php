@@ -2,6 +2,7 @@
 
 namespace App\Application\User\UseCases;
 
+use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Application\User\DTOs\UserResponseDTO;
 use App\Domain\User\Entities\User;
@@ -10,9 +11,14 @@ class GetAllUsersUseCase
 {
     public function __construct(private UserRepositoryInterface $repository) {}
 
-    public function execute(?string $search = null): array
+    public function execute(User $actor, ?string $search = null): array
     {
-        $users = $this->repository->getAll($search);
+        $actorRoleValue = $actor->role instanceof UserRole ? $actor->role->value : $actor->role;
+        $isAdmin = $actorRoleValue === UserRole::Admin->value;
+
+        $departmentId = $isAdmin ? null : (int)$actor->department->id;
+
+        $users = $this->repository->getAll($search, $departmentId);
 
         return array_map(fn(User $user) => new UserResponseDTO(
             id: $user->id,

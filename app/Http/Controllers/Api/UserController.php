@@ -33,9 +33,10 @@ class UserController extends Controller
    // GET /users
     public function index(Request $request): ApiResponse
     {
+        $actor = $this->getActor();
         $search = $request->query('search');
 
-        $users = $this->getUsers->execute($search);
+        $users = $this->getUsers->execute($actor, $search);
         return ApiResponse::ok($users, 'تم جلب المستخدمين بنجاح.');
     }
 
@@ -43,8 +44,9 @@ class UserController extends Controller
     public function show(int $id): ApiResponse
     {
         /** @var UserResponseDTO|null $user */
+        $actor = $this->getActor();
 
-        $userData = $this->findUser->execute($id);
+        $userData = $this->findUser->execute($actor , $id);
         if(!$userData) {
             return ApiResponse::notFound([] , 'المستخدم مع ال ID [' . $id . '] غير موجود.');
         }
@@ -57,7 +59,7 @@ class UserController extends Controller
     {
         $actor = $this->getActor();
 
-        $existingUser = $this->findUser->execute($id);
+        $existingUser = $this->findUser->execute($actor , $id);
 
         if (!$existingUser) {
             return ApiResponse::notFound([] , 'المستخدم مع ال ID [' . $id . '] غير موجود.');
@@ -96,7 +98,6 @@ class UserController extends Controller
             role: $role
         );
 
-        /** @var UserResponseDTO $user */
         $user = $this->updateUser->execute($actor, $id, $dto);
 
         return ApiResponse::ok($user, 'تم تحديث بيانات المستخدم بنجاح.');
@@ -107,7 +108,7 @@ class UserController extends Controller
     {
         $actor = $this->getActor();
 
-        $existingUser = $this->findUser->execute($id);
+        $existingUser = $this->findUser->execute($actor,$id);
         if(!$existingUser)
         {
             return ApiResponse::notFound([] , 'المستخدم مع ال ID [' . $id . '] غير موجود.');
