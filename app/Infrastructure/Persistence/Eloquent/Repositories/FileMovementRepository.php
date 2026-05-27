@@ -223,11 +223,17 @@ class FileMovementRepository implements FileMovementRepositoryInterface
 
             $dayData = [
                 'date' => $dateString,
-                $dept1Name => 0,
+                'dept1' => [
+                    'name' => $dept1Name,
+                    'value' => 0
+                ],
             ];
 
             if ($dept2Name) {
-                $dayData[$dept2Name] = 0;
+                $dayData['dept2'] = [
+                    'name' => $dept2Name,
+                    'value' => 0
+                ];
             }
 
             $result[$dateString] = $dayData;
@@ -237,9 +243,9 @@ class FileMovementRepository implements FileMovementRepositoryInterface
             $dateString = Carbon::parse($movement->day)->format('Y-m-d');
             if (isset($result[$dateString])) {
                 if ($movement->department_id == $dept1Id) {
-                    $result[$dateString][$dept1Name] = $movement->count;
+                    $result[$dateString]['dept1']['value'] = $movement->count;
                 } elseif ($dept2Id && $movement->department_id == $dept2Id) {
-                    $result[$dateString][$dept2Name] = $movement->count;
+                    $result[$dateString]['dept2']['value'] = $movement->count;
                 }
             }
         }

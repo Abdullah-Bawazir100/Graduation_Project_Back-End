@@ -9,6 +9,7 @@ use App\Domain\FileMovement\Entities\FileMovement;
 use App\Domain\FileMovement\Enums\enFileMovement;
 use App\Domain\FileMovement\Repositories\FileMovementRepositoryInterface;
 use App\Domain\TaxCollector\Repositories\TaxCollectorRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use DomainException;
 
@@ -49,7 +50,9 @@ class CreateFileMovementUseCase
             throw new DomainException("لا يوجد قسم مع ال ID [$fileMovementDTOs->departmentId].");
         }
 
-        if ($creator->department->id !== $department->id) {
+        if (
+            $creator->role !== UserRole::Admin &&
+            $creator->department->id !== $department->id) {
             throw new DomainException("لا يمكنك انشاء حركة ملف في قسم لا تعمل فيه.");
         }
 

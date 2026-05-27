@@ -36,6 +36,7 @@ class ActivityLogService
                 'payment_type', 'region', 'district', 'job_type',
                 'tax_collector', 'tax_payer', 'company', 'charitable_company',
                 'tax_type', 'tax_information', 'file', 'file_movement',
+                'request', 'file_status', 'address',
             ])
             ->select(
                 DB::raw("DAYNAME(created_at) as day_name"),

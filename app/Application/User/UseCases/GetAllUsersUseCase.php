@@ -20,6 +20,13 @@ class GetAllUsersUseCase
 
         $users = $this->repository->getAll($search, $departmentId);
 
+        if (!$isAdmin) {
+            $users = array_filter($users, function(User $user) {
+                $roleValue = $user->role instanceof UserRole ? $user->role->value : $user->role;
+                return $roleValue !== UserRole::Admin->value;
+            });
+        }
+
         return array_map(fn(User $user) => new UserResponseDTO(
             id: $user->id,
             firstName: $user->firstName,
