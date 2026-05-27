@@ -60,10 +60,17 @@ class TaxCollectorRepository implements TaxCollectorRepositoryInterface
         return $this->mapToDomain($taxCollectorModel);
     }
 
-    public function getAll()
+    public function getAll(?int $departmentId = null): array
     {
-        $taxCollectors = TaxCollectorModel::with('jobType' , 'department')->get();
-        return $taxCollectors->map(fn(TaxCollectorModel $model) => $this->mapToDomain($model))->toArray();
+        $query = TaxCollectorModel::with('jobType', 'department');
+
+        if ($departmentId !== null) {
+            $query->where('dept_id', $departmentId);
+        }
+
+        return $query->get()
+            ->map(fn(TaxCollectorModel $model) => $this->mapToDomain($model))
+            ->toArray();
     }
 
     public function findByName(string $name): ?TaxCollector

@@ -14,6 +14,10 @@ use App\Http\Requests\TaxCollector\StoreTaxCollectorRequest;
 use App\Http\Requests\TaxCollector\UpdateTaxCollectorRequest;
 use App\Http\Responses\ApiResponse;
 use App\Application\User\Services\UploadFileService;
+use App\Domain\User\Entities\User as DomainUser;
+use App\Domain\Department\Entities\Department;
+use App\Domain\User\Enums\UserRole;
+use Illuminate\Support\Facades\Auth;
 
 class TaxCollectorController extends Controller
 {
@@ -24,12 +28,15 @@ class TaxCollectorController extends Controller
 
     public function index(ListTaxCollectorUseCase $useCase): ApiResponse
     {
-        $taxCollectors = $useCase->execute();
+        $actor = $this->getActor();
+        $taxCollectors = $useCase->execute($actor);
         return ApiResponse::ok($taxCollectors, 'تم جلب المأمورين بنجاح.');
     }
 
     public function store(StoreTaxCollectorRequest $request , CreateTaxCollectorUseCase $useCase): ApiResponse
     {
+        $actor = $this->getActor();
+
         $idCardUrl = null;
         if ($request->hasFile('idCard')) {
             $idCardUrl = $this->uploadFileService->uploadFile($request->file('idCard') , 'id-cards');
@@ -44,28 +51,23 @@ class TaxCollectorController extends Controller
             deptID: $request->deptID
         );
 
-        $taxCollector = $useCase->execute($dto);
+        $taxCollector = $useCase->execute($actor, $dto);
 
         return ApiResponse::created($taxCollector, 'تم إنشاء المأمور بنجاح.');
     }
 
     public function show(int $id): ApiResponse
     {
-        $taxCollector = $this->findTaxCollectorById->execute($id);
-
-        if (!$taxCollector) {
-            return ApiResponse::notFound([] , 'المأمور مع ال ID [' . $id . '] غير موجود.');
-        }
-
+        $actor = $this->getActor();
+        $taxCollector = $this->findTaxCollectorById->execute($actor, $id);
         return ApiResponse::ok($taxCollector, 'تم جلب المأمور بنجاح.');
     }
 
     public function update(int $id , UpdateTaxCollectorRequest $request, UpdateTaxCollectorUseCase $useCase): ApiResponse
     {
-        $existingUser = $this->findTaxCollectorById->execute($id);
-        if  (!$existingUser) {
-            return ApiResponse::notFound([] , 'المأمور مع ال ID [' . $id . '] غير موجود.');
-        }
+        $actor = $this->getActor();
+
+        $existingUser = $this->findTaxCollectorById->execute($actor, $id);
 
         $idCardUrl = $existingUser->idCard;
         if($request->hasFile('idCard')){
@@ -81,7 +83,7 @@ class TaxCollectorController extends Controller
             deptID: $request->deptID ?? $existingUser->deptID,
         );
 
-        $taxCollector = $useCase->execute($id , $dto);
+        $taxCollector = $useCase->execute($actor, $id, $dto);
 
         return ApiResponse::ok($taxCollector, 'تم تحديث بيانات المأمور بنجاح.');
     }
@@ -92,4 +94,28 @@ class TaxCollectorController extends Controller
         return ApiResponse::ok([], 'تم حذف المأمور مع ال ID [' . $id . '] بنجاح.');
     }
 
+    private function getActor(): DomainUser
+    {
+        $authUser = Auth::user() ?? throw new \Illuminate\Auth\AuthenticationException();
+
+        $department = new Department(
+            id: $authUser->department_id,
+            name: $authUser->department?->name ?? ''
+        );
+
+        return new DomainUser(
+            id: $authUser->id,
+            firstName: $authUser->first_name,
+            lastName: $authUser->last_name,
+            idCard: $authUser->id_card,
+            userName: $authUser->user_name,
+            phone: $authUser->phone,
+            image: $authUser->image,
+            password: $authUser->password,
+            createdBy: $authUser->created_by,
+            department: $department,
+            role: $authUser->role,
+            mustChangePassword: $authUser->must_change_password,
+        );
+    }
 }

@@ -10,7 +10,7 @@ interface TaxCollectorRepositoryInterface
     public function update(TaxCollector $taxCollector): TaxCollector;
     public function delete(int $id): void;
     public function findById(int $id): ?TaxCollector;
-    public function getAll();
+    public function getAll(?int $departmentId = null): array;
     public function findByName(string $name): ?TaxCollector;
     public function countTaxCollectors(): int;
 }

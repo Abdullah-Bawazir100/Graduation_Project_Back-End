@@ -17,11 +17,6 @@ class CreateActivityTypeUseCase
     {
         $name = trim($activityTypeDTOs->name);
 
-        /*if($this->activity_Type_RepositoryInterface->existsByName($name))
-        {
-            throw new \DomainException("Activity Type with name '{$name}' already exists.");
-        }*/
-
         return $this->activity_Type_RepositoryInterface->create(
 
             new Activity_Type(null , $name)
