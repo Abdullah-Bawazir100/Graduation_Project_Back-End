@@ -11,6 +11,5 @@ interface TaxInformationRepositoryInterface
     public function findById(int $id);
     public function getAll();
     public function delete(int $id): void;
-
     public function moveTaxInformationToAnotherTaxType(int $oldTaxTypeId , int $newTaxTypeId);
 }

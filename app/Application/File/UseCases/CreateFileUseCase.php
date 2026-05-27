@@ -15,6 +15,7 @@ use App\Domain\District\Repositories\DistrictRepositoryInterface;
 use App\Domain\Request\Enums\enRequestStatus;
 use App\Domain\Request\Repositories\TaxPayerRequestRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use DomainException;
 
 class CreateFileUseCase
@@ -76,8 +77,8 @@ class CreateFileUseCase
         }
 
         if (
-            !$creator->department ||
-            $creator->department->id !== $department->id
+            $creator->role !== UserRole::Admin &&
+            (!$creator->department || $creator->department->id !== $department->id)
         ) {
             throw new DomainException(
                 "لا يمكنك إنشاء ملف في قسم لا تنتمي إليه."

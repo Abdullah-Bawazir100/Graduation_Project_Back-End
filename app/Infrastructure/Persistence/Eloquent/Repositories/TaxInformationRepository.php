@@ -89,6 +89,7 @@ class TaxInformationRepository implements TaxInformationRepositoryInterface
             insuranceCard: $taxPayerModel?->insurance_card,
             propertyDocPict: $taxPayerModel?->property_doc_pict,
             fileType: $taxPayerModel?->file_type,
+            source: $taxPayerModel->source
         );
 
         return new TaxInformation(

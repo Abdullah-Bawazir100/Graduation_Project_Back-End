@@ -88,6 +88,7 @@ class CompanyController extends Controller
                 insuranceCard: $insuranceCardUrl,
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
+                source: 'Manually'
             );
 
             $companyDTO = new CompanyDTOs(
@@ -135,6 +136,7 @@ class CompanyController extends Controller
                 insuranceCard: $insuranceCardUrl,
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
+                source: 'Manually'
             );
 
             $companyDTO = new CompanyDTOs(

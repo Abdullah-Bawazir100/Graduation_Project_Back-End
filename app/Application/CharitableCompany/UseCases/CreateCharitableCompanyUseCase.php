@@ -67,6 +67,7 @@ class CreateCharitableCompanyUseCase
             insuranceCard: $taxPayerDTOs->insuranceCard,
             propertyDocPict: $taxPayerDTOs->propertyDocPict,
             fileType: $taxPayerDTOs->getFileType(),
+            source: $taxPayerDTOs->source
         );
 
         $createdTaxPayer = $this->tax_payer_repository->create($taxPayer);

@@ -87,6 +87,7 @@ class CharitableCompanyController extends Controller
                 insuranceCard: $insuranceCardUrl,
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
+                source: 'Manually'
             );
 
             $charitableCompanyDTO = new CharitableCompanyDTOs(
@@ -95,7 +96,7 @@ class CharitableCompanyController extends Controller
 
             $result = $useCase->execute($charitableCompanyDTO , $taxPayerDTO , $userDTO , $actor);
 
-            return ApiResponse::created($result , 'تم إنشاء مكلف مع ملف شركة بنجاح.');
+            return ApiResponse::created($result , 'تم إنشاء مكلف مع ملف شركة خيرية بنجاح.');
 
         } catch (Exception $e) {
             return ApiResponse::serverError($e->getMessage());
@@ -130,6 +131,7 @@ class CharitableCompanyController extends Controller
                 insuranceCard: $insuranceCardUrl,
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
+                source: 'Manually'
             );
 
             $charitableCompanyDTO = new CharitableCompanyDTOs(
@@ -149,7 +151,7 @@ class CharitableCompanyController extends Controller
     public function show(int $id)
     {
         $charitableCompany = $this->findCharitableCompanyByIdUseCase->execute($id);
-        return ApiResponse::ok($charitableCompany , "تم جلب ملف الشركة  الخيرية بنجاح.");
+        return ApiResponse::ok($charitableCompany , "تم جلب ملف الشركة الخيرية بنجاح.");
 
     }
 
