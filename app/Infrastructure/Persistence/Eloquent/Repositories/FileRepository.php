@@ -112,7 +112,7 @@ class FileRepository implements FileRepositoryInterface
         return $this->mapToDomain($fileModel);
     }
 
-    public function getAll(?string $search = null)
+    public function getAll(?string $search = null, ?int $departmentId = null)
     {
         $query = FileModel::with(
             'taxPayer',
@@ -129,6 +129,10 @@ class FileRepository implements FileRepositoryInterface
             $query->whereHas('taxPayer', function ($q) use ($search) {
                 $q->where('trade_name', 'LIKE', '%' . $search . '%');
             });
+        }
+
+        if ($departmentId !== null) {
+            $query->where('department_id', $departmentId);
         }
 
         $files = $query->get();

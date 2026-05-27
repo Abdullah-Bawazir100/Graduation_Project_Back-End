@@ -12,6 +12,8 @@ use App\Domain\FileStatus\Repositories\FileStatusRepositoryInterface;
 use App\Domain\PaymentType\Repositories\PaymentTypeRepositoryInterface;
 use App\Domain\Region\Repositories\RegionRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
+use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use DomainException;
 
 class UpdateFileUseCase
@@ -24,16 +26,29 @@ class UpdateFileUseCase
         private Activity_Type_RepositoryInterface $activity_type_repository,
         private PaymentTypeRepositoryInterface $payment_type_repository,
         private RegionRepositoryInterface  $region_repository,
-        private DistrictRepositoryInterface $district_repository
+        private DistrictRepositoryInterface $district_repository,
+        private UserRepositoryInterface $user_repository
     )
     {}
 
-    public function execute(FileDTOs $dto , int $id): ?File
+    public function execute(FileDTOs $dto , int $id, int $authenticatedUserId): ?File
     {
         $existingFile = $this->file_repository->findById($id);
 
         if (!$existingFile) {
             throw new DomainException("لا يوجد ملف مع ال ID [$id].");
+        }
+
+        $user = $this->user_repository->findById($authenticatedUserId);
+        
+        if ($user && $user->role !== UserRole::Admin) {
+            if (!$user->department || $user->department->id !== $existingFile->department->id) {
+                throw new DomainException("لا يمكنك تعديل ملف في قسم لا تنتمي إليه.");
+            }
+            
+            if ($dto->departmentId !== null && $dto->departmentId !== $user->department->id) {
+                throw new DomainException("لا يمكنك نقل الملف إلى قسم لا تنتمي إليه.");
+            }
         }
 
         $newTaxPayer = $existingFile->taxPayer;

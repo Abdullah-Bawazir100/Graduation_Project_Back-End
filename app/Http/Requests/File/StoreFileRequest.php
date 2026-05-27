@@ -34,6 +34,7 @@ class StoreFileRequest extends FormRequest
             'paymentTypeId' => ['required', 'integer', 'exists:payment_types,id'],
             'regionId' => ['required', 'integer', 'exists:regions,id'],
             'districtId' => ['required', 'integer', 'exists:districts,id'],
+            'requestId' => ['nullable', 'integer', 'exists:requests,id'],
         ];
     }
 
@@ -83,6 +84,9 @@ class StoreFileRequest extends FormRequest
             'districtId.required' => 'معرف الحي مطلوب.',
             'districtId.integer' => 'معرف الحي يجب أن يكون رقماً صحيحاً.',
             'districtId.exists' => 'الحي المحدد غير موجود.',
+
+            'requestId.integer' => 'معرف الطلب يجب أن يكون رقماً صحيحاً.',
+            'requestId.exists' => 'الطلب المحدد غير موجود.',
         ];
     }
 }

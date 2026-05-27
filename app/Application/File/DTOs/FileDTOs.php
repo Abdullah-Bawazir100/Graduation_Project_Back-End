@@ -17,6 +17,7 @@ class FileDTOs
         public ?int $paymentTypeId,
         public ?int $regionId,
         public ?int $districtId,
+        public ?int $requestId = null,
     ) {}
 
 }

@@ -30,7 +30,7 @@ class FileController extends Controller
     public function index(Request $request , ListFilesUseCase $useCase)
     {
         $search = $request->query('search');
-        $files = $useCase->execute($search);
+        $files = $useCase->execute($search, Auth::id());
         return ApiResponse::ok($files , "تم جلب الملفات بنجاح.");
     }
 
@@ -59,7 +59,8 @@ class FileController extends Controller
                 activityTypeId: $request->activityTypeId,
                 paymentTypeId: $request->paymentTypeId,
                 regionId: $request->regionId,
-                districtId:  $request->districtId
+                districtId:  $request->districtId,
+                requestId: $request->requestId
             );
             // Execute the use case
             $result = $useCase->execute($dto, $authenticatedUser->id);
@@ -83,7 +84,7 @@ class FileController extends Controller
 
     public function show(int $id , FindFileByIdUseCase $useCase)
     {
-        $file = $useCase->execute($id);
+        $file = $useCase->execute($id, Auth::id());
         return ApiResponse::ok(
             data: $file,
             message: "تم جلب الملف بنجاح."
@@ -118,7 +119,7 @@ class FileController extends Controller
                 districtId: $request->districtId,
             );
 
-            $result = $useCase->execute($dto , $id);
+            $result = $useCase->execute($dto , $id, Auth::id());
 
             return ApiResponse::ok(
                 data: $result,

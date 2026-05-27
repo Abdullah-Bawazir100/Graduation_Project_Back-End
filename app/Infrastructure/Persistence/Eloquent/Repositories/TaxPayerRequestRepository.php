@@ -98,6 +98,20 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
         return $this->mapToDomain($request);
     }
 
+    public function findRequestByIdAndUserId(int $requestId, int $userId): ?TaxPayerRequest
+    {
+        $request = RequestModel::with('user')
+            ->where('id', $requestId)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$request) {
+            return null;
+        }
+
+        return $this->mapToDomain($request);
+    }
+
     public function acceptRequest(int $requestId): ?TaxPayerRequest
     {
         $request = RequestModel::with('user')->find($requestId);

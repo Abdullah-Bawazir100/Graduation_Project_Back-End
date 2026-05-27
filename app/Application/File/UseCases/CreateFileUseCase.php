@@ -105,7 +105,11 @@ class CreateFileUseCase
 
         if($taxPayer->source === 'Requests')
         {
-            $request = $this->tax_payer_request_repository->findRequestByUserId($taxPayer->userId);
+            if (!$dto->requestId) {
+                throw new DomainException("معرف الطلب (requestId) مطلوب عندما يكون مصدر المكلف هو الطلبات.");
+            }
+
+            $request = $this->tax_payer_request_repository->findRequestByIdAndUserId($dto->requestId, $taxPayer->userId);
             if(!$request)
             {
                 throw new DomainException("لا يوجد طلب مربوط بهذا المكلف.");
