@@ -4,6 +4,7 @@ namespace App\Application\TaxPayer\UseCases;
 
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use DomainException;
 
 class FindTaxPayerByUserIDUseCase
@@ -14,7 +15,7 @@ class FindTaxPayerByUserIDUseCase
     )
     {}
 
-    public function execute(int $userId)
+    public function execute(int $userId, ?int $authenticatedUserId = null)
     {
         $user = $this->user_repository->findById($userId);
         if (!$user) {
@@ -28,6 +29,16 @@ class FindTaxPayerByUserIDUseCase
         $taxPayer = $this->tax_payer_repository->findByUserId($userId);
         if(!$taxPayer) {
             throw new DomainException("لا يوجد مستخدم مكلف مرتبط بالمستخدم ID [{$userId}].");
+        }
+
+        if ($authenticatedUserId !== null) {
+            $actor = $this->user_repository->findById($authenticatedUserId);
+            if ($actor && $actor->role !== UserRole::Admin) {
+                $actorDeptId = (int)$actor->department->id;
+                if ($actorDeptId !== (int)$user->department->id) {
+                    throw new DomainException('غير مصرح لك بعرض بيانات مكلف من قسم غير القسم الذي تعمل فيه.');
+                }
+            }
         }
 
         return [

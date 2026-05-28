@@ -6,6 +6,7 @@ use App\Domain\CharitableCompany\Repositories\CharitableCompanyRepositoryInterfa
 use App\Domain\Company\Repositories\CompanyRepositoryInterface;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 
 class ListTaxPayersWithSpecialInfoUseCase
@@ -18,9 +19,17 @@ class ListTaxPayersWithSpecialInfoUseCase
     )
     {}
 
-    public function execute(?string $search = null)
+    public function execute(?string $search = null, ?int $authenticatedUserId = null)
     {
-        $taxPayersInfo = $this->tax_payer_repository->getTaxPayersWithSpecialInfo($search);
+        $departmentId = null;
+        if ($authenticatedUserId !== null) {
+            $actor = $this->user_repository->findById($authenticatedUserId);
+            if ($actor && $actor->role !== UserRole::Admin) {
+                $departmentId = (int)$actor->department->id;
+            }
+        }
+
+        $taxPayersInfo = $this->tax_payer_repository->getTaxPayersWithSpecialInfo($search, $departmentId);
 
         $result = [];
 

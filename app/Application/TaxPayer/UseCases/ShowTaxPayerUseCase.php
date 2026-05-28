@@ -16,12 +16,23 @@ class ShowTaxPayerUseCase
     )
     {}
 
-    public function execute(int $id)
+    public function execute(int $id, ?int $authenticatedUserId = null)
     {
         $taxPayer = $this->tax_payer_repository->findById($id);
 
         if  (!$taxPayer) {
-            throw new DomainException("دافع الضرائب مع ال ID [{$id}] غير موجود.");
+            throw new DomainException("المكلف مع ال ID [{$id}] غير موجود.");
+        }
+
+        if ($authenticatedUserId !== null) {
+            $actor = $this->user_repository->findById($authenticatedUserId);
+            if ($actor && $actor->role !== UserRole::Admin) {
+                $actorDeptId = (int)$actor->department->id;
+                $oldUser = $this->user_repository->findById($taxPayer->userId);
+                if ($oldUser && $actorDeptId !== (int)$oldUser->department->id) {
+                    throw new DomainException('غير مصرح لك بعرض بيانات مكلف من قسم غير القسم الذي تعمل فيه.');
+                }
+            }
         }
 
         $userInfo = null;

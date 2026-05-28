@@ -145,7 +145,8 @@ class TaxPayerController extends Controller
     public function update(int $id , UpdateTaxPayerRequest $request , UpdateTaxPayerUseCase $useCase)
     {
         try {
-            $existingTaxPayer = $this->findTaxPayerByIdUseCase->execute($id);
+            $authenticatedUser = Auth::user();
+            $existingTaxPayer = $this->findTaxPayerByIdUseCase->execute($id, $authenticatedUser->id);
             if (!$existingTaxPayer) {
                 return ApiResponse::notFound([], 'المكلف مع ال ID [' . $id . '] غير موجود.');
             }
@@ -188,25 +189,29 @@ class TaxPayerController extends Controller
                 source: 'Manually'
             );
 
-            $updatedTaxPayer = $useCase->execute($taxPayerDTO, $existingTaxPayer->id);
+            $updatedTaxPayer = $useCase->execute($taxPayerDTO, $existingTaxPayer->id , $authenticatedUser->id);
             return ApiResponse::ok($updatedTaxPayer, 'تم تحديث بيانات المكلف بنجاح.');
 
-        } catch (Exception $e) {
-            Log::error('TaxPayer update error: ' . $e->getMessage());
-            return ApiResponse::serverError($e->getMessage());
+        } catch (DomainException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 400
+            ], 400);
         }
     }
 
 
     public function show(int $id , ShowTaxPayerUseCase $useCase)
     {
-        $taxPayer = $useCase->execute($id);
+        $authenticatedUserId = Auth::id();
+        $taxPayer = $useCase->execute($id, $authenticatedUserId);
         return ApiResponse::ok($taxPayer , 'تم جلب المكلف بنجاح.');
     }
 
     public function findTaxPayerByUserID(int $userID , FindTaxPayerByUserIDUseCase $useCase)
     {
-        $taxPayer = $useCase->execute($userID);
+        $authenticatedUserId = Auth::id();
+        $taxPayer = $useCase->execute($userID, $authenticatedUserId);
         return ApiResponse::ok($taxPayer , "تم جلب المستخدم المكلف مع ال ID [{$userID}] بنجاح.");
     }
 
@@ -221,7 +226,8 @@ class TaxPayerController extends Controller
         , ListTaxPayersWithSpecialInfoUseCase $useCase)
     {
         $search = $request->query('search');
-        $taxPayers = $useCase->execute($search);
+        $authenticatedUserId = Auth::id();
+        $taxPayers = $useCase->execute($search, $authenticatedUserId);
 
         return ApiResponse::ok($taxPayers , "تم جلب المستخدمين المكلفين بنجاح.");
     }

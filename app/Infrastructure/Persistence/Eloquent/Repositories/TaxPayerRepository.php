@@ -134,13 +134,19 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         return $this->mapToDomain($taxPayerModel);
     }
 
-    public function getTaxPayersWithSpecialInfo(?string $search = null)
+    public function getTaxPayersWithSpecialInfo(?string $search = null, ?int $departmentId = null)
     {
         $query = TaxPayerModel::with('user', 'companies', 'charitable_companies');
 
         // اذا يوجد بحث
         if ($search !== null) {
             $query->where('trade_name', 'LIKE', '%' . $search . '%');
+        }
+
+        if ($departmentId !== null) {
+            $query->whereHas('user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
         }
 
         $taxPayers = $query->get();
