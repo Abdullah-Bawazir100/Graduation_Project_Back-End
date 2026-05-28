@@ -3,6 +3,7 @@
 namespace App\Application\TaxPayer\UseCases;
 
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 
 class ListTaxPayersUseCase
@@ -13,9 +14,13 @@ class ListTaxPayersUseCase
     )
     {}
 
-    public function execute()
+    public function execute(int $authenticatedUserId)
     {
-        $taxPayers = $this->tax_payer_repository->getAll();
+        $actor = $this->user_repository->findById($authenticatedUserId);
+        $isAdmin = $actor->role === UserRole::Admin;
+        $departmentId = $isAdmin ? null : (int)$actor->department->id;
+
+        $taxPayers = $this->tax_payer_repository->getAll($departmentId);
 
         $result = [];
         foreach ($taxPayers as $taxPayer) {

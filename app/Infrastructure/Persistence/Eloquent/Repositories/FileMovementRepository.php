@@ -89,14 +89,20 @@ class FileMovementRepository implements FileMovementRepositoryInterface
         return $fileMovement ? $this->mapToDomain($fileMovement) : null;
     }
 
-    public function getAll()
+    public function getAll(?int $departmentId = null)
     {
-        $filesMovements = FileMovementModel::with(
+        $query = FileMovementModel::with(
             'file',
             'taxCollector',
             'department',
             'creator'
-        )->get();
+        );
+
+        if ($departmentId !== null) {
+            $query->where('department_id', $departmentId);
+        }
+
+        $filesMovements = $query->get();
         return $filesMovements->map(fn(FileMovementModel $model) => $this->mapToDomain($model))->toArray();
     }
 

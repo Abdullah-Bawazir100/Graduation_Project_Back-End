@@ -25,10 +25,12 @@ use App\Domain\User\Entities\User as DomainUser;
 use App\Domain\User\Enums\UserRole;
 use App\Http\Requests\TaxPayer\UpdateTaxPayerRequest;
 use App\Http\Responses\ApiResponse;
+use DomainException;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class TaxPayerController extends Controller
 {
@@ -40,11 +42,12 @@ class TaxPayerController extends Controller
 
     public function index(ListTaxPayersUseCase $useCase): ApiResponse
     {
-        $taxPayers = $useCase->execute();
+        $authenticatedUser = Auth::user();
+        $taxPayers = $useCase->execute($authenticatedUser->id);
         return ApiResponse::ok($taxPayers , 'تم جلب المكلفين بنجاح.');
     }
 
-    public function store(StoreTaxPayerRequest $request , CreateTaxPayerWithUserUseCase $useCase): ApiResponse
+    public function store(StoreTaxPayerRequest $request , CreateTaxPayerWithUserUseCase $useCase)
     {
         try {
             $authUser = Auth::user();
@@ -94,12 +97,15 @@ class TaxPayerController extends Controller
 
             return ApiResponse::created($result , 'تم إنشاء مكلف مع  ملف فرد بنجاح.');
 
-        } catch (Exception $e) {
-            return ApiResponse::serverError($e->getMessage());
+        } catch (DomainException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 400
+            ], 400);
         }
     }
 
-    public function createFileToExistingTaxPayer(StoreFileToExistingTaxPayerRequest $request, CreateFileToExistingTaxPayerUseCase $useCase): ApiResponse
+    public function createFileToExistingTaxPayer(StoreFileToExistingTaxPayerRequest $request, CreateFileToExistingTaxPayerUseCase $useCase)
     {
         try {
             $authUser = Auth::user();
@@ -124,12 +130,15 @@ class TaxPayerController extends Controller
                 fileType: enFileType::from($request->fileType),
                 source: 'Manually'
             );
-            $result = $useCase->execute($taxPayerDTO, $request->userId);
+            $result = $useCase->execute($taxPayerDTO, $request->userId, $authUser->id);
 
             return ApiResponse::created($result, 'تم إنشاء ملف فرد جديد للمكلف الحالي بنجاح.');
 
-        } catch (Exception $e) {
-            return ApiResponse::serverError($e->getMessage());
+        } catch (DomainException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 400
+            ], 400);
         }
     }
 
@@ -219,7 +228,8 @@ class TaxPayerController extends Controller
 
     public function getAllTaxPayersWithSource(ListAllTaxPayersWithSourceUseCase $useCase)
     {
-        $taxPayers = $useCase->execute();
+        $authenticatedUser = Auth::user();
+        $taxPayers = $useCase->execute($authenticatedUser->id);
         return ApiResponse::ok($taxPayers , 'تم جلب المكلفين بنجاح.');
     }
 

@@ -13,9 +13,9 @@ class ListAllTaxPayersWithSourceUseCase
     )
     {}
 
-    public function execute()
+    public function execute(int $authenticatedUserId)
     {
-        $taxPayers = $this->tax_payer_repository->getAllTaxPayers();
+        $taxPayers = $this->tax_payer_repository->getAllTaxPayers($authenticatedUserId);
 
         $result = [];
         foreach ($taxPayers as $taxPayer) {

@@ -31,7 +31,7 @@ class FileMovementController extends Controller
 
     public function index(ListFilesMovementsUseCase $useCase)
     {
-        $filesMovements = $useCase->execute();
+        $filesMovements = $useCase->execute(Auth::id());
         return ApiResponse::ok(
             data: $filesMovements,
             message: "تم جلب حركات الملفات بنجاح."
@@ -81,7 +81,7 @@ class FileMovementController extends Controller
 
     public function show(int $id , FindFileMovementByIdUseCase $useCase)
     {
-        $fileMovement = $useCase->execute($id);
+        $fileMovement = $useCase->execute($id, Auth::id());
         return ApiResponse::ok(
             data: $fileMovement,
             message: "تم جلب حركة الملف مع ال ID [$id] بنجاح."
@@ -92,6 +92,14 @@ class FileMovementController extends Controller
     UpdateFileMovementUseCase $useCase)
     {
         try {
+
+            $authenticatedUser = Auth::user();
+
+            if (!$authenticatedUser) {
+                return response()->json([
+                    'error' => 'المستخدم غير مسجل الدخول'
+                ], 401);
+            }
 
             $existingFileMovement = $this->file_movement_repository->findById($id);
             if(!$existingFileMovement)
@@ -109,7 +117,7 @@ class FileMovementController extends Controller
                 departmentId: $request->departmentId,
             );
 
-            $result = $useCase->execute($dto , $id);
+            $result = $useCase->execute($dto , $id, $authenticatedUser->id);
 
             return ApiResponse::ok(
                 data: $result,

@@ -17,14 +17,27 @@ class CreateFileToExistingTaxPayerUseCase
     )
     {}
 
-    public function execute(TaxPayerDTOs $taxPayerDTO, int $userId)
+    public function execute(TaxPayerDTOs $taxPayerDTO, int $userId, int $authenticatedUserId)
     {
         $existingUser = $this->user_repository->findById($userId);
 
+        if (!$existingUser) {
+            throw new DomainException("المستخدم مع ال ID [$userId] غير موجود.");
+        }
+
         if($existingUser->role !== UserRole::Tax_Payer)
         {
-            throw new DomainException("المستخدم الموجود مع ال ID [$userId] ليس مكلف.");
+            throw new DomainException("المستخدم المحدد مع ال ID [$userId] ليس مكلف .");
         }
+
+        $actor = $this->user_repository->findById($authenticatedUserId);
+        if ($actor && $actor->role !== UserRole::Admin) {
+            if (!$actor->department || !$existingUser->department
+                || $actor->department->id !== $existingUser->department->id) {
+                throw new DomainException("لا يمكنك إنشاء ملف لمكلف في قسم لا تنتمي إليه.");
+            }
+        }
+
 
         $newTaxPayerFile = new TaxPayer(
             id: null,
@@ -43,6 +56,7 @@ class CreateFileToExistingTaxPayerUseCase
             $newTaxPayerFile,
             $existingUser->id
         );
+
 
         if (!$createdTaxPayerFile) {
             throw new DomainException("فشل إنشاء الملف الجديد للمكلف.");

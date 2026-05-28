@@ -16,7 +16,7 @@ class ListFilesUseCase
     public function execute(?string $search = null, int $authenticatedUserId)
     {
         $user = $this->user_repository->findById($authenticatedUserId);
-        
+
         $departmentId = null;
         if ($user && $user->role !== UserRole::Admin) {
             $departmentId = $user->department?->id;

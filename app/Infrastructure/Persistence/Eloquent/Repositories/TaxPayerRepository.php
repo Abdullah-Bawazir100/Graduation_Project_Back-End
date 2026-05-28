@@ -71,19 +71,41 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         return $this->mapToDomain($taxPayerModel);
     }
 
-    public function getAll()
+    public function getAll(?int $departmentId = null)
     {
-        $taxPayers = TaxPayerModel::with('user')
-                ->where('file_type', 'Individual')
-                ->get();
+        // $taxPayers = TaxPayerModel::with('user')
+        //         ->where('file_type', 'Individual')
+        //         ->get();
 
-        return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
+        // return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
+
+        $query = TaxPayerModel::with('user')
+        ->where('file_type', 'Individual');
+
+        if ($departmentId !== null) {
+            $query->whereHas('user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        return $query->get()
+            ->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))
+            ->toArray();
     }
 
-    public function getAllTaxPayers()
+    public function getAllTaxPayers(?int $departmentId)
     {
-        $taxPayers = TaxPayerModel::with('user')->get();
-        return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
+        $query = TaxPayerModel::with('user');
+
+        if ($departmentId !== null) {
+            $query->whereHas('user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        return $query->get()
+            ->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))
+            ->toArray();
     }
 
     public function findByUserId(int $userId): ?TaxPayer
@@ -117,7 +139,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         $query = TaxPayerModel::with('user', 'companies', 'charitable_companies');
 
         // اذا يوجد بحث
-        if ($search) {
+        if ($search !== null) {
             $query->where('trade_name', 'LIKE', '%' . $search . '%');
         }
 

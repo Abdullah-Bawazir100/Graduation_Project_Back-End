@@ -14,6 +14,7 @@ use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Interfaces\PasswordHashInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use DomainException;
+use Exception;
 
 class CreateTaxPayerWithUserUseCase
 {
@@ -22,7 +23,6 @@ class CreateTaxPayerWithUserUseCase
         private TaxPayerRepositoryInterface $tax_payer_repository,
         private DepartmentRepositoryInterface $department_repository,
         private PasswordHashInterface $password_hash,
-        private TaxInformationRepositoryInterface $tax_information_repository
     )
     {}
 
@@ -31,6 +31,12 @@ class CreateTaxPayerWithUserUseCase
         $department = $this->department_repository->findById($userDTO->departmentID);
         if (!$department) {
             throw new DomainException("القسم مع ال ID [{$userDTO->departmentID}] غير موجود.");
+        }
+
+        if ($actor->role !== UserRole::Admin) {
+            if (!$actor->department || $actor->department->id !== $department->id) {
+                throw new DomainException("لا يمكنك إضافة مكلف في قسم لا تنتمي إليه.");
+            }
         }
 
         $userName = $userDTO->phone;

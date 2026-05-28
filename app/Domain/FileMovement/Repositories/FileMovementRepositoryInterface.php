@@ -10,7 +10,7 @@ interface FileMovementRepositoryInterface
     public function update(FileMovement $fileMovement , int $id): ?FileMovement;
     public function findById(int $fileMovementId): ?FileMovement;
     public function findFileMovementByFileId(int $fileId): ?FileMovement;
-    public function getAll();
+    public function getAll(?int $departmentId = null);
     public function delete(int $id): void;
     public function getFileMovementCount(): int;
     public function getFileMovementsStatistics(): array;

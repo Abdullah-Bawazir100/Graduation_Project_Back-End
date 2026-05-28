@@ -161,7 +161,9 @@ class FileRepository implements FileRepositoryInterface
 
     public function countFilesByType(enFileType $type): int
     {
-        return TaxPayerModel::where('file_type', $type->value)->count();
+        return FileModel::whereHas('taxPayer', function ($query) use ($type) {
+                $query->where('file_type', $type->value);
+            })->count();
     }
 
     private function mapToDomain(FileModel $model): File

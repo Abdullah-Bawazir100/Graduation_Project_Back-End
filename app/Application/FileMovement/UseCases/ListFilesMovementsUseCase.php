@@ -3,17 +3,27 @@
 namespace App\Application\FileMovement\UseCases;
 
 use App\Domain\FileMovement\Repositories\FileMovementRepositoryInterface;
+use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 
 class ListFilesMovementsUseCase
 {
     public function __construct(
-        private FileMovementRepositoryInterface $file_movement_repository
+        private FileMovementRepositoryInterface $file_movement_repository,
+        private UserRepositoryInterface $user_repository
     )
     {}
 
-    public function execute()
+    public function execute(int $authenticatedUserId)
     {
-        $filesMovements = $this->file_movement_repository->getAll();
+        $user = $this->user_repository->findById($authenticatedUserId);
+
+        $departmentId = null;
+        if ($user && $user->role !== UserRole::Admin) {
+            $departmentId = $user->department?->id;
+        }
+
+        $filesMovements = $this->file_movement_repository->getAll($departmentId);
         return [
             'filesMovements' => $filesMovements
         ];
