@@ -36,7 +36,7 @@ class CompanyController extends Controller
 
     public function index(ListCompaniesUseCase $useCase)
     {
-        $companies = $useCase->execute();
+        $companies = $useCase->execute(Auth::id());
         return ApiResponse::ok($companies , "تم جلب ملفات الشركات بنجاح.");
     }
 
@@ -145,7 +145,7 @@ class CompanyController extends Controller
                 partnersIDCards: $partnersIDCardsUrl,
             );
 
-            $result = $useCase->execute($companyDTO , $taxPayerDTO , $request->userId);
+            $result = $useCase->execute($companyDTO , $taxPayerDTO , $request->userId, Auth::id());
 
             return ApiResponse::created($result , 'تم إنشاء ملف شركة لمكلف موجود بنجاح.');
 
@@ -157,7 +157,7 @@ class CompanyController extends Controller
 
     public function show(int $id , FindByIdUseCase $useCase)
     {
-        $company = $useCase->execute($id);
+        $company = $useCase->execute($id, Auth::id());
         return ApiResponse::ok($company , "تم جلب ملف الشركة بنجاح.");
     }
 
@@ -165,7 +165,7 @@ class CompanyController extends Controller
     public function update(int $id , UpdateCompanyRequest $request , UpdateCompanyUseCase $useCase)
     {
         try {
-            $findCompany = $this->findByIdUseCase->execute($id);
+            $findCompany = $this->findByIdUseCase->execute($id, Auth::id());
             $existingCompany = $findCompany['companyInfo'];
 
             if (!$existingCompany) {
@@ -195,7 +195,7 @@ class CompanyController extends Controller
                 partnersIDCards: $partnersIDCardsUrl ?? $existingCompany->partnersIDCards,
             );
 
-            $result = $useCase->execute($companyDTO, $existingCompany->id);
+            $result = $useCase->execute($companyDTO, $existingCompany->id, Auth::id());
 
             return ApiResponse::ok($result, 'تم تحديث بيانات ملف الشركة بنجاح.');
 
@@ -210,7 +210,7 @@ class CompanyController extends Controller
 
     public function destroy(int $id , DeleteCompanyUseCase $useCase)
     {
-        $useCase->execute($id);
+        $useCase->execute($id, Auth::id());
         return ApiResponse::ok(null , "تم حذف ملف الشركة مع ال ID [{$id}] بنجاح.");
     }
 

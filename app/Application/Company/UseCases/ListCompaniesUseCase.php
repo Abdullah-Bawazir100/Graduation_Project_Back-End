@@ -4,6 +4,7 @@ namespace App\Application\Company\UseCases;
 
 use App\Domain\Company\Repositories\CompanyRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 
 class ListCompaniesUseCase
@@ -15,9 +16,12 @@ class ListCompaniesUseCase
     )
     {}
 
-    public function execute()
+    public function execute(int $authenticatedUserId)
     {
-        $companies = $this->company_repository->getAll();
+        $actor = $this->user_repository->findById($authenticatedUserId);
+        $departmentId = ($actor && $actor->role !== UserRole::Admin) ? (int)$actor->department->id : null;
+
+        $companies = $this->company_repository->getAll($departmentId);
 
         $result = [];
         foreach ($companies as $company) {

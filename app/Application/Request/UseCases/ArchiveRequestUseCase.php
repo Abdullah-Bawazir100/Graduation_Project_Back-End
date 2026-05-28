@@ -24,6 +24,7 @@ use App\Domain\Region\Repositories\RegionRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use DomainException;
 
 class ArchiveRequestUseCase
@@ -90,13 +91,15 @@ class ArchiveRequestUseCase
             throw new DomainException("الحي المحدد غير موجود.");
         }
 
-        if (
-            !$creator->department ||
-            $creator->department->id !== $department->id
-        ) {
-            throw new DomainException(
-                "لا يمكنك إنشاء ملف في قسم لا تنتمي إليه."
-            );
+        $user = $this->user_repository->findById($request->userId);
+
+        if ($creator->role !== UserRole::Admin) {
+            if (!$creator->department || (int)$creator->department->id !== (int)$user->department->id) {
+                throw new DomainException('غير مصرح لك بترحيل طلب من قسم غير القسم الذي تعمل فيه.');
+            }
+            if ($creator->department->id !== $department->id) {
+                throw new DomainException("لا يمكنك إنشاء ملف في قسم لا تنتمي إليه.");
+            }
         }
 
         if($request->requestStatus === EnRequestStatus::Archived)

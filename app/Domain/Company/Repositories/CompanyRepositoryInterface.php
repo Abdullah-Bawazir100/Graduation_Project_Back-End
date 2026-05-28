@@ -10,7 +10,7 @@ interface CompanyRepositoryInterface
     public function update(Company $company , int $id): ?Company;
     public function findById(int $id): ?Company;
     public function findByTaxPayerId(int $taxPayerId): ?Company;
-    public function getAll();
+    public function getAll(?int $departmentId = null);
     public function delete(int $id);
     public function createCompanyFileToExistingTaxPayer(Company $company , int $userId);
 

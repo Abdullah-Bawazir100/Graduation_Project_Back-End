@@ -4,6 +4,7 @@ namespace App\Application\Request\UseCases;
 
 use App\Domain\Request\Repositories\TaxPayerRequestRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use DomainException;
 
 class FindRequestByIdUseCase
@@ -14,7 +15,7 @@ class FindRequestByIdUseCase
     )
     {}
 
-    public function execute(int $id)
+    public function execute(int $id, ?int $authenticatedUserId = null)
     {
         $request = $this->tax_payer_request_repository->findRequestById($id);
         if(!$request)
@@ -22,6 +23,16 @@ class FindRequestByIdUseCase
             throw new DomainException("لا يوجد طلب مع ال ID [$id].");
         }
         $user = $this->user_repository->findById($request->userId);
+        
+        if ($authenticatedUserId !== null) {
+            $actor = $this->user_repository->findById($authenticatedUserId);
+            if ($actor && $actor->role !== UserRole::Admin) {
+                if ((int)$actor->department->id !== (int)$user->department->id) {
+                    throw new DomainException('غير مصرح لك بعرض بيانات طلب من قسم غير القسم الذي تعمل فيه.');
+                }
+            }
+        }
+
         return [
             'RequestInfo' => $request,
             'UserInfo' => $user->toArray(),

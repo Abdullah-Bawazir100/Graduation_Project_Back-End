@@ -4,6 +4,7 @@ namespace App\Application\Request\UseCases;
 
 use App\Domain\Request\Repositories\TaxPayerRequestRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 
 class ListPendingRequestsUseCase
 {
@@ -13,9 +14,12 @@ class ListPendingRequestsUseCase
     )
     {}
 
-    public function execute(): array
+    public function execute(int $authenticatedUserId): array
     {
-        $pendingRequests = $this->tax_payer_request_repository->getPendingRequests();
+        $actor = $this->user_repository->findById($authenticatedUserId);
+        $departmentId = ($actor && $actor->role !== UserRole::Admin) ? (int)$actor->department->id : null;
+
+        $pendingRequests = $this->tax_payer_request_repository->getPendingRequests($departmentId);
         
         $response = [];
         foreach ($pendingRequests as $request) {

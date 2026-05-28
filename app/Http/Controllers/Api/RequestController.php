@@ -39,7 +39,7 @@ class RequestController extends Controller
 
     public function index(ListRequestsUseCase $useCase)
     {
-        $allRequests = $useCase->execute();
+        $allRequests = $useCase->execute(Auth::id());
         return ApiResponse::ok(
             data: $allRequests,
             message: "تم جلب جميع الطلبات بنجاح."
@@ -48,7 +48,7 @@ class RequestController extends Controller
 
     public function getPendingRequests(ListPendingRequestsUseCase $useCase)
     {
-        $pendingRequests = $useCase->execute();
+        $pendingRequests = $useCase->execute(Auth::id());
         return ApiResponse::ok(
             data: $pendingRequests,
             message: "تم جلب الطلبات قيد الإنتظار بنجاح."
@@ -57,7 +57,7 @@ class RequestController extends Controller
 
     public function getConfirmedRequests(ListConfirmedRequestsUseCase $useCase)
     {
-        $confirmedRequests = $useCase->execute();
+        $confirmedRequests = $useCase->execute(Auth::id());
         return ApiResponse::ok(
             data: $confirmedRequests,
             message: "تم جلب الطلبات المؤكدة بنجاح."
@@ -66,7 +66,7 @@ class RequestController extends Controller
 
     public function getArchivedRequests(ListArchivedRequestsUseCase $useCase)
     {
-        $confirmedRequests = $useCase->execute();
+        $confirmedRequests = $useCase->execute(Auth::id());
         return ApiResponse::ok(
             data: $confirmedRequests,
             message: "تم جلب الطلبات المرحلة بنجاح."
@@ -75,7 +75,7 @@ class RequestController extends Controller
 
     public function getRejectedRequests(ListRejectedRequestsUseCase $useCase)
     {
-        $confirmedRequests = $useCase->execute();
+        $confirmedRequests = $useCase->execute(Auth::id());
         return ApiResponse::ok(
             data: $confirmedRequests,
             message: "تم جلب الطلبات المرفوضة بنجاح."
@@ -150,7 +150,7 @@ class RequestController extends Controller
                 source: 'Requests'
             );
 
-            $result = $useCase->execute($taxPayerDTO);
+            $result = $useCase->execute($taxPayerDTO, Auth::id());
 
             return ApiResponse::created($result, 'تم إرسال طلب فتح الملف بنجاح.');
 
@@ -165,7 +165,7 @@ class RequestController extends Controller
         try {
             $requestId = $request->requestId;
 
-            $result = $useCase->execute($requestId);
+            $result = $useCase->execute($requestId, Auth::id());
             return ApiResponse::ok(
                 data: $result,
                 message: "تم قبول الطلب مع ال ID [$requestId] بنجاح."
@@ -183,7 +183,7 @@ class RequestController extends Controller
             $requestId = $request->requestId;
             $note = $request->note ?? null;
 
-            $result = $useCase->execute($requestId , $note);
+            $result = $useCase->execute($requestId , $note, Auth::id());
             return ApiResponse::ok(
                 data: $result,
                 message: "تم رفض الطلب مع ال ID [$requestId]."
@@ -196,7 +196,7 @@ class RequestController extends Controller
 
     public function show(int $id , FindRequestByIdUseCase $useCase)
     {
-        $request = $useCase->execute($id);
+        $request = $useCase->execute($id, Auth::id());
         return ApiResponse::ok(
             data: $request,
             message: "تم جلب الطلب مع ال ID [$id] بنجاح."
@@ -251,7 +251,7 @@ class RequestController extends Controller
 
     public function destroy(int $requestId , DeleteRequestUseCase $useCase)
     {
-        $useCase->execute($requestId);
+        $useCase->execute($requestId, Auth::id());
         return ApiResponse::ok(
             data: [],
             message: "تم حذف الطلب مع ال ID [$requestId] بنجاح."

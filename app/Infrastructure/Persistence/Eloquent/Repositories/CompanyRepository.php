@@ -55,9 +55,17 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     }
 
-    public function getAll()
+    public function getAll(?int $departmentId = null)
     {
-        $taxPayers = CompanyModel::with('taxPayer')->get();
+        $query = CompanyModel::with('taxPayer');
+
+        if ($departmentId !== null) {
+            $query->whereHas('taxPayer.user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        $taxPayers = $query->get();
         return $taxPayers->map(fn(CompanyModel $model) => $this->mapToDomain($model))->toArray();
     }
 

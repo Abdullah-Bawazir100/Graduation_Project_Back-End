@@ -6,6 +6,7 @@ use App\Application\Company\DTOs\CompanyDTOs;
 use App\Domain\Company\Entities\Company;
 use App\Domain\Company\Repositories\CompanyRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use DomainException;
 
@@ -18,15 +19,27 @@ class UpdateCompanyUseCase
     )
     {}
 
-    public function execute(CompanyDTOs $companyDTOs , int $id)
+    public function execute(CompanyDTOs $companyDTOs , int $id, ?int $authenticatedUserId = null)
     {
         $existingCompany = $this->company_repository->findById($id);
-        $existingTaxPayer = $this->tax_payer_repository->findById($existingCompany->tax_payer_id);
-        $existingUser = $this->user_repository->findById($existingTaxPayer->userId);
         if(!$existingCompany)
         {
             throw new DomainException("ملف الشركة مع ال ID [{$id}] غير موجود.");
         }
+
+        $existingTaxPayer = $this->tax_payer_repository->findById($existingCompany->tax_payer_id);
+        $existingUser = $this->user_repository->findById($existingTaxPayer->userId);
+
+        // التحقق من صلاحيات القسم
+        if ($authenticatedUserId !== null) {
+            $actor = $this->user_repository->findById($authenticatedUserId);
+            if ($actor && $actor->role !== UserRole::Admin) {
+                if ((int)$actor->department->id !== (int)$existingUser->department->id) {
+                    throw new DomainException('غير مصرح لك بتحديث بيانات شركة من قسم غير القسم الذي تعمل فيه.');
+                }
+            }
+        }
+
         $company = new Company(
             id: $id,
             tax_payer_id: $existingTaxPayer->id,

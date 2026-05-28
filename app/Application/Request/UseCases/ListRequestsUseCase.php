@@ -4,6 +4,7 @@ namespace App\Application\Request\UseCases;
 
 use App\Domain\Request\Repositories\TaxPayerRequestRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 
 class ListRequestsUseCase
 {
@@ -13,9 +14,12 @@ class ListRequestsUseCase
     )
     {}
 
-    public function execute(): array
+    public function execute(int $authenticatedUserId): array
     {
-        $allRequests = $this->tax_payer_request_repository->getAllRequests();
+        $actor = $this->user_repository->findById($authenticatedUserId);
+        $departmentId = ($actor && $actor->role !== UserRole::Admin) ? (int)$actor->department->id : null;
+
+        $allRequests = $this->tax_payer_request_repository->getAllRequests($departmentId);
 
         $response = [];
         foreach ($allRequests as $request) {

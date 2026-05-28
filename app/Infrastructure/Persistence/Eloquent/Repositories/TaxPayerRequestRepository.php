@@ -35,45 +35,73 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
         return $this->mapToDomain($model);
     }
 
-    public function getPendingRequests(): array
+    public function getPendingRequests(?int $departmentId = null): array
     {
-        $models = RequestModel::where('status', EnRequestStatus::Pending->value)
-            ->with('user')
-            ->get();
+        $query = RequestModel::where('status', EnRequestStatus::Pending->value)->with('user');
 
+        if ($departmentId !== null) {
+            $query->whereHas('user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        $models = $query->get();
         return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
     }
 
-    public function getConfirmedRequests(): array
+    public function getConfirmedRequests(?int $departmentId = null): array
     {
-        $models = RequestModel::where('status', EnRequestStatus::Confirmed->value)
-            ->with('user')
-            ->get();
+        $query = RequestModel::where('status', EnRequestStatus::Confirmed->value)->with('user');
 
+        if ($departmentId !== null) {
+            $query->whereHas('user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        $models = $query->get();
         return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
     }
 
-    public function getArchivedRequests(): array
+    public function getArchivedRequests(?int $departmentId = null): array
     {
-        $models = RequestModel::where('status', EnRequestStatus::Archived->value)
-            ->with('user')
-            ->get();
+        $query = RequestModel::where('status', EnRequestStatus::Archived->value)->with('user');
 
+        if ($departmentId !== null) {
+            $query->whereHas('user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        $models = $query->get();
         return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
     }
 
-    public function getRejectedRequests(): array
+    public function getRejectedRequests(?int $departmentId = null): array
     {
-        $models = RequestModel::where('status', EnRequestStatus::Rejected->value)
-            ->with('user')
-            ->get();
+        $query = RequestModel::where('status', EnRequestStatus::Rejected->value)->with('user');
 
+        if ($departmentId !== null) {
+            $query->whereHas('user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        $models = $query->get();
         return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
     }
 
-    public function getAllRequests(): array
+    public function getAllRequests(?int $departmentId = null): array
     {
-        $models = RequestModel::with('user')->get();
+        $query = RequestModel::with('user');
+
+        if ($departmentId !== null) {
+            $query->whereHas('user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        $models = $query->get();
         return $models->map(fn (RequestModel $model) => $this->mapToDomain($model))->toArray();
     }
 

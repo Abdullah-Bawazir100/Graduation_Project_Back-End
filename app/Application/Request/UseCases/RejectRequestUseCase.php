@@ -13,6 +13,7 @@ use App\Domain\Company\Entities\Company;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use DomainException;
 
 class RejectRequestUseCase
@@ -26,7 +27,7 @@ class RejectRequestUseCase
     )
     {}
 
-    public function execute(int $requestId , ?string $note)
+    public function execute(int $requestId , ?string $note, ?int $authenticatedUserId = null)
     {
         $request =  $this->tax_payer_request_repository->findRequestById($requestId);
         if(!$request)
@@ -34,10 +35,20 @@ class RejectRequestUseCase
             throw new DomainException("لا يوجد طلب مع ال ID [$requestId].");
         }
 
+        $user = $this->user_repository->findById($request->userId);
+
+        if ($authenticatedUserId !== null) {
+            $actor = $this->user_repository->findById($authenticatedUserId);
+            if ($actor && $actor->role !== UserRole::Admin) {
+                if ((int)$actor->department->id !== (int)$user->department->id) {
+                    throw new DomainException('غير مصرح لك برفض طلب من قسم غير القسم الذي تعمل فيه.');
+                }
+            }
+        }
+
         if($request->requestStatus === EnRequestStatus::Pending)
         {
             $acceptedRequest = $this->tax_payer_request_repository->rejectRequest($requestId , $note);
-            $user = $this->user_repository->findById($request->userId);
 
             return [
                 'RequestInfo' => $acceptedRequest,

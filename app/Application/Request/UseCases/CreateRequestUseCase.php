@@ -19,9 +19,9 @@ class CreateRequestUseCase
     )
     {}
 
-    public function execute(TaxPayerRequestDTOs $dto)
+    public function execute(TaxPayerRequestDTOs $dto, ?int $authenticatedUserId = null)
     {
-        $user = $this->checkUser($dto->userId);
+        $user = $this->checkUser($dto->userId, $authenticatedUserId);
         $taxPayerRequest = $this->mapToDomain($dto, $user->id);
         $createdRequest = $this->tax_payer_request_repository->create($taxPayerRequest);
 
@@ -74,7 +74,7 @@ class CreateRequestUseCase
         );
     }
 
-    private function checkUser(int $userId)
+    private function checkUser(int $userId, ?int $authenticatedUserId = null)
     {
         $existingUser = $this->user_repository->findById($userId);
         if(!$existingUser)
@@ -84,6 +84,15 @@ class CreateRequestUseCase
         if($existingUser->role !== UserRole::Tax_Payer)
         {
             throw new DomainException("المستخدم الموجود مع ال ID [$userId] ليس مكلف.");
+        }
+
+        if ($authenticatedUserId !== null) {
+            $actor = $this->user_repository->findById($authenticatedUserId);
+            if ($actor && $actor->role !== UserRole::Admin) {
+                if ((int)$actor->department->id !== (int)$existingUser->department->id) {
+                    throw new DomainException('غير مصرح لك بإنشاء طلب لمكلف من قسم غير القسم الذي تعمل فيه.');
+                }
+            }
         }
 
         return $existingUser;
