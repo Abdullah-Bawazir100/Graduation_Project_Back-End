@@ -138,7 +138,7 @@ class CharitableCompanyController extends Controller
                 byLawsCopy: $byLawsCopyUrl,
             );
 
-            $result = $useCase->execute($charitableCompanyDTO , $taxPayerDTO , $request->userId);
+            $result = $useCase->execute($charitableCompanyDTO , $taxPayerDTO , $request->userId , $authUser->id);
 
             return ApiResponse::created($result , 'تم إنشاء ملف شركة خيرية لمكلف موجود بنجاح.');
 
@@ -190,7 +190,7 @@ class CharitableCompanyController extends Controller
 
     public function destroy(int $id , DeleteCharitableCompanyUseCase $useCase)
     {
-        $useCase->execute($id);
+        $useCase->execute($id , Auth::id());
         return ApiResponse::ok([] , "تم حذف ملف الشركة الخيرية مع ال ID [{$id}] بنجاح.");
     }
 

@@ -35,7 +35,6 @@ class CreateCompanyFileToExistingTaxPayerUseCase
             throw new DomainException("المستخدم المكلف مع ال ID [$userId] ليس مكلف.");
         }
 
-        // التحقق من صلاحيات القسم
         if ($authenticatedUserId !== null) {
             $actor = $this->user_repository->findById($authenticatedUserId);
             if ($actor && $actor->role !== UserRole::Admin) {

@@ -12,6 +12,7 @@ use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
 use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Entities\User;
+use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Interfaces\PasswordHashInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Persistence\Eloquent\Models\CharitableCompanyModel;
@@ -35,6 +36,12 @@ class CreateCharitableCompanyUseCase
         if(!$department)
         {
             throw new DomainException("لا يوجد قسم مع ال ID [{$userDTO->departmentID}].");
+        }
+
+        if ($actor->role !== UserRole::Admin) {
+            if ((int)$actor->department->id !== (int)$department->id) {
+                throw new DomainException('غير مصرح لك بإنشاء ملف شركة  خيرية في قسم غير القسم الذي تعمل فيه.');
+            }
         }
 
         $userName = $userDTO->phone;

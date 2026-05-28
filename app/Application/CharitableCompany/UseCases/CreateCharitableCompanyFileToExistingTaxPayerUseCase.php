@@ -22,7 +22,7 @@ class CreateCharitableCompanyFileToExistingTaxPayerUseCase
     {}
 
     public function execute(CharitableCompanyDTOs $charitableCompanyDTOs ,
-    TaxPayerDTOs $taxPayerDTOs , int $userId)
+    TaxPayerDTOs $taxPayerDTOs , int $userId , ?int $authenticatedUserId = null)
     {
         $existingUser = $this->user_repository->findById($userId);
         if(!$existingUser)
@@ -32,6 +32,15 @@ class CreateCharitableCompanyFileToExistingTaxPayerUseCase
         if($existingUser->role !== UserRole::Tax_Payer)
         {
             throw new DomainException("المستخدم المكلف مع ال ID [$userId] ليس مكلف.");
+        }
+
+        if ($authenticatedUserId !== null) {
+            $actor = $this->user_repository->findById($authenticatedUserId);
+            if ($actor && $actor->role !== UserRole::Admin) {
+                if ((int)$actor->department->id !== (int)$existingUser->department->id) {
+                    throw new DomainException('غير مصرح لك بإنشاء ملف شركة خيرية لمكلف من قسم غير القسم الذي تعمل فيه.');
+                }
+            }
         }
 
         $taxPayer = new TaxPayer(
