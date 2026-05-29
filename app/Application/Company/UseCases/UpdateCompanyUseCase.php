@@ -30,7 +30,6 @@ class UpdateCompanyUseCase
         $existingTaxPayer = $this->tax_payer_repository->findById($existingCompany->tax_payer_id);
         $existingUser = $this->user_repository->findById($existingTaxPayer->userId);
 
-        // التحقق من صلاحيات القسم
         if ($authenticatedUserId !== null) {
             $actor = $this->user_repository->findById($authenticatedUserId);
             if ($actor && $actor->role !== UserRole::Admin) {

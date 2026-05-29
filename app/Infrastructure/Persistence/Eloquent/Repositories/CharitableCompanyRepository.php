@@ -44,9 +44,15 @@ class CharitableCompanyRepository implements CharitableCompanyRepositoryInterfac
         return $this->mapToDomain($charitableCompanyModel);
     }
 
-    public function getAll()
+    public function getAll(?int $departmentId = null)
     {
-        $charitableCompanies = CharitableCompanyModel::with('taxPayer')->get();
+        $query = CharitableCompanyModel::with('taxPayer');
+        if ($departmentId !== null) {
+            $query->whereHas('taxPayer.user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+        $charitableCompanies = $query->get();
         return $charitableCompanies->map(fn(CharitableCompanyModel $model) => $this->mapToDomain($model))->toArray();
     }
 

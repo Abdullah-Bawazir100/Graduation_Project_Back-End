@@ -65,8 +65,8 @@ class CompanyRepository implements CompanyRepositoryInterface
             });
         }
 
-        $taxPayers = $query->get();
-        return $taxPayers->map(fn(CompanyModel $model) => $this->mapToDomain($model))->toArray();
+        $companies = $query->get();
+        return $companies->map(fn(CompanyModel $model) => $this->mapToDomain($model))->toArray();
     }
 
     public function findById(int $id): ?Company

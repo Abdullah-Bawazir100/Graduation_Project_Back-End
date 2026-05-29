@@ -37,7 +37,7 @@ class CharitableCompanyController extends Controller
 
     public function index(ListCharitableCompaniesUseCase $useCase)
     {
-        $charitableCompanies = $useCase->execute();
+        $charitableCompanies = $useCase->execute(Auth::id());
         return ApiResponse::ok($charitableCompanies , "تم جلب ملفات الشركات الخيرية بنجاح.");
     }
 
@@ -150,7 +150,7 @@ class CharitableCompanyController extends Controller
 
     public function show(int $id)
     {
-        $charitableCompany = $this->findCharitableCompanyByIdUseCase->execute($id);
+        $charitableCompany = $this->findCharitableCompanyByIdUseCase->execute($id , Auth::id());
         return ApiResponse::ok($charitableCompany , "تم جلب ملف الشركة الخيرية بنجاح.");
 
     }
@@ -159,7 +159,7 @@ class CharitableCompanyController extends Controller
     public function update(int $id , UpdateCharitableCompanyRequest $request , UpdateCharitableCompanyUseCase $useCase)
     {
         try{
-            $findCharitableCompany = $this->findCharitableCompanyByIdUseCase->execute($id);
+            $findCharitableCompany = $this->findCharitableCompanyByIdUseCase->execute($id , Auth::id());
             $existingCharitableCompany = $findCharitableCompany['charitableCompanyInfo'];
             if (!$existingCharitableCompany) {
                 return ApiResponse::notFound([], "ملف الشركة الخيرية مع ال ID [{$id}] غير موجود.");

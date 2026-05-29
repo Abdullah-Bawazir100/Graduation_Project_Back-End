@@ -31,7 +31,7 @@ class DeleteCharitableCompanyUseCase
             $actor = $this->user_repository->findById($authenticatedUserId);
             if ($actor && $actor->role !== UserRole::Admin) {
                 if ((int)$actor->department->id !== (int)$user->department->id) {
-                    throw new DomainException('غير مصرح لك بحذف شركة من قسم غير القسم الذي تعمل فيه.');
+                    throw new DomainException('غير مصرح لك بحذف شركة خيرية من قسم غير القسم الذي تعمل فيه.');
                 }
             }
         }
