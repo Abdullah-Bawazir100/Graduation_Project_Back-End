@@ -107,11 +107,10 @@ class UserRepository implements UserRepositoryInterface
         return $userData->map(fn(UserModel $model) => $this->mapToDomain($model))->toArray();
     }
 
-    public function updatePasswordOnly(int $userId, string $hashedPassword, bool $mustChangePassword = false): void
+    public function forgetPassword(int $userId, string $hashedPassword): void
     {
         UserModel::where('id', $userId)->update([
             'password' => $hashedPassword,
-            'must_change_password' => $mustChangePassword
         ]);
     }
 
@@ -165,6 +164,11 @@ class UserRepository implements UserRepositoryInterface
         return UserModel::where('department_id', $departmentId)
             ->where('role', UserRole::Admin->value)
             ->exists();
+    }
+
+    public function checkUserName(string $userName): bool
+    {
+        return UserModel::where('user_name', $userName)->exists();
     }
 
     private function mapToDomain(UserModel $userData): User
