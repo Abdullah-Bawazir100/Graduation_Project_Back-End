@@ -12,6 +12,7 @@ class TaxInformationModel extends Model
     protected $fillable = [
         'tax_amount',
         'last_payment',
+        'attachment',
         'tax_payer_id',
         'tax_type_id'
     ];
@@ -31,7 +32,7 @@ class TaxInformationModel extends Model
     {
         return LogOptions::defaults()
             ->useLogName('tax_information')
-            ->logOnly(['tax_amount', 'last_payment', 'tax_payer_id', 'tax_type_id'])
+            ->logOnly(['tax_amount', 'last_payment', 'attachment' , 'tax_payer_id', 'tax_type_id'])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
                 'created' => 'إنشاء معلومة ضريبية',

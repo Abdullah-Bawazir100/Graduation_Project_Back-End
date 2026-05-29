@@ -251,7 +251,7 @@ class TaxPayerController extends Controller
             image: $authUser->image ?? '',
             password: $authUser->password,
             createdBy: $authUser->createdBy ?? 0,
-            department: new Department($authUser->departmentID ?? 0, ''),
+            department: new Department($authUser->department_id ?? 0, ''),
             role: $authUser->role,
             mustChangePassword: $authUser->mustChangePassword ?? true
         );

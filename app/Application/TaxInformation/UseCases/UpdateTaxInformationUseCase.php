@@ -40,6 +40,7 @@ class UpdateTaxInformationUseCase
             taxPayerId: $dto->taxPayerId ?? $taxPayer->id,
             taxAmount: $dto->taxAmount,
             lastPayment: $dto->lastPayment,
+            attachment: $dto->attachment,
             taxType: $existingTaxType,
             taxPayer: $taxPayer,
         );

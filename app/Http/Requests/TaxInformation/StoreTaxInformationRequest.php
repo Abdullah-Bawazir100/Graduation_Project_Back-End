@@ -24,6 +24,7 @@ class StoreTaxInformationRequest extends FormRequest
         return [
             'taxAmount' => ['required', 'string' , 'min:0'],
             'lastPayment' => ['required', 'string'],
+            'attachment' => ['nullable' , 'file' , 'mimes:jpeg,png,jpg,pdf' , 'max:10240',],
             'taxTypeId' => ['required', 'integer', 'exists:tax_types,id'],
             'taxPayerId' => ['required', 'integer', 'exists:tax_payers,id'],
         ];
@@ -38,6 +39,12 @@ class StoreTaxInformationRequest extends FormRequest
 
             // last_payment
             'lastPayment.required' => 'اخر دفع مطلوب.',
+
+            // attachment
+            'attachment.file' => 'المرفقات الأخرى يجب أن تكون ملفا',
+            'attachment.mimes'    => 'يجب أن تكون المرفقات الأخرى من نوع: jpeg, png, jpg أو pdf.',
+            'attachment.max'      => 'يجب ألا يتجاوز حجم المرفقات الأخرى 10 MB.',
+
 
             // tax_type_id
             'taxTypeId.required' => 'نوع الضريبة مطلوب.',

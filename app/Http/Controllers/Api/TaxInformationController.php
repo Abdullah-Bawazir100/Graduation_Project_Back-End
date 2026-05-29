@@ -8,6 +8,7 @@ use App\Application\TaxInformation\UseCases\DeleteTaxInformationUseCase;
 use App\Application\TaxInformation\UseCases\ListTaxInformationsUseCase;
 use App\Application\TaxInformation\UseCases\ShowTaxInformationUseCase;
 use App\Application\TaxInformation\UseCases\UpdateTaxInformationUseCase;
+use App\Application\User\Services\UploadFileService;
 use App\Domain\TaxInformation\Repositories\TaxInformationRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Http\Controllers\Controller;
@@ -20,7 +21,9 @@ class TaxInformationController extends Controller
 {
     public function __construct(
         private TaxInformationRepositoryInterface $tax_information_repository,
-        private TaxPayerRepositoryInterface $tax_payer_repository
+        private TaxPayerRepositoryInterface $tax_payer_repository,
+        private UploadFileService $uploadFileService
+
     )
     {}
 
@@ -33,10 +36,16 @@ class TaxInformationController extends Controller
 
     public function store(StoreTaxInformationRequest $request , CreateTaxInformationUseCase $useCase)
     {
+        $attachmentUrl = null;
+        if($request->hasFile('attachment')){
+            $attachmentUrl = $this->uploadFileService->uploadFile($request->file('attachment') , 'attachment-records');
+        }
+
         $dto = new TaxInformationDTOs(
             id: null,
             taxAmount: $request->taxAmount,
             lastPayment: $request->lastPayment,
+            attachment: $attachmentUrl,
             taxTypeId:  $request->taxTypeId,
             taxPayerId: $request->taxPayerId,
         );
@@ -60,12 +69,18 @@ class TaxInformationController extends Controller
             return ApiResponse::notFound([] , "لا يوجد نوع ضريبة مع ال ID [$id].");
         }
 
+        $attachmentUrl = null;
+        if($request->hasFile('attachment')){
+            $attachmentUrl = $this->uploadFileService->uploadFile($request->file('attachment') , 'attachment-records');
+        }
+
         $dto = new TaxInformationDTOs(
             id: $existingTaxInfo->id,
             taxTypeId: $request->taxTypeId ??  $existingTaxInfo->taxTypeId,
             taxPayerId: $request->taxPayerId ?? $existingTaxInfo->taxPayerId,
             taxAmount: $request->taxAmount ?? $existingTaxInfo->taxAmount,
             lastPayment: $request->lastPayment ?? $existingTaxInfo->lastPayment,
+            attachment: $attachmentUrl ?? $existingTaxInfo->attachment
         );
 
         $updatedTaxInfo = $useCase->execute($id , $dto);

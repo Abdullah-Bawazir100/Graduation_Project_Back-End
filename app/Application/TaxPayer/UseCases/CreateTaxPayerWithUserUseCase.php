@@ -34,7 +34,7 @@ class CreateTaxPayerWithUserUseCase
         }
 
         if ($actor->role !== UserRole::Admin) {
-            if (!$actor->department || $actor->department->id !== $department->id) {
+            if ($actor->department->id !== $department->id) {
                 throw new DomainException("لا يمكنك إضافة مكلف في قسم لا تنتمي إليه.");
             }
         }

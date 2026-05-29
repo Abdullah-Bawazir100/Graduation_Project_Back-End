@@ -40,6 +40,7 @@ class CreateTaxInformationUseCase
             taxPayerId: $taxPayer->id,
             taxAmount: $taxInformationDTOs->taxAmount,
             lastPayment: $taxInformationDTOs->lastPayment,
+            attachment: $taxInformationDTOs->attachment,
             taxType: $taxType,
             taxPayer: $taxPayer
         );

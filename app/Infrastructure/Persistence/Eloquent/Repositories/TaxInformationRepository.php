@@ -17,6 +17,7 @@ class TaxInformationRepository implements TaxInformationRepositoryInterface
             'tax_payer_id' => $taxInformation->taxPayerId,
             'tax_amount' => $taxInformation->taxAmount,
             'last_payment' => $taxInformation->lastPayment,
+            'attachment' => $taxInformation->attachment
         ]);
         $taxInformationModel->load('taxType' , 'taxPayer');
 
@@ -36,6 +37,7 @@ class TaxInformationRepository implements TaxInformationRepositoryInterface
             'tax_type_id' => $taxInformation->taxTypeId,
             'tax_amount' => $taxInformation->taxAmount,
             'last_payment' => $taxInformation->lastPayment,
+            'attachment' => $taxInformation->attachment
         ]);
         $taxInformationModel->load('taxType' , 'taxPayer');
 
@@ -98,6 +100,7 @@ class TaxInformationRepository implements TaxInformationRepositoryInterface
             taxPayerId: $model->tax_payer_id,
             taxAmount: $model->tax_amount,
             lastPayment: $model->last_payment,
+            attachment: $model->attachment,
             taxType: $taxType,
             taxPayer: $taxPayer,
         );

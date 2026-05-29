@@ -11,6 +11,7 @@ class TaxInformationDTOs
         public ?int $id,
         public string $taxAmount,
         public string $lastPayment,
+        public ?string $attachment,
         public ?int $taxTypeId,
         public ?int $taxPayerId,
     ){}

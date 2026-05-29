@@ -13,6 +13,7 @@ class TaxInformation
         public ?int $taxPayerId,
         public string $taxAmount,
         public string $lastPayment,
+        public ?string $attachment,
         public TaxType $taxType,
         public TaxPayer $taxPayer
     )
