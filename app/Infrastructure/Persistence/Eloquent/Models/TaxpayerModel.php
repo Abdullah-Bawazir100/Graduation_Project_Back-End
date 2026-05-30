@@ -50,7 +50,7 @@ class TaxPayerModel extends Model
 
     public function tax_informations()
     {
-        return $this->hasOne(TaxInformationModel::class , 'tax_payer_id');
+        return $this->hasMany(TaxInformationModel::class , 'tax_payer_id');
     }
 
     public function file()

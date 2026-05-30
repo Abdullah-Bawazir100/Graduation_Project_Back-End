@@ -149,6 +149,17 @@ class FileRepository implements FileRepositoryInterface
         return $this->mapToDomain($file);
     }
 
+    public function getFileByTaxPayerId(int $taxPayerId , enFileType $fileType)
+    {
+        $files = FileModel::with('taxPayer')
+        ->whereHas('taxPayer' , function ($query) use ($fileType, $taxPayerId){
+            $query->where('tax_payer_id' , $taxPayerId);
+            $query->where('file_type' , $fileType);
+        })->get();
+
+        return $files->map(fn(FileModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
     public function delete(int $id): void
     {
         FileModel::findOrFail($id)->delete();

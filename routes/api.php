@@ -110,9 +110,17 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     // Mobile App Routes
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update'])
     ->name('update-tax-payer-mobile');
+
     Route::post('tax-payer-mobile-logout' , [TaxPayerMobileController::class , 'TaxPayerMobileLogout'])
     ->name('tax-payer-mobile-logout');
+
     Route::get('get-tax-payer-mobile-profile' , [TaxPayerMobileController::class , 'show'])
     ->name('get-tax-payer-mobile-profile');
+
+    Route::get('get-tax-payer-mobile-files' , [TaxPayerMobileController::class , 'index'])
+    ->name('get-tax-payer-mobile-files');
+
+    Route::get('get-tax-payer-mobile-file_By_Id/{id}' , [TaxPayerMobileController::class , 'getTaxPayerFileById'])
+    ->name('get-tax-payer-mobile-file_By_Id');
 
 });

@@ -70,7 +70,7 @@ class UserRepository implements UserRepositoryInterface
     public function findTaxPayerById(int $id): ?User
     {
         $userData = UserModel::with('department')->where('id' , $id)
-                        ->where('role' , UserRole::Tax_Payer->value)->find($id);
+            ->where('role' , UserRole::Tax_Payer->value)->find($id);
 
         if (!$userData) return null;
 

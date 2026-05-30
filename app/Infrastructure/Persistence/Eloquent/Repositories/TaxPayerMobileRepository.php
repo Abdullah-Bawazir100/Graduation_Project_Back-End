@@ -3,8 +3,11 @@
 namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 
 use App\Domain\Department\Entities\Department;
+use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Domain\TaxPayerMobile\Repositories\TaxPayerMobileRepositoryInterface;
 use App\Domain\User\Entities\User;
+use App\Infrastructure\Persistence\Eloquent\Models\FileModel;
+use App\Infrastructure\Persistence\Eloquent\Models\TaxPayerModel;
 use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Override;
 
@@ -53,6 +56,65 @@ class TaxPayerMobileRepository implements TaxPayerMobileRepositoryInterface
         $taxPayerData->load('department');
         return $this->mapToDomain($taxPayerData);
     }
+    public function getTaxPayerMobileFile(int $userId)
+    {
+        $taxPayerFiles = TaxPayerModel::query()
+            ->with([
+                'user',
+                'companies',
+                'charitable_companies',
+                'tax_informations',
+                'file'
+            ])
+            ->where('user_id', $userId)
+            ->orderBy('id')
+            ->get();
+
+
+            return $taxPayerFiles->map(function ($taxPayer) {
+
+            return [
+                'file' => [
+                    'id' => $taxPayer->id,
+                    'user_id' => $taxPayer->user_id,
+                    'trade_name' => $taxPayer->trade_name,
+                    'file_type' => $taxPayer->file_type,
+                ],
+
+                'tax_informations' => $taxPayer->tax_informations->map(function ($taxInfo) {
+                    return [
+                        'id' => $taxInfo->id,
+                        'tax_amount' => $taxInfo->tax_amount,
+                        'last_payment' => $taxInfo->last_payment,
+                        'attachment' => $taxInfo->attachment,
+                        'last_payment_date' => $taxInfo->created_at?->format('Y-m-d'),
+                        'created_at' => $taxInfo->created_at?->format('Y-m-d H:i:s'),
+                    ];
+                })->values(),
+                ];
+            });
+    }
+
+    public function getTaxPayerFileById(int $taxPayerId): ?TaxPayer
+    {
+        $taxPayer = TaxPayerModel::with('companies' , 'charitable_companies' , 'tax_informations')->find($taxPayerId);
+        if(!$taxPayer)
+            return null;
+
+        return new TaxPayer(
+            id: $taxPayer->id,
+            userId: $taxPayer->user_id,
+            tradeName: $taxPayer->trade_name,
+            commercialRecord: $taxPayer->commercial_record,
+            activityLicense: $taxPayer->activity_license,
+            tradePict: $taxPayer->trade_pict,
+            insuranceCard: $taxPayer->insurance_card,
+            propertyDocPict: $taxPayer->property_doc_pict,
+            fileType: $taxPayer->file_type,
+            source: $taxPayer->source
+        );
+    }
+
     private function mapToDomain(UserModel $userData): User
     {
         $department = new Department(

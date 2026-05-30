@@ -346,6 +346,8 @@ class UsersRolesAndAllowedRoutes
             'update-tax-payer-mobile',
             'get-tax-payer-mobile-profile',
             'tax-payer-mobile-logout',
+            'get-tax-payer-mobile-files',
+            'get-tax-payer-mobile-file_By_Id',
 
             // Requests
             'requests.store',

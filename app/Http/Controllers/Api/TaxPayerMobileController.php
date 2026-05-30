@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Application\TaxPayerMobile\UseCases\CreateTaxPayerMobileUseCase;
+use App\Application\TaxPayerMobile\UseCases\GetTaxPayerFileByIdUseCase;
+use App\Application\TaxPayerMobile\UseCases\ListTaxPayerFileMobileUseCase;
 use App\Application\TaxPayerMobile\UseCases\ShowProfileUseCase;
 use App\Application\TaxPayerMobile\UseCases\UpdateTaxPayerMobileUseCase;
 use App\Application\User\DTOs\LoginDTO;
@@ -30,9 +32,22 @@ class TaxPayerMobileController extends Controller
     )
     {}
 
-    public function index()
+    public function index(ListTaxPayerFileMobileUseCase $useCase)
     {
-        //
+        $taxPayerFiles = $useCase->execute(Auth::id());
+        return ApiResponse::ok(
+            data: $taxPayerFiles,
+            message: "تم جلب ملفات المكلف بنجاح."
+        );
+    }
+
+    public function getTaxPayerFileById(int $id , GetTaxPayerFileByIdUseCase $useCase)
+    {
+        $taxPayerFile = $useCase->execute($id , Auth::id());
+        return ApiResponse::ok(
+            data: $taxPayerFile,
+            message: "تم جلب ملف المكلف مع ال ID [$id] بنجاح."
+        );
     }
 
 

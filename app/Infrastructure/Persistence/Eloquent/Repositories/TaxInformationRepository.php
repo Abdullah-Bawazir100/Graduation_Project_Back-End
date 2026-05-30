@@ -60,6 +60,17 @@ class TaxInformationRepository implements TaxInformationRepositoryInterface
         return $this->mapToDomain($taxInformationModel);
     }
 
+    public function getTaxInformationByTaxPayerId(int $taxPayerId)
+    {
+        $taxInfo = TaxInformationModel::with('taxPayer')
+            ->where('tax_payer_id' , $taxPayerId)->get();
+
+        if(!$taxInfo)
+            return null;
+
+        return $taxInfo->map(fn(TaxInformationModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
     public function getAll(): array
     {
         $taxCollectors = TaxInformationModel::with('taxType' , 'taxPayer')->get();
