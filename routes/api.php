@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\{
     DistrictController , FileController, FileStatusController , JobTypeController ,
     TaxCollectorController , TaxPayerController , UserController , AuthController,
     FileMovementController , PaymentTypeController , RegionController , RequestController,
+    ResetPasswordController,
     StatisticsController , TaxInformationController , TaxPayerMobileController ,
     TaxTypeController
 };
@@ -15,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login' , [AuthController::class, 'login'])->name('auth.login');
 Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name('auth.forget-password');
+
+Route::post('request' , [ResetPasswordController::class , 'request'])->name('request');
+Route::post('verify' , [ResetPasswordController::class , 'verify'])->name('verify');
+Route::post('reset' , [ResetPasswordController::class , 'reset'])->name('reset');
+
 
 Route::post('create-tax-payer-mobile', [TaxPayerMobileController::class, 'store']);
 Route::post('tax-payer-mobile-login', [TaxPayerMobileController::class, 'TaxPayerMobileLogin']);
@@ -98,7 +104,6 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     ->name('reject-request');
     Route::get('/get-rejected-requests', [RequestController::class , 'getRejectedRequests'])
     ->name('get-rejected-requests');
-
 
     // Mobile App Routes
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update'])

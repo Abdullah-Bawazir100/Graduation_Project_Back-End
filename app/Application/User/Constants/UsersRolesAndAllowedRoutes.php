@@ -306,7 +306,6 @@ class UsersRolesAndAllowedRoutes
             'reject-request',
             'get-rejected-requests',
 
-
             // Authentication routes
             'auth.create-user',
             'auth.reset-password',

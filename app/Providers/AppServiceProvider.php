@@ -117,6 +117,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Persistence\Eloquent\Repositories\TaxPayerRequestRepository::class
         );
 
+        $this->app->bind(
+            \App\Domain\ResetPassword\Repositories\ResetPasswordRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\ResetPasswordRepository::class
+        );
+
     }
 
     /**
