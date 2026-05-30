@@ -27,10 +27,10 @@ class ForgotPasswordUseCase
 
         $hashedPassword = $this->passwordHash->hashPassword($newPassword);
 
-        $this->userRepository->updatePasswordOnly(
-            $user->id,
-            $hashedPassword,
-            false
-        );
+        // $this->userRepository->updatePasswordOnly(
+        //     $user->id,
+        //     $hashedPassword,
+        //     false
+        // );
     }
 }
