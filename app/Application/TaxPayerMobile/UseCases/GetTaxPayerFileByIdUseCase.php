@@ -2,6 +2,7 @@
 
 namespace App\Application\TaxPayerMobile\UseCases;
 
+use App\Application\TaxPayerMobile\Mapper\TaxPayerInfoMapper;
 use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Domain\TaxInformation\Repositories\TaxInformationRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
@@ -42,9 +43,11 @@ class GetTaxPayerFileByIdUseCase
         $taxPayerFile = $this->tax_payer_mobile_repository->getTaxPayerFileById($taxPayerId);
         $file = $this->file_repository->getFileByTaxPayerId($taxPayer->id , $taxPayer->fileType);
         return [
-            'taxPayer' => $taxPayerFile,
-            'tax_information' => $taxInfo,
-            'file' => $file
+            TaxPayerInfoMapper::map(
+                $taxPayerFile,
+                $taxInfo,
+                $file
+            )
         ];
     }
 }

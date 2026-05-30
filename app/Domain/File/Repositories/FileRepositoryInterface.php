@@ -15,4 +15,5 @@ interface FileRepositoryInterface
     public function delete(int $fileId): void;
     public function countFiles(): int;
     public function countFilesByType(enFileType $type): int;
+    public function existsTaxPayer(int $taxPayerId , enFileType $fileType);
 }

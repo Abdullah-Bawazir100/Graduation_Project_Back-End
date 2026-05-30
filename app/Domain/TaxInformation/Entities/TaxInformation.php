@@ -15,7 +15,8 @@ class TaxInformation
         public string $lastPayment,
         public ?string $attachment,
         public TaxType $taxType,
-        public TaxPayer $taxPayer
+        public TaxPayer $taxPayer,
+
     )
     {}
 }
