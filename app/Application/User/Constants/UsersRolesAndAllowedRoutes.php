@@ -154,6 +154,13 @@ class UsersRolesAndAllowedRoutes
             'reject-request',
             'get-rejected-requests',
 
+            // Attachments
+            'attachment.store',
+            'attachment.index',
+            'attachment.show',
+            'attachment.update',
+            'attachment.destroy',
+
 
             // Authentication routes
             'auth.create-user',
@@ -305,6 +312,12 @@ class UsersRolesAndAllowedRoutes
             'get-archived-requests',
             'reject-request',
             'get-rejected-requests',
+
+            // Attachments
+            'attachment.store',
+            'attachment.index',
+            'attachment.show',
+            'attachment.update',
 
             // Authentication routes
             'auth.create-user',

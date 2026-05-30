@@ -72,6 +72,11 @@ class FileModel extends Model
         return $this->hasMany(FileMovementModel::class, 'file_id');
     }
 
+    public function attachment()
+    {
+        return $this->hasOne(AttachmentFileModel::class, 'file_id');
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

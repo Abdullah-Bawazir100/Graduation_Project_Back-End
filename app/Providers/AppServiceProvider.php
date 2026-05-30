@@ -122,6 +122,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Persistence\Eloquent\Repositories\ResetPasswordRepository::class
         );
 
+        $this->app->bind(
+            \App\Domain\Attachment\Repositories\AttachmentRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\AttachmentRepository::class
+        );
+
     }
 
     /**

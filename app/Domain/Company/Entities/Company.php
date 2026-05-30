@@ -10,5 +10,5 @@ class Company
         public ?string $articlesOfIncorporation,
         public ?string $govemorLicense,
         public ?string $partnersIDCards,
-    ){}
+    ) {}
 }

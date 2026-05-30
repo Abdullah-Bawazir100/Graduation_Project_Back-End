@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\{
     ActivityLogController , ActivityTypeController , AddressController ,
+    AttachmentController,
     CharitableCompanyController , CompanyController , DepartmentController ,
     DistrictController , FileController, FileStatusController , JobTypeController ,
     TaxCollectorController , TaxPayerController , UserController , AuthController,
@@ -86,7 +87,6 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
     Route::apiResource('/requests', RequestController::class);
 
-
     Route::get('/get-pending-requests', [RequestController::class , 'getPendingRequests'])
     ->name('get-pending-requests');
 
@@ -104,6 +104,8 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     ->name('reject-request');
     Route::get('/get-rejected-requests', [RequestController::class , 'getRejectedRequests'])
     ->name('get-rejected-requests');
+
+    Route::apiResource('attachment' , AttachmentController::class);
 
     // Mobile App Routes
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update'])

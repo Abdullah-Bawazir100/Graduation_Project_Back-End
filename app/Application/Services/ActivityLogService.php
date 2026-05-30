@@ -9,9 +9,6 @@ use Carbon\Carbon;
 
 class ActivityLogService
 {
-    /**
-     * إحصائية عدد العمليات (إنشاء، تعديل، حذف) لكل يوم من أيام الأسبوع الحالي
-     */
     public function getWeeklyActivityStatistics(): array
     {
         // أيام الأسبوع بالعربي (السبت = بداية الأسبوع)
@@ -36,7 +33,7 @@ class ActivityLogService
                 'payment_type', 'region', 'district', 'job_type',
                 'tax_collector', 'tax_payer', 'company', 'charitable_company',
                 'tax_type', 'tax_information', 'file', 'file_movement',
-                'request', 'file_status', 'address',
+                'request', 'file_status', 'address', 'attachment'
             ])
             ->select(
                 DB::raw("DAYNAME(created_at) as day_name"),
@@ -85,7 +82,8 @@ class ActivityLogService
             ->whereIn('log_name', ['user', 'department','activity_type',
                         'payment_type' , 'region' , 'district' , 'job_type',
                         'tax_collector' , 'tax_payer' , 'company' , 'charitable_company'
-                        , 'tax_type' , 'tax_information' , 'file' , 'file_movement']);
+                        , 'tax_type' , 'tax_information' , 'file' , 'file_movement',
+                        'attachment']);
 
         // Filters
         if (!empty($filters['user_id'])) {
@@ -232,6 +230,10 @@ class ActivityLogService
             'إنشاء طلب' => "تم إنشاء طلب" . ($new['name'] ?? ''),
             'تحديث طلب' => "تم تحديث طلب" . ($new['name'] ?? ''),
             'حذف طلب'  => "تم حذف طلب" . ($old['name'] ?? ''),
+
+            'إنشاء مرفق ملف' => "تم إنشاء مرفق ملف" . ($new['name'] ?? ''),
+            'تحديث مرفق ملف' => "تم تحديث مرفق ملف" . ($new['name'] ?? ''),
+            'حذف مرفق ملف'  => "تم حذف مرفق ملف" . ($old['name'] ?? ''),
 
             default => $description,
         };

@@ -13,7 +13,7 @@ class ListFilesUseCase
         private UserRepositoryInterface $user_repository
     ){}
 
-    public function execute(?string $search = null, int $authenticatedUserId)
+    public function execute(?string $search , int $authenticatedUserId)
     {
         $user = $this->user_repository->findById($authenticatedUserId);
 
