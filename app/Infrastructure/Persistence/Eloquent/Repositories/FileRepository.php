@@ -44,7 +44,6 @@ class FileRepository implements FileRepositoryInterface
         $fileModel->save();
 
 
-        // Refresh the file entity with the saved model's ID
         return new File(
             id: $fileModel->id,
             taxNumber: $fileModel->tax_number,
@@ -151,13 +150,14 @@ class FileRepository implements FileRepositoryInterface
 
     public function getFileByTaxPayerId(int $taxPayerId , enFileType $fileType)
     {
-        $files = FileModel::with('taxPayer')
-        ->whereHas('taxPayer' , function ($query) use ($fileType, $taxPayerId){
-            $query->where('tax_payer_id' , $taxPayerId);
-            $query->where('file_type' , $fileType);
-        })->get();
+        $file = FileModel::with('taxPayer')
+            ->whereHas('taxPayer', function ($query) use ($fileType, $taxPayerId) {
+                $query->where('tax_payer_id', $taxPayerId);
+                $query->where('file_type', $fileType);
+            })
+            ->first();
 
-        return $files->map(fn(FileModel $model) => $this->mapToDomain($model))->toArray();
+        return $file ? $this->mapToDomain($file) : null;
     }
 
     public function delete(int $id): void

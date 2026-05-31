@@ -13,6 +13,7 @@ class TaxPayerInfoMapper
         $taxInformations,
         $file
     ): array {
+
         return [
             'taxPayer' => [
                 'id' => $taxPayer->id,
@@ -34,6 +35,7 @@ class TaxPayerInfoMapper
                 ->toArray(),
 
                 'file' => $file ? [
+
                     'id' => $file->id,
                     'tax_number' => $file->taxNumber,
                     'inventory_number' => $file->inventoryNumber,

@@ -80,17 +80,6 @@ class TaxPayerMobileRepository implements TaxPayerMobileRepositoryInterface
                     'trade_name' => $taxPayer->trade_name,
                     'file_type' => $taxPayer->file_type,
                 ],
-
-                'tax_informations' => $taxPayer->tax_informations->map(function ($taxInfo) {
-                    return [
-                        'id' => $taxInfo->id,
-                        'tax_amount' => $taxInfo->tax_amount,
-                        'last_payment' => $taxInfo->last_payment,
-                        'attachment' => $taxInfo->attachment,
-                        'last_payment_date' => $taxInfo->created_at?->format('Y-m-d'),
-                        'created_at' => $taxInfo->created_at?->format('Y-m-d H:i:s'),
-                    ];
-                })->values(),
                 ];
             });
     }
