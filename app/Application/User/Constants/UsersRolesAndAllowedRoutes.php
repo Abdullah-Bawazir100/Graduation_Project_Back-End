@@ -161,6 +161,13 @@ class UsersRolesAndAllowedRoutes
             'attachment.update',
             'attachment.destroy',
 
+            // Notifications
+            'notification.store',
+            'notification.index',
+            'notification.show',
+            'notification.update',
+            'notification.destroy',
+
 
             // Authentication routes
             'auth.create-user',

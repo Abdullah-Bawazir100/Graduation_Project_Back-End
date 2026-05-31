@@ -127,6 +127,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Persistence\Eloquent\Repositories\AttachmentRepository::class
         );
 
+        $this->app->bind(
+            \App\Domain\Notification\Repositories\NotificationRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\NotificationRepository::class
+        );
+
     }
 
     /**

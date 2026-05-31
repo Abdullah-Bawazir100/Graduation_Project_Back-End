@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->enum('notification_type' , ['General' , 'ForSystemUsers' , 'ForTaxPayers' , 'Special']);
-            $table->string('receiver_phone');
+            $table->string('receiver_phone')->nullable();
             $table->foreignId('send_by')
                 ->nullable()
                 ->constrained('app_users')

@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\{
     CharitableCompanyController , CompanyController , DepartmentController ,
     DistrictController , FileController, FileStatusController , JobTypeController ,
     TaxCollectorController , TaxPayerController , UserController , AuthController,
-    FileMovementController , PaymentTypeController , RegionController , RequestController,
+    FileMovementController , NotificationController, PaymentTypeController , RegionController , RequestController,
     ResetPasswordController,
     StatisticsController , TaxInformationController , TaxPayerMobileController ,
     TaxTypeController
@@ -106,6 +106,8 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     ->name('get-rejected-requests');
 
     Route::apiResource('attachment' , AttachmentController::class);
+
+    Route::apiResource('notification' , NotificationController::class);
 
     // Mobile App Routes
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update'])

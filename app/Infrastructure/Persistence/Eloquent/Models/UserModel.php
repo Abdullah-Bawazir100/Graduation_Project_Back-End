@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel;
+use Override;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 class UserModel extends Authenticatable
@@ -76,7 +77,11 @@ class UserModel extends Authenticatable
     public function request()
     {
         return $this->hasOne(RequestModel::class, 'user_id');
+    }
 
+    public function notifications()
+    {
+        return $this->hasMany(NotificationModel::class, 'send_by');
     }
 
     protected $hidden = [
