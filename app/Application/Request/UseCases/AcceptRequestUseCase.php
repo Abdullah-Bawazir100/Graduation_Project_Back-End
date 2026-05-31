@@ -34,9 +34,9 @@ class AcceptRequestUseCase
         {
             throw new DomainException("لا يوجد طلب مع ال ID [$requestId].");
         }
-        
+
         $user = $this->user_repository->findById($request->userId);
-        
+
         if ($authenticatedUserId !== null) {
             $actor = $this->user_repository->findById($authenticatedUserId);
             if ($actor && $actor->role !== UserRole::Admin) {
@@ -71,7 +71,7 @@ class AcceptRequestUseCase
                 "يوجد ملف مسجل مسبقاً بهذا الاسم التجاري."
             );
         }
-        
+
         switch($request->fileType)
         {
             case enFileType::Individual :
@@ -88,7 +88,6 @@ class AcceptRequestUseCase
                     fileType: $request->fileType,
                     source: $request->source
                 );
-
 
                 return $this->tax_payer_repository->create($taxPayer);
             }

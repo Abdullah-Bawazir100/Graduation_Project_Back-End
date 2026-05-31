@@ -85,7 +85,6 @@ class RequestController extends Controller
     public function store(StoreRequestOfTaxPayerRequest $request, CreateRequestUseCase $useCase): ApiResponse
     {
         try {
-            // جلب المستخدم الحالي
             $authUser = Auth::user();
 
             if (!$authUser) {
@@ -132,6 +131,7 @@ class RequestController extends Controller
             $byLawsCopyUrl = $request->hasFile('byLawsCopy')
                 ? $this->uploadFileService->uploadFile($request->file('byLawsCopy'), 'by-laws-copies')
                 : null;
+                
             $taxPayerDTO = new TaxPayerRequestDTOs(
                 userId: $authUser->id,
                 tradeName: $request->tradeName,

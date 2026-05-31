@@ -44,8 +44,6 @@ class UpdateFileUseCase
             throw new DomainException("المستخدم غير موجود.");
         }
 
-        // الأدمن يستطيع تحديث أي ملف في أي قسم ونقله لأي قسم
-        // غير الأدمن يحدث فقط ملفات قسمه ولا ينقلها لقسم آخر
         if ($user->role !== UserRole::Admin) {
             if (!$user->department || $user->department->id !== $existingFile->department->id) {
                 throw new DomainException("لا يمكنك تعديل ملف في قسم لا تنتمي إليه.");

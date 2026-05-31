@@ -7,6 +7,7 @@ use App\Domain\Notification\Entities\Notification;
 use App\Domain\Notification\Repositories\NotificationRepositoryInterface;
 use App\Domain\User\Entities\User;
 use App\Infrastructure\Persistence\Eloquent\Models\NotificationModel;
+use League\CommonMark\Extension\DescriptionList\Node\Description;
 use Override;
 
 class NotificationRepository implements NotificationRepositoryInterface
@@ -25,13 +26,30 @@ class NotificationRepository implements NotificationRepositoryInterface
         return $this->mapToDomain($notificationModel);
     }
 
+    public function update(int $id , Notification $notification): ?Notification
+    {
+        $notificationModel = NotificationModel::with('user')->find($id);
+        if(!$notificationModel)
+            return null;
+
+        $notificationModel->update([
+            'title' => $notification->title,
+            'description' => $notification->description,
+            'notification_type' => $notification->notificationType->value,
+            'receiver_phone' => $notification->receiverPhone,
+            'send_by' => $notification->sendBy->id
+        ]);
+
+        $notificationModel->refresh();
+        return $this->mapToDomain($notificationModel);
+    }
+
     public function getAll()
     {
         $notifications = NotificationModel::with('user')->get();
         return $notifications->map(fn(NotificationModel $model) => $this->mapToDomain($model))->toArray();
     }
 
-    #[Override]
     public function findNotificationById(int $id)
     {
         $notification = NotificationModel::with('user')->find($id);
@@ -40,6 +58,11 @@ class NotificationRepository implements NotificationRepositoryInterface
             return null;
 
         return $this->mapToDomain($notification);
+    }
+
+    public function delete(int $id)
+    {
+        NotificationModel::findOrFail($id)->delete();
     }
 
     private function mapToDomain(NotificationModel $model): Notification
