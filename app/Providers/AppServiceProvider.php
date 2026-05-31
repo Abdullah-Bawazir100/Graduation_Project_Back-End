@@ -132,6 +132,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Persistence\Eloquent\Repositories\NotificationRepository::class
         );
 
+        $this->app->bind(
+            \App\Domain\RecyclePin\Repositories\RecyclePinRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\RecyclePinRepository::class
+        );
+
     }
 
     /**

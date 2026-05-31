@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Infrastructure\Persistence\Eloquent\Models;
+
+use App\Infrastructure\Persistence\Eloquent\Traits\HasRecyclePin;
 use illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
 class TaxTypeModel extends Model
 {
-    use LogsActivity;
+    use LogsActivity , HasRecyclePin;
     protected $table = 'tax_types';
     protected $fillable = ['name'];
 

@@ -3,13 +3,14 @@
 namespace App\Infrastructure\Persistence\Eloquent\Models;
 
 use App\Domain\FileMovement\Enums\enFileMovement;
+use App\Infrastructure\Persistence\Eloquent\Traits\HasRecyclePin;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
 class FileMovementModel extends Model
 {
-    use LogsActivity;
+    use LogsActivity , HasRecyclePin;
     protected $table = 'file_movements';
     protected $fillable = [
         'file_id',

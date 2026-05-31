@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\{
     DistrictController , FileController, FileStatusController , JobTypeController ,
     TaxCollectorController , TaxPayerController , UserController , AuthController,
     FileMovementController , NotificationController, PaymentTypeController , RegionController , RequestController,
-    ResetPasswordController,
+    ResetPasswordController, RecyclePinController,
     StatisticsController , TaxInformationController , TaxPayerMobileController ,
     TaxTypeController
 };
@@ -108,6 +108,11 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::apiResource('attachment' , AttachmentController::class);
 
     Route::apiResource('notification' , NotificationController::class);
+
+    Route::get('recycle-pin', [RecyclePinController::class, 'index'])->name('recycle-pin.index');
+    Route::get('recycle-pin/{id}', [RecyclePinController::class, 'show'])->name('recycle-pin.show');
+    Route::delete('recycle-pin/{id}', [RecyclePinController::class, 'destroy'])->name('recycle-pin.destroy');
+    Route::post('recycle-pin/{id}/restore', [RecyclePinController::class, 'restore'])->name('recycle-pin.restore');
 
     // Mobile App Routes
     Route::put('update-tax-payer-mobile', [TaxPayerMobileController::class, 'update'])

@@ -7,12 +7,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel;
+use App\Infrastructure\Persistence\Eloquent\Traits\HasRecyclePin;
 use Override;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 class UserModel extends Authenticatable
 {
-    use HasApiTokens , Notifiable , LogsActivity;
+    use HasApiTokens , Notifiable , LogsActivity , HasRecyclePin;
 
     protected $table = 'app_users';
 
@@ -82,6 +83,11 @@ class UserModel extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(NotificationModel::class, 'send_by');
+    }
+
+    public function recyclePin()
+    {
+        return $this->hasMany(RecyclePinModel::class, 'user_id');
     }
 
     protected $hidden = [

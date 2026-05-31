@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Persistence\Eloquent\Models;
 
+use App\Infrastructure\Persistence\Eloquent\Traits\HasRecyclePin;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
@@ -9,7 +10,7 @@ use Spatie\Activitylog\Support\LogOptions;
 
 class AttachmentFileModel extends Model
 {
-    use LogsActivity;
+    use LogsActivity , HasRecyclePin;
 
     protected $table = 'attachments';
     protected $fillable = ['title', 'attachment_file' , 'file_id'];

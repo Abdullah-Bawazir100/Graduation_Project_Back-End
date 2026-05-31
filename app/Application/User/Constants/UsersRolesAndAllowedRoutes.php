@@ -168,6 +168,11 @@ class UsersRolesAndAllowedRoutes
             'notification.update',
             'notification.destroy',
 
+            // Recycle Pins
+            'recycle-pin.index',
+            'recycle-pin.restore',
+            'recycle-pin.show',
+            'recycle-pin.destroy',
 
             // Authentication routes
             'auth.create-user',

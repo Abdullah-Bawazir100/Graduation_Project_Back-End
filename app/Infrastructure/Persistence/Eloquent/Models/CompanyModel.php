@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Persistence\Eloquent\Models;
 
+use App\Infrastructure\Persistence\Eloquent\Traits\HasRecyclePin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Spatie\Activitylog\Support\LogOptions;
 
 class CompanyModel extends Model
 {
-    use HasFactory , LogsActivity;
+    use HasFactory , LogsActivity , HasRecyclePin;
 
     protected $table = 'companies';
 

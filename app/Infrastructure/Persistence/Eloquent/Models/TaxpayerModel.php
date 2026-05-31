@@ -5,13 +5,14 @@ namespace App\Infrastructure\Persistence\Eloquent\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Domain\TaxPayer\Enums\enFileType;
+use App\Infrastructure\Persistence\Eloquent\Traits\HasRecyclePin;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
 class TaxPayerModel extends Model
 {
-    use Notifiable , LogsActivity;
+    use Notifiable , LogsActivity , HasRecyclePin;
 
     protected $table = 'tax_payers';
 

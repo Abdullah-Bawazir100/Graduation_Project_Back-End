@@ -3,12 +3,13 @@
 namespace App\Infrastructure\Persistence\Eloquent\Models;
 use illuminate\Database\Eloquent\Model;
 use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
+use App\Infrastructure\Persistence\Eloquent\Traits\HasRecyclePin;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
 class DepartmentModel extends Model
 {
-    use LogsActivity;
+    use LogsActivity , HasRecyclePin;
     protected $table = 'departments';
     protected $fillable = ['name'];
 

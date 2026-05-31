@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\Eloquent\Models;
 
 use App\Domain\Request\Enums\enRequestStatus;
+use App\Infrastructure\Persistence\Eloquent\Traits\HasRecyclePin;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Spatie\Activitylog\Support\LogOptions;
 
 class RequestModel extends Model
 {
-    use HasApiTokens , Notifiable , LogsActivity;
+    use HasApiTokens , Notifiable , LogsActivity , HasRecyclePin;
 
     protected $table = 'requests';
 

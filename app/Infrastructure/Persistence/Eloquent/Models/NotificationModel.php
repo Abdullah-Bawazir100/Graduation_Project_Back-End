@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\Eloquent\Models;
 
 use App\Domain\Notification\Enums\enNotificationType;
+use App\Infrastructure\Persistence\Eloquent\Traits\HasRecyclePin;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +12,7 @@ use Spatie\Activitylog\Support\LogOptions;
 
 class NotificationModel extends Model
 {
-    use Notifiable , LogsActivity;
+    use Notifiable , LogsActivity , HasRecyclePin;
 
     protected $table = 'notifications';
 

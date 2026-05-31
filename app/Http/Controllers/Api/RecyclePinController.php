@@ -1,0 +1,117 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Application\RecyclePin\UseCases\FindRecyclePinByIdUseCase;
+use App\Application\RecyclePin\UseCases\DeleteRecyclePinUseCase;
+use App\Application\RecyclePin\UseCases\ListRecyclePinsUseCase;
+use App\Application\RecyclePin\UseCases\RestoreRecyclePinUseCase;
+use App\Http\Controllers\Controller;
+use Exception;
+
+class RecyclePinController extends Controller
+{
+    private ListRecyclePinsUseCase $listRecyclePinsUseCase;
+    private RestoreRecyclePinUseCase $restoreRecyclePinUseCase;
+    private FindRecyclePinByIdUseCase $findRecyclePinByIdUseCase;
+    private DeleteRecyclePinUseCase $deleteRecyclePinUseCase;
+
+    public function __construct(
+        ListRecyclePinsUseCase $listRecyclePinsUseCase,
+        RestoreRecyclePinUseCase $restoreRecyclePinUseCase,
+        FindRecyclePinByIdUseCase $findRecyclePinByIdUseCase,
+        DeleteRecyclePinUseCase $deleteRecyclePinUseCase
+    ) {
+        $this->listRecyclePinsUseCase = $listRecyclePinsUseCase;
+        $this->restoreRecyclePinUseCase = $restoreRecyclePinUseCase;
+        $this->findRecyclePinByIdUseCase = $findRecyclePinByIdUseCase;
+        $this->deleteRecyclePinUseCase = $deleteRecyclePinUseCase;
+    }
+
+    public function index()
+    {
+        try {
+            $records = $this->listRecyclePinsUseCase->execute();
+            
+            $formattedRecords = array_map(function($record) {
+                return [
+                    'id' => $record->id,
+                    'type' => class_basename($record->type),
+                    'data' => $record->data,
+                    'userId' => $record->userId,
+                    'createdAt' => $record->createdAt,
+                ];
+            }, $records);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'تم جلب سجلات سلة المحذوفات بنجاح',
+                'data' => $formattedRecords,
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ أثناء جلب سجلات سلة المحذوفات',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function show(int $id)
+    {
+        try {
+            $record = $this->findRecyclePinByIdUseCase->execute($id);
+            return response()->json([
+                'success' => true,
+                'message' => 'تم جلب السجل بنجاح',
+                'data' => [
+                    'id' => $record->id,
+                    'type' => class_basename($record->type),
+                    'data' => $record->data,
+                    'userId' => $record->userId,
+                    'createdAt' => $record->createdAt,
+                ],
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'السجل غير موجود أو حدث خطأ',
+                'error' => $e->getMessage()
+            ], 404);
+        }
+    }
+
+    public function restore(int $id)
+    {
+        try {
+            $this->restoreRecyclePinUseCase->execute($id);
+            return response()->json([
+                'success' => true,
+                'message' => 'تم استعادة السجل بنجاح',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ أثناء استعادة السجل',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function destroy(int $id)
+    {
+        try {
+            $this->deleteRecyclePinUseCase->execute($id);
+            return response()->json([
+                'success' => true,
+                'message' => 'تم حذف السجل من سلة المحذوفات نهائياً',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ أثناء حذف السجل',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+}
