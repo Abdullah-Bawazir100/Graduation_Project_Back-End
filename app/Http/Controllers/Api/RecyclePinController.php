@@ -11,28 +11,11 @@ use Exception;
 
 class RecyclePinController extends Controller
 {
-    private ListRecyclePinsUseCase $listRecyclePinsUseCase;
-    private RestoreRecyclePinUseCase $restoreRecyclePinUseCase;
-    private FindRecyclePinByIdUseCase $findRecyclePinByIdUseCase;
-    private DeleteRecyclePinUseCase $deleteRecyclePinUseCase;
-
-    public function __construct(
-        ListRecyclePinsUseCase $listRecyclePinsUseCase,
-        RestoreRecyclePinUseCase $restoreRecyclePinUseCase,
-        FindRecyclePinByIdUseCase $findRecyclePinByIdUseCase,
-        DeleteRecyclePinUseCase $deleteRecyclePinUseCase
-    ) {
-        $this->listRecyclePinsUseCase = $listRecyclePinsUseCase;
-        $this->restoreRecyclePinUseCase = $restoreRecyclePinUseCase;
-        $this->findRecyclePinByIdUseCase = $findRecyclePinByIdUseCase;
-        $this->deleteRecyclePinUseCase = $deleteRecyclePinUseCase;
-    }
-
-    public function index()
+    public function index(ListRecyclePinsUseCase $useCase)
     {
         try {
-            $records = $this->listRecyclePinsUseCase->execute();
-            
+            $records = $useCase->execute();
+
             $formattedRecords = array_map(function($record) {
                 return [
                     'id' => $record->id,
@@ -57,10 +40,10 @@ class RecyclePinController extends Controller
         }
     }
 
-    public function show(int $id)
+    public function show(int $id , FindRecyclePinByIdUseCase $useCase)
     {
         try {
-            $record = $this->findRecyclePinByIdUseCase->execute($id);
+            $record = $useCase->execute($id);
             return response()->json([
                 'success' => true,
                 'message' => 'تم جلب السجل بنجاح',
@@ -81,10 +64,10 @@ class RecyclePinController extends Controller
         }
     }
 
-    public function restore(int $id)
+    public function restore(int $id , RestoreRecyclePinUseCase $useCase)
     {
         try {
-            $this->restoreRecyclePinUseCase->execute($id);
+            $useCase->execute($id);
             return response()->json([
                 'success' => true,
                 'message' => 'تم استعادة السجل بنجاح',
@@ -98,10 +81,10 @@ class RecyclePinController extends Controller
         }
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id , DeleteRecyclePinUseCase $useCase)
     {
         try {
-            $this->deleteRecyclePinUseCase->execute($id);
+            $useCase->execute($id);
             return response()->json([
                 'success' => true,
                 'message' => 'تم حذف السجل من سلة المحذوفات نهائياً',
