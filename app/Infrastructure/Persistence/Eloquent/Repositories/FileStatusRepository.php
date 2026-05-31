@@ -42,7 +42,6 @@ class FileStatusRepository implements RepositoriesFileStatusRepositoryInterface
         );
     }
 
-    #[Override]
     public function findById(int $id): ?FileStatus
     {
         $fileStatusModel = FileStatusModel::find($id);

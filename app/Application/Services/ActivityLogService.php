@@ -33,7 +33,7 @@ class ActivityLogService
                 'payment_type', 'region', 'district', 'job_type',
                 'tax_collector', 'tax_payer', 'company', 'charitable_company',
                 'tax_type', 'tax_information', 'file', 'file_movement',
-                'request', 'file_status', 'address', 'attachment'
+                'request', 'file_status', 'address', 'attachment', 'notification'
             ])
             ->select(
                 DB::raw("DAYNAME(created_at) as day_name"),
@@ -83,7 +83,7 @@ class ActivityLogService
                         'payment_type' , 'region' , 'district' , 'job_type',
                         'tax_collector' , 'tax_payer' , 'company' , 'charitable_company'
                         , 'tax_type' , 'tax_information' , 'file' , 'file_movement',
-                        'attachment']);
+                        'attachment' , 'notification']);
 
         // Filters
         if (!empty($filters['user_id'])) {
@@ -234,6 +234,10 @@ class ActivityLogService
             'إنشاء مرفق ملف' => "تم إنشاء مرفق ملف" . ($new['name'] ?? ''),
             'تحديث مرفق ملف' => "تم تحديث مرفق ملف" . ($new['name'] ?? ''),
             'حذف مرفق ملف'  => "تم حذف مرفق ملف" . ($old['name'] ?? ''),
+
+            'إنشاء إشعار' => "تم إنشاء إشعار" . ($new['name'] ?? ''),
+            'تحديث إشعار' => "تم إشعار" . ($new['name'] ?? ''),
+            'حذف إشعار'  => "تم إشعار" . ($old['name'] ?? ''),
 
             default => $description,
         };

@@ -7,6 +7,7 @@ use App\Domain\Notification\Entities\Notification;
 use App\Domain\Notification\Repositories\NotificationRepositoryInterface;
 use App\Domain\User\Entities\User;
 use App\Infrastructure\Persistence\Eloquent\Models\NotificationModel;
+use Override;
 
 class NotificationRepository implements NotificationRepositoryInterface
 {
@@ -22,6 +23,23 @@ class NotificationRepository implements NotificationRepositoryInterface
         $notificationModel->load('user');
 
         return $this->mapToDomain($notificationModel);
+    }
+
+    public function getAll()
+    {
+        $notifications = NotificationModel::with('user')->get();
+        return $notifications->map(fn(NotificationModel $model) => $this->mapToDomain($model))->toArray();
+    }
+
+    #[Override]
+    public function findNotificationById(int $id)
+    {
+        $notification = NotificationModel::with('user')->find($id);
+
+        if(!$notification)
+            return null;
+
+        return $this->mapToDomain($notification);
     }
 
     private function mapToDomain(NotificationModel $model): Notification

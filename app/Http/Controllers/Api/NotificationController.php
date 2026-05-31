@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Application\Notification\DTOs\NotificationDTOs;
 use App\Application\Notification\UseCases\CreateNotificationUseCase;
+use App\Application\Notification\UseCases\FindNotificationByIdUseCase;
+use App\Application\Notification\UseCases\ListNotificationsUseCase;
 use App\Domain\Notification\Enums\enNotificationType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Notification\StoreNotificationRequest;
@@ -14,9 +16,13 @@ use Illuminate\Support\Facades\Auth;
 class NotificationController extends Controller
 {
 
-    public function index()
+    public function index(ListNotificationsUseCase $useCase)
     {
-        //
+        $notifications = $useCase->execute();
+        return ApiResponse::ok(
+            data: $notifications,
+            message: 'تم جلب الإشعارات بنجاح.'
+        );
     }
 
 
@@ -40,25 +46,22 @@ class NotificationController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(int $id , FindNotificationByIdUseCase $useCase)
     {
-        //
+        $notification = $useCase->execute($id);
+        return ApiResponse::ok(
+            data: $notification,
+            message: "تم جلب الإشعار مع ال ID [$id] بنجاح."
+        );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         //
