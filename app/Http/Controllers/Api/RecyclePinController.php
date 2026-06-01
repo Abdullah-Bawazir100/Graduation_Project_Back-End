@@ -7,6 +7,7 @@ use App\Application\RecyclePin\UseCases\DeleteRecyclePinUseCase;
 use App\Application\RecyclePin\UseCases\ListRecyclePinsUseCase;
 use App\Application\RecyclePin\UseCases\RestoreRecyclePinUseCase;
 use App\Http\Controllers\Controller;
+use App\Http\Responses\ApiResponse;
 use Exception;
 
 class RecyclePinController extends Controller
@@ -26,11 +27,11 @@ class RecyclePinController extends Controller
                 ];
             }, $records);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'تم جلب سجلات سلة المحذوفات بنجاح',
-                'data' => $formattedRecords,
-            ], 200);
+            return ApiResponse::ok(
+                data: $formattedRecords,
+                message: 'تم جلب سجلات سلة المحذوفات بنجاح'
+            );
+
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
@@ -68,10 +69,10 @@ class RecyclePinController extends Controller
     {
         try {
             $useCase->execute($id);
-            return response()->json([
-                'success' => true,
-                'message' => 'تم استعادة السجل بنجاح',
-            ], 200);
+            return ApiResponse::ok(
+                message: 'تم استعادة السجل بنجاح'
+            );
+            
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
@@ -98,3 +99,4 @@ class RecyclePinController extends Controller
         }
     }
 }
+

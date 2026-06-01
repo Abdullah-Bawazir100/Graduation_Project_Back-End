@@ -7,19 +7,16 @@ use Exception;
 
 class DeleteRecyclePinUseCase
 {
-    private RecyclePinRepositoryInterface $repository;
-
-    public function __construct(RecyclePinRepositoryInterface $repository)
-    {
-        $this->repository = $repository;
-    }
+    public function __construct(
+        private RecyclePinRepositoryInterface $repository
+    ) {}
 
     public function execute(int $id): bool
     {
         $recyclePin = $this->repository->findById($id);
 
         if (!$recyclePin) {
-            throw new Exception("Recycle pin record not found.");
+            throw new Exception("لا يوجد سجل في سلة المحذوفات مع ال ID [$id].");
         }
 
         $this->repository->delete($id);

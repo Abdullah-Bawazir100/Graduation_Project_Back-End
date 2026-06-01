@@ -7,19 +7,17 @@ use Exception;
 
 class FindRecyclePinByIdUseCase
 {
-    private RecyclePinRepositoryInterface $repository;
 
-    public function __construct(RecyclePinRepositoryInterface $repository)
-    {
-        $this->repository = $repository;
-    }
+    public function __construct(
+        private RecyclePinRepositoryInterface $repository
+    ) {}
 
     public function execute(int $id)
     {
         $recyclePin = $this->repository->findById($id);
 
         if (!$recyclePin) {
-            throw new Exception("Recycle pin record not found.");
+            throw new Exception("لا يوجد سجل في سلة المحذوفات مع ال ID [$id].");
         }
 
         return $recyclePin;

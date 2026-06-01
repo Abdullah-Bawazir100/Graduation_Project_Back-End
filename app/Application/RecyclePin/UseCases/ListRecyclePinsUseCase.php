@@ -6,11 +6,10 @@ use App\Domain\RecyclePin\Repositories\RecyclePinRepositoryInterface;
 
 class ListRecyclePinsUseCase
 {
-    private RecyclePinRepositoryInterface $repository;
-
-    public function __construct(RecyclePinRepositoryInterface $repository)
+    public function __construct(
+        private RecyclePinRepositoryInterface $repository
+    )
     {
-        $this->repository = $repository;
     }
 
     public function execute(): array
