@@ -9,4 +9,5 @@ interface ResetPasswordRepositoryInterface
     public function create(ResetPassword $resetPassword): ResetPassword;
     public function verifyCode(int $userId, string $code): ?ResetPassword;
     public function deleteByUserId(int $userId): void;
+    public function findLatestByUserId(int $userId): ?ResetPassword;
 }

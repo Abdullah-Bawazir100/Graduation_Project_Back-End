@@ -27,4 +27,20 @@ class ResetPasswordRequest extends FormRequest
             'newPassword' => ['required' , 'string' , 'confirmed']
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'userId.required' => 'المستخدم مطلوب.',
+            'userId.integer' => 'المستخدم يجب ان يكون رقم.',
+            'userId.exists' => 'المستخدم غير موجود.',
+
+            'code.required' => 'كود التحقق مطلوب.',
+            'code.string' => 'كود التحقق يجب ان يكون نص.',
+
+            'newPassword.required' => 'كلمة المرور الجديدة مطلوبة.',
+            'newPassword.string' => 'كلمة المرور يجب ان تكون نص.',
+            'newPassword.confirmed' => 'كلمة المرور الجديدة غير متطابقة.'
+        ];
+    }
 }

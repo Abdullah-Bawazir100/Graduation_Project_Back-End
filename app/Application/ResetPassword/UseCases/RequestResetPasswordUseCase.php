@@ -39,6 +39,9 @@ class RequestResetPasswordUseCase
 
         $this->reset_password_repository->create($resetPassword);
 
+        // TODO: الربط مع خدمة الـ SMS لإرسال رمز التحقق
+        // SmsService::send($user->phone, "رمز التحقق الخاص بك هو: $code");
+
         return [
             'message' => 'تم إنشاء رمز التحقق',
             'user_id' => $user->id,

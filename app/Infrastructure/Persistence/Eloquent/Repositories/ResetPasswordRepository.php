@@ -32,12 +32,22 @@ class ResetPasswordRepository implements ResetPasswordRepositoryInterface
         ResetPasswordModel::where('user_id', $userId)->delete();
     }
 
+    public function findLatestByUserId(int $userId): ?ResetPassword
+    {
+        $model = ResetPasswordModel::where('user_id', $userId)
+            ->latest('created_at')
+            ->first();
+
+        return $model ? $this->mapToDomain($model) : null;
+    }
+
     private function mapToDomain(ResetPasswordModel $model): ResetPassword
     {
         return new ResetPassword(
             id: $model->id,
             userId: $model->user_id,
             code: $model->code,
+            createdAt: $model->created_at,
         );
     }
 }

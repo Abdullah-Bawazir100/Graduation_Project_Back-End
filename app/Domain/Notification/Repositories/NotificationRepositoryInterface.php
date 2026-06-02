@@ -12,8 +12,5 @@ interface NotificationRepositoryInterface
     public function getAll();
     public function findNotificationById(int $id);
     public function delete(int $id);
-    // public function sendNotificationToGeneralUsers(enNotificationType $notificationType);
-    // public function sendNotificationToSystemUsers(enNotificationType $notificationType);
-    // public function sendNotificationToTaxPayersUsers(enNotificationType $notificationType);
-    // public function sendNotificationToSpecialUser(enNotificationType $notificationType);
+    public function sendSmsNotification(Notification $notification): void;
 }

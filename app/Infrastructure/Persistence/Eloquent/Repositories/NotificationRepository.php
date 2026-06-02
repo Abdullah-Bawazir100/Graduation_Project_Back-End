@@ -6,8 +6,11 @@ use App\Domain\Department\Entities\Department;
 use App\Domain\Notification\Entities\Notification;
 use App\Domain\Notification\Repositories\NotificationRepositoryInterface;
 use App\Domain\User\Entities\User;
+use App\Domain\Notification\Enums\enNotificationType;
+use App\Domain\User\Enums\UserRole;
 use App\Infrastructure\Persistence\Eloquent\Models\NotificationModel;
-use League\CommonMark\Extension\DescriptionList\Node\Description;
+use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
+use App\Infrastructure\Persistence\Eloquent\Models\TaxCollectorModel;
 use Override;
 
 class NotificationRepository implements NotificationRepositoryInterface
@@ -63,6 +66,49 @@ class NotificationRepository implements NotificationRepositoryInterface
     public function delete(int $id)
     {
         NotificationModel::findOrFail($id)->delete();
+    }
+
+    public function sendSmsNotification(Notification $notification): void
+    {
+        $phones = [];
+
+        switch ($notification->notificationType) {
+            
+            case enNotificationType::General:
+                $phones = UserModel::where('role', '!=', UserRole::Admin->value)
+                    ->whereNotNull('phone')
+                    ->pluck('phone')
+                    ->toArray();
+                break;
+
+            case enNotificationType::ForSystemUsers:
+                $phones = UserModel::where('role', '!=', UserRole::Tax_Payer->value)
+                    ->where('role', '!=', UserRole::Admin->value)
+                    ->whereNotNull('phone')
+                    ->pluck('phone')
+                    ->toArray();
+                break;
+
+            case enNotificationType::ForTaxPayers:
+                $phones = UserModel::where('role', UserRole::Tax_Payer->value)
+                    ->whereNotNull('phone')
+                    ->pluck('phone')
+                    ->toArray();
+                break;
+
+            case enNotificationType::Special:
+                if ($notification->receiverPhone) {
+                    $phones = [$notification->receiverPhone];
+                }
+                break;
+        }
+
+        $phones = array_unique(array_filter($phones));
+
+        // مثال:
+        // foreach ($phones as $phone) {
+        //     SmsService::send($phone, $notification->title, $notification->description);
+        // }
     }
 
     private function mapToDomain(NotificationModel $model): Notification

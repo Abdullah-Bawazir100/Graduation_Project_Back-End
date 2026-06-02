@@ -21,7 +21,7 @@ Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name(
 Route::post('request' , [ResetPasswordController::class , 'request'])->name('request');
 Route::post('verify' , [ResetPasswordController::class , 'verify'])->name('verify');
 Route::post('reset' , [ResetPasswordController::class , 'reset'])->name('reset');
-
+Route::post('resend' , [ResetPasswordController::class , 'resend'])->name('resend');
 
 Route::post('create-tax-payer-mobile', [TaxPayerMobileController::class, 'store']);
 Route::post('tax-payer-mobile-login', [TaxPayerMobileController::class, 'TaxPayerMobileLogin']);

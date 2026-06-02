@@ -48,6 +48,8 @@ class NotificationController extends Controller
 
         $createdNotification = $useCase->execute($dto , $actor->id);
 
+        $this->notification_repository->sendSmsNotification($createdNotification);
+
         return ApiResponse::created(
             data: $createdNotification,
             message: 'تم انشاء الاشعار بنجاح'
@@ -80,7 +82,7 @@ class NotificationController extends Controller
         $notificationType = $notificationTypeInput !== null
             ? enNotificationType::from($notificationTypeInput)
             : $existingNotification->notificationType;
-            
+
         $dto = new NotificationDTOs(
             title: $request->title ?? $existingNotification->title,
             description: $request->description ?? $existingNotification->description,

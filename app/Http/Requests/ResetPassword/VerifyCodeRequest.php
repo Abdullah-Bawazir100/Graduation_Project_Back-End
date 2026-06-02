@@ -25,6 +25,17 @@ class VerifyCodeRequest extends FormRequest
             'userId' => ['required', 'integer' , 'exists:app_users,id'],
             'code' => ['required', 'string'],
         ];
+    }
 
+    public function messages()
+    {
+        return [
+            'userId.required' => 'المستخدم مطلوب.',
+            'userId.integer' => 'المستخدم يجب ان يكون رقم.',
+            'userId.exists' => 'المستخدم غير موجود.',
+
+            'code.required' => 'كود التحقق مطلوب.',
+            'code.string' => 'كود التحقق يجب ان يكون نص.',
+        ];
     }
 }
