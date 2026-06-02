@@ -1,63 +1,92 @@
-<<<<<<< HEAD
-# Graduation_Project_Back-End
-=======
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Graduation Project Back-End (نظام خدمات دافعي الضرائب)
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
 </p>
 
-## About Laravel
+هذا المستودع يحتوي على الشيفرة المصدرية (Back-End) لمشروع التخرج والخاص بنظام خدمات دافعي الضرائب، مبني باستخدام إطار العمل Laravel.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🏗️ المنهجية المعمارية (Architecture Methodology)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+تم بناء هذا المشروع بالاعتماد على **البنية النظيفة (Clean Architecture)** ومبادئ **التصميم الموجه بالمجال (Domain-Driven Design - DDD)**. يهدف هذا التصميم إلى فصل الاهتمامات (Separation of Concerns)، جعل الكود قابلاً للاختبار، وتسهيل عملية الصيانة والتطوير المستقبلي بحيث يكون النظام غير معتمد بشكل جذري على إطار العمل الخارجي.
 
-## Learning Laravel
+تم تقسيم هيكل النظام إلى الطبقات التالية:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+1. **طبقة المجال (Domain Layer):**
+   - تمثل قلب النظام وتحتوي على كيانات الأعمال الأساسية (Entities) مثل (الملفات File، المكلفين TaxPayer، الشركات Company، المستخدمين User).
+   - تحتوي على العقود وواجهات المستودعات (Repository Interfaces) التي تحدد القواعد الأساسية للبيانات دون التدخل في تفاصيل حفظها.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **طبقة التطبيق (Application Layer - Use Cases):**
+   - تحتوي على حالات الاستخدام (Use Cases) التي تُمثل العمليات اليومية أو مهام النظام (مثل: `UpdateFileUseCase`، `CreateTaxPayerUseCase`، إلخ).
+   - كل حالة استخدام مسؤولة عن تنفيذ عملية أعمال (Business Logic) واحدة ومحددة، مما يجعل الكود منظماً وسهل التتبع.
 
-## Laravel Sponsors
+3. **طبقة البنية التحتية (Infrastructure Layer):**
+   - تتعامل مع التفاصيل التقنية الخارجية، وتحتوي على مجلد `Persistence/Eloquent` الذي يضم المستودعات (Repositories) المنفذة للواجهات الموجودة في طبقة المجال. 
+   - وظيفتها الأساسية هي التفاعل مع قاعدة البيانات وإجراء عمليات CRUD من خلال ORM الخاص بإطار العمل.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. **طبقة العرض والواجهات (Http / Presentation Layer):**
+   - تحتوي على وحدات التحكم (Controllers) الخاصة بواجهة برمجة التطبيقات (RESTful API).
+   - تقوم باستقبال الطلبات (Requests) من العميل (Client)، التحقق من صحتها، تمريرها إلى "حالات الاستخدام" المناسبة، ومن ثم إرجاع الاستجابات (Responses) بهيكل JSON منظم.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🛠️ التقنيات المستخدمة (Technologies & Stack)
 
-## Contributing
+يعتمد النظام على مجموعة من أحدث تقنيات تطوير الويب المدعومة ببيئة عمل قوية:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**الأساسيات:**
+- **لغة البرمجة:** PHP (النسخة 8.2 فما فوق).
+- **إطار العمل الأساسي:** Laravel (النسخة 12.0 فما فوق).
 
-## Code of Conduct
+**قواعد البيانات ونمذجة البيانات:**
+- **قواعد البيانات:** (MySQL / SQLite) اعتماداً على بيئة التشغيل.
+- **التعامل مع البيانات (ORM):** Laravel Eloquent.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**المصادقة والأمان (Security & Authentication):**
+- **إدارة الجلسات والـ Tokens:** مكتبة **Laravel Sanctum** لإنشاء وإدارة المصادقة الخاصة بالـ APIs بشكل آمن.
+- **إدارة الصلاحيات:** نظام التحكم بالوصول المبني على الأدوار (RBAC)، وعزل البيانات بناءً على الأقسام (Departmental Isolation)، بحيث يقتصر وصول الموظفين غير الإداريين على الملفات التابعة لأقسامهم فقط.
 
-## Security Vulnerabilities
+**التتبع والأرشفة (Tracking & Archiving):**
+- **سجل الأنشطة (Activity Logging):** مكتبة `spatie/laravel-activitylog` لتتبع كافة التغييرات التي تطرأ على قواعد البيانات ومعرفة من قام بالتعديل ومتى.
+- **نظام سلة المحذوفات (Recycle Bin):** نظام أرشفة متطور مبني برمجياً باستخدام `Traits` مخصصة، يسمح بالاستعادة الآمنة للبيانات المحذوفة (Soft Deletes Architecture).
+- **تتبع حركة الملفات (File Movements):** نظام يراقب مسار الملفات داخل الدوائر الحكومية وبين محصلي الضرائب بدقة.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**تحسين بيئة التطوير والواجهات:**
+- **مُجمع الحزم (Bundler):** Vite (النسخة 7).
+- **أدوات تطوير الجودة:** Pest / PHPUnit لاختبارات الأكواد الآلية، و Laravel Pint لتنسيق الكود.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
->>>>>>> 73b7947 (Finish Login Phase)
+## 🚀 كيفية التشغيل (Getting Started)
+
+1. **استنساخ المستودع:**
+   ```bash
+   git clone <repository-url>
+   cd Graduation_Project_Back-End
+   ```
+
+2. **تثبيت الحزم (Dependencies):**
+   ```bash
+   composer install
+   npm install
+   ```
+
+3. **إعداد بيئة العمل:**
+   - انسخ ملف `.env.example` وقم بتسميته `.env`.
+   - قم بتحديث إعدادات قاعدة البيانات في ملف `.env`.
+   - توليد مفتاح التطبيق:
+     ```bash
+     php artisan key:generate
+     ```
+
+4. **تشغيل قواعد البيانات والهيكلة:**
+   ```bash
+   php artisan migrate --seed
+   ```
+
+5. **تشغيل الخادم المحلي:**
+   ```bash
+   php artisan serve
+   ```
