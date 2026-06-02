@@ -140,22 +140,32 @@ class UserRepository implements UserRepositoryInterface
         return $this->mapToDomain($userData);
     }
 
-    public function countUsers(): array
+    public function countUsers(?int $departmentId = null): array
     {
+        $userQuery = UserModel::query();
+        if ($departmentId !== null) {
+            $userQuery->where('department_id', $departmentId);
+        }
+
+        $taxCollectorQuery = TaxCollectorModel::query();
+        if ($departmentId !== null) {
+            $taxCollectorQuery->where('dept_id', $departmentId);
+        }
+
         return [
-            'total_users' => UserModel::count(),
+            'total_users' => (clone $userQuery)->count(),
 
-            'admin_count' => UserModel::where('role', UserRole::Admin->value)->count(),
+            'admin_count' => (clone $userQuery)->where('role', UserRole::Admin->value)->count(),
 
-            'manager_count' => UserModel::where('role', UserRole::Manager->value)->count(),
+            'manager_count' => (clone $userQuery)->where('role', UserRole::Manager->value)->count(),
 
-            'employee_count' => UserModel::where('role', UserRole::Employee->value)->count(),
+            'employee_count' => (clone $userQuery)->where('role', UserRole::Employee->value)->count(),
 
-            'tax_payer_count' => UserModel::where('role', UserRole::Tax_Payer->value)->count(),
+            'tax_payer_count' => (clone $userQuery)->where('role', UserRole::Tax_Payer->value)->count(),
 
-            'collectors_manager_count' => UserModel::where('role', UserRole::Collectors_Manager->value)->count(),
+            'collectors_manager_count' => (clone $userQuery)->where('role', UserRole::Collectors_Manager->value)->count(),
 
-            'tax_collector_count' => TaxCollectorModel::count(),
+            'tax_collector_count' => $taxCollectorQuery->count(),
         ];
     }
 

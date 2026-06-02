@@ -11,8 +11,8 @@ class CountFilesByTypeUseCase
         private FileRepositoryInterface $repository
     ) {}
 
-    public function execute(enFileType $type): int
+    public function execute(enFileType $type, ?int $departmentId = null): int
     {
-        return $this->repository->countFilesByType($type);
+        return $this->repository->countFilesByType($type, $departmentId);
     }
 }

@@ -10,8 +10,8 @@ class CountFilesUseCase
         private FileRepositoryInterface $repository
     ) {}
 
-    public function execute(): int
+    public function execute(?int $departmentId = null): int
     {
-        return $this->repository->countFiles();
+        return $this->repository->countFiles($departmentId);
     }
 }

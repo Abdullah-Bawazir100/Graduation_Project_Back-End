@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class ActivityLogService
 {
-    public function getWeeklyActivityStatistics(): array
+    public function getWeeklyActivityStatistics(?int $departmentId = null): array
     {
         // أيام الأسبوع بالعربي (السبت = بداية الأسبوع)
         $daysMap = [
@@ -27,15 +27,21 @@ class ActivityLogService
         $startOfWeek = $now->copy()->startOfWeek(Carbon::SATURDAY);
         $endOfWeek   = $startOfWeek->copy()->addDays(6)->endOfDay();
 
-        $activities = Activity::whereBetween('created_at', [$startOfWeek, $endOfWeek])
+        $query = Activity::whereBetween('created_at', [$startOfWeek, $endOfWeek])
             ->whereIn('log_name', [
                 'user', 'department', 'activity_type',
                 'payment_type', 'region', 'district', 'job_type',
                 'tax_collector', 'tax_payer', 'company', 'charitable_company',
                 'tax_type', 'tax_information', 'file', 'file_movement',
                 'request', 'file_status', 'address', 'attachment', 'notification'
-            ])
-            ->select(
+            ]);
+
+        if ($departmentId !== null) {
+            $userIds = \App\Infrastructure\Persistence\Eloquent\Models\UserModel::where('department_id', $departmentId)->pluck('id');
+            $query->whereIn('causer_id', $userIds);
+        }
+
+        $activities = $query->select(
                 DB::raw("DAYNAME(created_at) as day_name"),
                 DB::raw("DATE(created_at) as date"),
                 'event',

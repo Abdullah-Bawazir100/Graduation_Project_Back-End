@@ -13,7 +13,7 @@ interface FileRepositoryInterface
     public function findById(int $fileId): ?File;
     public function getFileByTaxPayerId(int $taxPayerId , enFileType $fileType);
     public function delete(int $fileId): void;
-    public function countFiles(): int;
-    public function countFilesByType(enFileType $type): int;
+    public function countFiles(?int $departmentId = null): int;
+    public function countFilesByType(enFileType $type, ?int $departmentId = null): int;
     public function existsTaxPayer(int $taxPayerId , enFileType $fileType);
 }

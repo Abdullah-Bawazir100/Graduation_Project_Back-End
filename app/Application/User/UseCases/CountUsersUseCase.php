@@ -10,8 +10,8 @@ class CountUsersUseCase
         private UserRepositoryInterface $repository
     ) {}
 
-    public function execute(): array
+    public function execute(?int $departmentId = null): array
     {
-        return $this->repository->countUsers();
+        return $this->repository->countUsers($departmentId);
     }
 }

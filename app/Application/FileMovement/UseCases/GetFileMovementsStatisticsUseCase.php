@@ -10,8 +10,8 @@ class GetFileMovementsStatisticsUseCase
         private FileMovementRepositoryInterface $repository
     ) {}
 
-    public function execute(): array
+    public function execute(?int $departmentId = null): array
     {
-        return $this->repository->getFileMovementsStatistics();
+        return $this->repository->getFileMovementsStatistics($departmentId);
     }
 }

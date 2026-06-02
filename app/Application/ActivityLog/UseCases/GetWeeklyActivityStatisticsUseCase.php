@@ -10,8 +10,8 @@ class GetWeeklyActivityStatisticsUseCase
         private ActivityLogService $activityLogService
     ) {}
 
-    public function execute(): array
+    public function execute(?int $departmentId = null): array
     {
-        return $this->activityLogService->getWeeklyActivityStatistics();
+        return $this->activityLogService->getWeeklyActivityStatistics($departmentId);
     }
 }

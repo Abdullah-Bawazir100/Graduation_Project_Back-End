@@ -175,16 +175,26 @@ class FileRepository implements FileRepositoryInterface
             ->exists();
     }
 
-    public function countFiles(): int
+    public function countFiles(?int $departmentId = null): int
     {
-        return FileModel::count();
+        $query = FileModel::query();
+        if ($departmentId !== null) {
+            $query->where('department_id', $departmentId);
+        }
+        return $query->count();
     }
 
-    public function countFilesByType(enFileType $type): int
+    public function countFilesByType(enFileType $type, ?int $departmentId = null): int
     {
-        return FileModel::whereHas('taxPayer', function ($query) use ($type) {
-                $query->where('file_type', $type->value);
-            })->count();
+        $query = FileModel::whereHas('taxPayer', function ($query) use ($type) {
+            $query->where('file_type', $type->value);
+        });
+
+        if ($departmentId !== null) {
+            $query->where('department_id', $departmentId);
+        }
+
+        return $query->count();
     }
 
     private function mapToDomain(FileModel $model): File

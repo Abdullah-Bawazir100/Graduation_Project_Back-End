@@ -116,12 +116,17 @@ class FileMovementRepository implements FileMovementRepositoryInterface
         return FileMovementModel::count();
     }
 
-    public function getFileMovementsStatistics(): array
+    public function getFileMovementsStatistics(?int $departmentId = null): array
     {
         $sixMonthsAgo = Carbon::now()->subMonths(6)->startOfMonth();
 
-        $movements = FileMovementModel::where('date', '>=', $sixMonthsAgo)
-            ->selectRaw("
+        $query = FileMovementModel::where('date', '>=', $sixMonthsAgo);
+        
+        if ($departmentId !== null) {
+            $query->where('department_id', $departmentId);
+        }
+
+        $movements = $query->selectRaw("
                 DATE_FORMAT(date, '%Y-%m') as month,
                 status,
                 COUNT(*) as count

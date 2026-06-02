@@ -16,7 +16,7 @@ interface UserRepositoryInterface {
     public function forgetPassword(int $id , string $newPassword);
     public function updatePassword(int $id , string $newPassword , bool $mustChangePassword);
     public function findByUserNameAndPhone(string $userName, string $phone): ?User;
-    public function countUsers(): array;
+    public function countUsers(?int $departmentId = null): array;
     public function hasAdminInDepartment(int $departmentId): bool;
     public function checkUserName(string $userName): bool;
 }
