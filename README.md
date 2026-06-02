@@ -70,7 +70,6 @@
 2. **تثبيت الحزم (Dependencies):**
    ```bash
    composer install
-   npm install
    ```
 
 3. **إعداد بيئة العمل:**
