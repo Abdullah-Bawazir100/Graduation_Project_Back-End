@@ -111,6 +111,11 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
     public function findByUserId(int $userId): ?TaxPayer
     {
         $taxPayerModel = TaxPayerModel::with('user')->where('user_id', $userId)->first();
+        
+        if (!$taxPayerModel) {
+            return null;
+        }
+        
         return $this->mapToDomain($taxPayerModel);
     }
 

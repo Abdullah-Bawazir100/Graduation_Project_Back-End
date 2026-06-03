@@ -70,9 +70,11 @@ class TaxPayerMobileRepository implements TaxPayerMobileRepositoryInterface
             ->orderBy('id')
             ->get();
 
+        if ($taxPayerFiles->isEmpty()) {
+            return null;
+        }
 
-            return $taxPayerFiles->map(function ($taxPayer) {
-
+        return $taxPayerFiles->map(function ($taxPayer) {
             return [
                 'file' => [
                     'id' => $taxPayer->id,
@@ -80,8 +82,8 @@ class TaxPayerMobileRepository implements TaxPayerMobileRepositoryInterface
                     'trade_name' => $taxPayer->trade_name,
                     'file_type' => $taxPayer->file_type,
                 ],
-                ];
-            });
+            ];
+        });
     }
 
     public function getTaxPayerFileById(int $taxPayerId): ?TaxPayer

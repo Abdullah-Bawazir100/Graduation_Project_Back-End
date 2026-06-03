@@ -19,12 +19,20 @@ class ListTaxPayerFileMobileUseCase
 
     public function execute(int $userId)
     {
-        $taxPayer = $this->tax_payer_repository->findByUserId($userId);
-        if(!$taxPayer)
+        $user = $this->user_repository->findById($userId);
+        if(!$user)
         {
             throw new DomainException("لا يوجد مستخدم مكلف مع ال ID [$userId].");
         }
 
-        return $this->tax_payer_mobile_repository->getTaxPayerMobileFile($taxPayer->userId);
+        $taxPayerFiles = $this->tax_payer_mobile_repository->getTaxPayerMobileFile($userId);
+
+        if(!$taxPayerFiles)
+        {
+            throw new DomainException("لا يوجد ملفات لهذا المكلف.");
+        }
+        
+        return $taxPayerFiles;
     }
 }
+
