@@ -17,13 +17,43 @@ class RecyclePinController extends Controller
         try {
             $records = $useCase->execute();
 
-            $formattedRecords = array_map(function($record) {
+            $actionTranslations = [
+                'UserModel' => 'مستخدم',
+                'TaxTypeModel' => 'نوع ضريبة',
+                'TaxPayerModel' => 'مكلف',
+                'TaxInformationModel' => 'معلومات ضريبية',
+                'TaxCollectorModel' => 'مأمور',
+                'RequestModel' => 'طلب',
+                'RegionModel' => 'منطقة',
+                'PaymentTypeModel' => 'نوع دفع',
+                'NotificationModel' => 'إشعار',
+                'JobTypeModel' => 'نوع وظيفة',
+                'FileStatusModel' => 'حالة ملف',
+                'FileMovementModel' => 'حركة ملف',
+                'FileModel' => 'ملف',
+                'DistrictModel' => 'حي',
+                'DepartmentModel' => 'قسم',
+                'CompanyModel' => 'ملف شركة',
+                'CharitableCompanyModel' => 'ملف شركة خيرية',
+                'AttachmentFileModel' => 'مرفق',
+                'AddressModel' => 'عنوان',
+                'ActivityTypeModel' => 'نوع نشاط',
+            ];
+
+            $formattedRecords = array_map(function($record) use ($actionTranslations) {
+                $translatedAction = 'حذف ' . ($actionTranslations[$record->modelName] ?? 'سجل');
                 return [
-                    'id' => $record->id,
-                    'type' => class_basename($record->type),
-                    'data' => $record->data,
-                    'userId' => $record->userId,
-                    'createdAt' => $record->createdAt,
+                    'user' => [
+                        'id' => $record->user['id'] ?? null,
+                        'name' => isset($record->user) ? trim(($record->user['first_name'] ?? '') . ' ' . ($record->user['last_name'] ?? '')) : 'نظام',
+                        'role' => $record->user['role'] ?? '—',
+                    ],
+                    'action' => $translatedAction,
+                    'deleted_record_id' => $record->data['id'] ?? null,
+                    'recycle_pin_id' => $record->id,
+                    'model' => $record->modelName,
+                    //'details' => $record->data,
+                    'datetime' => $record->createdAt,
                 ];
             }, $records);
 
@@ -45,15 +75,47 @@ class RecyclePinController extends Controller
     {
         try {
             $record = $useCase->execute($id);
+
+            $actionTranslations = [
+                'UserModel' => 'مستخدم',
+                'TaxTypeModel' => 'نوع ضريبة',
+                'TaxPayerModel' => 'مكلف',
+                'TaxInformationModel' => 'معلومات ضريبية',
+                'TaxCollectorModel' => 'مأمور',
+                'RequestModel' => 'طلب',
+                'RegionModel' => 'منطقة',
+                'PaymentTypeModel' => 'نوع دفع',
+                'NotificationModel' => 'إشعار',
+                'JobTypeModel' => 'نوع وظيفة',
+                'FileStatusModel' => 'حالة ملف',
+                'FileMovementModel' => 'حركة ملف',
+                'FileModel' => 'ملف',
+                'DistrictModel' => 'حي',
+                'DepartmentModel' => 'قسم',
+                'CompanyModel' => 'ملف شركة',
+                'CharitableCompanyModel' => 'ملف شركة خيرية',
+                'AttachmentFileModel' => 'مرفق',
+                'AddressModel' => 'عنوان',
+                'ActivityTypeModel' => 'نوع نشاط',
+            ];
+
+            $translatedAction = 'حذف ' . ($actionTranslations[$record->modelName] ?? 'سجل');
+
             return response()->json([
                 'success' => true,
                 'message' => 'تم جلب السجل بنجاح',
                 'data' => [
-                    'id' => $record->id,
-                    'type' => class_basename($record->type),
-                    'data' => $record->data,
-                    'userId' => $record->userId,
-                    'createdAt' => $record->createdAt,
+                    'user' => [
+                        'id' => $record->user['id'] ?? null,
+                        'name' => isset($record->user) ? trim(($record->user['first_name'] ?? '') . ' ' . ($record->user['last_name'] ?? '')) : 'نظام',
+                        'role' => $record->user['role'] ?? '—',
+                    ],
+                    'action' => $translatedAction,
+                    'deleted_record_id' => $record->data['id'] ?? null,
+                    'recycle_pin_id' => $record->id,
+                    'model' => $record->modelName,
+                    //'details' => $record->data,
+                    'datetime' => $record->createdAt,
                 ],
             ], 200);
         } catch (Exception $e) {
@@ -72,7 +134,7 @@ class RecyclePinController extends Controller
             return ApiResponse::ok(
                 message: 'تم استعادة السجل بنجاح'
             );
-            
+
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,

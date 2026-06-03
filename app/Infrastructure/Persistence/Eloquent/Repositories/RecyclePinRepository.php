@@ -10,21 +10,22 @@ class RecyclePinRepository implements RecyclePinRepositoryInterface
 {
     public function getAll(): array
     {
-        return RecyclePinModel::orderBy('created_at', 'desc')
+        return RecyclePinModel::with('user')->orderBy('created_at', 'desc')
             ->get()
             ->map(fn ($model) => new RecyclePin(
                 $model->id,
                 $model->type,
                 $model->data,
                 $model->user_id,
-                $model->created_at ? $model->created_at->format('Y-m-d H:i:s') : null
+                $model->created_at ? $model->created_at->format('Y-m-d H:i:s') : null,
+                $model->user ? $model->user->toArray() : null
             ))
             ->toArray();
     }
 
     public function findById(int $id): ?RecyclePin
     {
-        $model = RecyclePinModel::find($id);
+        $model = RecyclePinModel::with('user')->find($id);
 
         if (!$model) {
             return null;
@@ -35,7 +36,8 @@ class RecyclePinRepository implements RecyclePinRepositoryInterface
             $model->type,
             $model->data,
             $model->user_id,
-            $model->created_at ? $model->created_at->format('Y-m-d H:i:s') : null
+            $model->created_at ? $model->created_at->format('Y-m-d H:i:s') : null,
+            $model->user ? $model->user->toArray() : null
         );
     }
 
