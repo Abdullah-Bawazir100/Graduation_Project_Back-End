@@ -412,6 +412,12 @@ class UsersRolesAndAllowedRoutes
 
             // Files
             'files.index',
+
+            // Files Movements
+            'files-movements.store',
+            'files-movements.update',
+            'files-movements.index',
+            'files-movements.show',
         ],
     ];
 }
