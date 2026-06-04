@@ -350,6 +350,28 @@ class UsersRolesAndAllowedRoutes
             'files.show',
             'archive-request',
 
+            // TaxPayers
+            'tax-payers.index',
+
+            // Departments
+            'departments.index',
+
+            // File Status
+            'file-status.index',
+
+            // Activity Types
+            'activity_types.index',
+
+
+            // Payment Types
+            'payment_types.index',
+
+            // Regions
+            'regions.index',
+
+            // Districts
+            'districts.index',
+            'districts.getByRegion',
         ],
 
         // Tax Payer Permissions
@@ -387,7 +409,9 @@ class UsersRolesAndAllowedRoutes
             'tax-collectors.store',
             'tax-collectors.show',
             'tax-collectors.update',
-            // Note: No destroy permission for collectors manager
+
+            // Files
+            'files.index',
         ],
     ];
 }

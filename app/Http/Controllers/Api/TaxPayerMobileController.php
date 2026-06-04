@@ -36,7 +36,7 @@ class TaxPayerMobileController extends Controller
     {
         $taxPayerFiles = $useCase->execute(Auth::id());
         return ApiResponse::ok(
-            data: $taxPayerFiles,
+            data: $taxPayerFiles ?? [],
             message: "تم جلب ملفات المكلف بنجاح."
         );
     }
