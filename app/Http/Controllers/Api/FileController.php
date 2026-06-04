@@ -8,6 +8,7 @@ use App\Application\File\UseCases\DeleteFileUseCase;
 use App\Application\File\UseCases\FindFileByIdUseCase;
 use App\Application\File\UseCases\ListFilesUseCase;
 use App\Application\File\UseCases\UpdateFileUseCase;
+use App\Application\File\UseCases\GenerateFileReportUseCase;
 use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\File\StoreFileRequest;
@@ -142,5 +143,21 @@ class FileController extends Controller
         return ApiResponse::ok(
             message: "تم حذف الملف مع ال ID $id بنجاح."
         );
+    }
+
+    public function generateReport(int $id, GenerateFileReportUseCase $useCase)
+    {
+        try {
+            $pdfUrl = $useCase->execute($id, Auth::id());
+            return ApiResponse::ok(
+                data: ['report_url' => $pdfUrl],
+                message: "تم إنشاء تقرير الملف بنجاح."
+            );
+        } catch (DomainException $e) {
+            return ApiResponse::notFound([], $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('File report generation error: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
+            return ApiResponse::serverError('حدث خطأ أثناء إنشاء التقرير.');
+        }
     }
 }

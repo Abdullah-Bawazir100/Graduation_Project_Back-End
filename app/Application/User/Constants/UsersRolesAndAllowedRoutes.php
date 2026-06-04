@@ -134,6 +134,8 @@ class UsersRolesAndAllowedRoutes
             'files.show',
             'files.update',
             'files.destroy',
+            'files.report',
+
 
             // File Movement
             'files-movements.store',
@@ -141,6 +143,7 @@ class UsersRolesAndAllowedRoutes
             'files-movements.index',
             'files-movements.show',
             'files-movements.destroy',
+            'files-movements.report',
 
             // Requests
             'requests.show',
@@ -307,12 +310,16 @@ class UsersRolesAndAllowedRoutes
             'files.store',
             'files.show',
             'files.update',
+            'files.report',
+
 
             // File Movement
             'files-movements.store',
             'files-movements.update',
             'files-movements.index',
             'files-movements.show',
+            'files-movements.report',
+
 
             // Requests
             'requests.show',

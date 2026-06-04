@@ -8,6 +8,7 @@ use App\Application\FileMovement\UseCases\DeleteFileMovementUseCase;
 use App\Application\FileMovement\UseCases\FindFileMovementByIdUseCase;
 use App\Application\FileMovement\UseCases\ListFilesMovementsUseCase;
 use App\Application\FileMovement\UseCases\UpdateFileMovementUseCase;
+use App\Application\FileMovement\UseCases\GenerateFileMovementsReportUseCase;
 use App\Domain\FileMovement\Enums\enFileMovement;
 use App\Domain\FileMovement\Repositories\FileMovementRepositoryInterface;
 use App\Http\Controllers\Controller;
@@ -141,6 +142,22 @@ class FileMovementController extends Controller
             [] ,
             "تم حذف حركة الملف مع ال ID [$id] بنجاح."
         );
+    }
+
+    public function generateReport(GenerateFileMovementsReportUseCase $useCase)
+    {
+        try {
+            $pdfUrl = $useCase->execute(Auth::id());
+            return ApiResponse::ok(
+                data: ['report_url' => $pdfUrl],
+                message: "تم إنشاء تقرير حركات الملفات بنجاح."
+            );
+        } catch (DomainException $e) {
+            return ApiResponse::notFound([], $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('File Movements report generation error: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
+            return ApiResponse::serverError('حدث خطأ أثناء إنشاء التقرير.');
+        }
     }
 }
 

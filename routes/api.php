@@ -83,8 +83,10 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::apiResource('file-status' , FileStatusController::class);
 
     Route::apiResource('/files', FileController::class);
+    Route::get('/files/{id}/report', [FileController::class, 'generateReport'])->name('files.report');
 
     Route::apiResource('/files-movements', FileMovementController::class);
+    Route::get('/files-movements-report', [FileMovementController::class, 'generateReport'])->name('files-movements.report');
 
     Route::apiResource('/requests', RequestController::class);
 
