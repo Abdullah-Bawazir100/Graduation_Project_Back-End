@@ -111,7 +111,7 @@ class FileRepository implements FileRepositoryInterface
         return $this->mapToDomain($fileModel);
     }
 
-    public function getAll(?string $search = null, ?int $departmentId = null)
+    public function getAll(?string $search = null, ?int $departmentId = null, ?int $activityTypeId = null, ?int $regionId = null, ?int $districtId = null)
     {
         $query = FileModel::with(
             'taxPayer',
@@ -132,6 +132,18 @@ class FileRepository implements FileRepositoryInterface
 
         if ($departmentId !== null) {
             $query->where('department_id', $departmentId);
+        }
+
+        if ($activityTypeId !== null) {
+            $query->where('activity_type_id', $activityTypeId);
+        }
+
+        if ($regionId !== null) {
+            $query->where('region_id', $regionId);
+        }
+
+        if ($districtId !== null) {
+            $query->where('district_id', $districtId);
         }
 
         $files = $query->get();

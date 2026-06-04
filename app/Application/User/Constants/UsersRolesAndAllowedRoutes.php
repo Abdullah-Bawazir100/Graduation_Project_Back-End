@@ -135,6 +135,7 @@ class UsersRolesAndAllowedRoutes
             'files.update',
             'files.destroy',
             'files.report',
+            'files.bulk-report',
 
 
             // File Movement
@@ -311,7 +312,7 @@ class UsersRolesAndAllowedRoutes
             'files.show',
             'files.update',
             'files.report',
-
+            'files.bulk-report',
 
             // File Movement
             'files-movements.store',
@@ -379,6 +380,12 @@ class UsersRolesAndAllowedRoutes
             // Districts
             'districts.index',
             'districts.getByRegion',
+
+            // Attachments
+            'attachment.store',
+            'attachment.index',
+            'attachment.show',
+            'attachment.update',
         ],
 
         // Tax Payer Permissions

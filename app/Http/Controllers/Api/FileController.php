@@ -9,6 +9,7 @@ use App\Application\File\UseCases\FindFileByIdUseCase;
 use App\Application\File\UseCases\ListFilesUseCase;
 use App\Application\File\UseCases\UpdateFileUseCase;
 use App\Application\File\UseCases\GenerateFileReportUseCase;
+use App\Application\File\UseCases\GenerateBulkFilesReportUseCase;
 use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\File\StoreFileRequest;
@@ -157,6 +158,42 @@ class FileController extends Controller
             return ApiResponse::notFound([], $e->getMessage());
         } catch (Exception $e) {
             Log::error('File report generation error: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
+            return ApiResponse::serverError('حدث خطأ أثناء إنشاء التقرير.');
+        }
+    }
+    public function generateBulkFilesReport(Request $request, GenerateBulkFilesReportUseCase $useCase)
+    {
+        $request->validate([
+            'activityTypeId' => 'nullable|integer',
+            'regionId' => 'nullable|integer',
+            'districtId' => 'nullable|integer',
+        ]);
+
+        try {
+            $pdfUrl = $useCase->execute(
+                Auth::id(),
+                $request->activityTypeId,
+                $request->regionId,
+                $request->districtId
+            );
+
+            $message = "تم إنشاء التقرير الشامل للملفات بنجاح.";
+            if ($request->has('activity_type_id') && $request->activity_type_id) {
+                $message = "تم إنشاء تقرير الملفات بناءً على نوع النشاط بنجاح.";
+            } elseif ($request->has('region_id') && $request->region_id && $request->has('district_id') && $request->district_id) {
+                $message = "تم إنشاء تقرير الملفات بناءً على المنطقة و الحي بنجاح.";
+            } elseif ($request->has('region_id') && $request->region_id) {
+                $message = "تم إنشاء تقرير الملفات بناءً على المنطقة بنجاح.";
+            }
+
+            return ApiResponse::ok(
+                data: ['report_url' => $pdfUrl],
+                message: $message
+            );
+        } catch (DomainException $e) {
+            return ApiResponse::notFound([], $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Bulk Files report error: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
             return ApiResponse::serverError('حدث خطأ أثناء إنشاء التقرير.');
         }
     }

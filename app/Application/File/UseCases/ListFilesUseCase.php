@@ -13,7 +13,7 @@ class ListFilesUseCase
         private UserRepositoryInterface $user_repository
     ){}
 
-    public function execute(?string $search , int $authenticatedUserId)
+    public function execute(?string $search, int $authenticatedUserId, ?int $activityTypeId = null, ?int $regionId = null, ?int $districtId = null)
     {
         $user = $this->user_repository->findById($authenticatedUserId);
 
@@ -22,7 +22,7 @@ class ListFilesUseCase
             $departmentId = $user->department?->id;
         }
 
-        $files = $this->file_repository->getAll($search, $departmentId);
+        $files = $this->file_repository->getAll($search, $departmentId, $activityTypeId, $regionId, $districtId);
         return $files;
     }
 }

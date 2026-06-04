@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* ألوان مستوحاة من الشعار (أحمر داكن) */
             --primary-color: #ae0014;
             --secondary-color: #cc0018;
             --bg-color: #f1f5f9;
@@ -221,7 +220,7 @@
                     <span class="detail-value" style="direction: ltr; color: var(--primary-color);">{{ $file->taxNumber ?? 'غير محدد' }}</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">الرقم الحصري (الحصر)</span>
+                    <span class="detail-label">الرقم الحصري</span>
                     <span class="detail-value" style="direction: ltr;">{{ $file->inventoryNumber }}</span>
                 </div>
 
@@ -259,7 +258,7 @@
                     <span class="detail-value">{{ $file->region->name ?? 'غير محدد' }}</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">المديرية</span>
+                    <span class="detail-label">الحي</span>
                     <span class="detail-value">{{ $file->district->name ?? 'غير محدد' }}</span>
                 </div>
 

@@ -82,6 +82,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
     Route::apiResource('file-status' , FileStatusController::class);
 
+    Route::get('/files/report', [FileController::class, 'generateBulkFilesReport'])->name('files.bulk-report');
     Route::apiResource('/files', FileController::class);
     Route::get('/files/{id}/report', [FileController::class, 'generateReport'])->name('files.report');
 

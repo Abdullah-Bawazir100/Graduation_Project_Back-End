@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تقرير حركة الملفات</title>
+    <title>تقرير الملفات الضريبية</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
@@ -116,34 +116,13 @@
 
         .badge {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 4px;
             font-size: 12px;
             font-weight: 700;
-        }
-
-        .badge-success {
             background-color: #f0fdf4;
             color: #166534;
             border: 1px solid #bbf7d0;
-        }
-
-        .badge-warning {
-            background-color: #fffbeb;
-            color: #b45309;
-            border: 1px solid #fde68a;
-        }
-
-        .badge-danger {
-            background-color: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        .badge-primary {
-            background-color: #eff6ff;
-            color: #1e3a8a;
-            border: 1px solid #bfdbfe;
         }
 
         .footer {
@@ -193,21 +172,14 @@
         if (file_exists($logoPath)) {
             $logoBase64 = base64_encode(file_get_contents($logoPath));
         }
-
-        function getStatusDetails($status) {
-            if ($status->value === 'InsideArchive') return ['label' => 'داخل الأرشيف', 'class' => 'badge-success'];
-            if ($status->value === 'OutsideArchive') return ['label' => 'خارج الأرشيف', 'class' => 'badge-warning'];
-            if ($status->value === 'Missing') return ['label' => 'مفقود', 'class' => 'badge-danger'];
-            return ['label' => 'غير معروف', 'class' => 'badge-primary'];
-        }
     @endphp
 
     <div class="container">
         <!-- Header -->
         <div class="header">
             <div class="header-content">
-                <h1 class="title">نظام خدمات المكلفين</h1>
-                <p class="subtitle">تقرير شامل بحركة الملفات الضريبية</p>
+                <h1 class="title">{{ $reportTitle ?? 'نظام خدمات المكلفين' }}</h1>
+                <p class="subtitle">{{ $reportSubtitle ?? 'تقرير شامل للملفات الضريبية' }}</p>
             </div>
             @if($logoBase64)
                 <img src="data:image/png;base64,{{ $logoBase64 }}" class="logo" alt="شعار النظام" />
@@ -216,8 +188,8 @@
 
         <div class="summary">
             <div class="summary-item">
-                <span class="summary-label">إجمالي الحركات</span>
-                <span class="summary-value">{{ count($filesMovements) }} حركة</span>
+                <span class="summary-label">إجمالي عدد الملفات</span>
+                <span class="summary-value">{{ count($files) }} ملف</span>
             </div>
             <div class="summary-item">
                 <span class="summary-label">تاريخ استخراج التقرير</span>
@@ -232,28 +204,32 @@
                     <tr>
                         <th>#</th>
                         <th>الرقم الحصري</th>
+                        <th>الرقم الضريبي</th>
                         <th>المكلف (الاسم التجاري)</th>
-                        <th>المأمور</th>
+                        <th>نوع النشاط</th>
+                        <th>المنطقة / الحي</th>
                         <th>القسم</th>
-                        <th>حالة الحركة</th>
-                        <th>تاريخ الحركة</th>
-                        <th>منشئ الحركة</th>
+                        <th>حالة الملف</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($filesMovements as $index => $movement)
-                        @php
-                            $statusInfo = getStatusDetails($movement->status);
-                        @endphp
+                    @foreach($files as $index => $file)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td style="direction: ltr; text-align: right; font-weight: 700;">{{ $movement->file->inventoryNumber }}</td>
-                            <td>{{ $movement->file->taxPayer->tradeName ?? 'غير محدد' }}</td>
-                            <td>{{ $movement->taxCollector->fullName ?? 'غير محدد' }}</td>
-                            <td>{{ $movement->department->name ?? 'غير محدد' }}</td>
-                            <td><span class="badge {{ $statusInfo['class'] }}">{{ $statusInfo['label'] }}</span></td>
-                            <td style="direction: ltr; text-align: right;">{{ $movement->date ? $movement->date->format('Y-m-d') : 'غير محدد' }}</td>
-                            <td>{{ $movement->creator ? $movement->creator->firstName . ' ' . $movement->creator->lastName : 'نظام' }}</td>
+                            <td style="direction: ltr; text-align: right; font-weight: 700;">{{ $file->inventoryNumber }}</td>
+                            <td style="direction: ltr; text-align: right; font-weight: 700; color: var(--primary-color);">{{ $file->taxNumber ?? '---' }}</td>
+                            <td>{{ $file->taxPayer->tradeName ?? 'غير محدد' }}</td>
+                            <td>{{ $file->activityType->name ?? 'غير محدد' }}</td>
+                            <td>
+                                {{ $file->region->name ?? '-' }} /
+                                {{ $file->district->name ?? '-' }}
+                            </td>
+                            <td>{{ $file->department->name ?? 'غير محدد' }}</td>
+                            <td>
+                                <span class="badge">
+                                    {{ $file->fileStatus->statusName ?? 'غير محدد' }}
+                                </span>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
