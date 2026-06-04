@@ -64,39 +64,46 @@
 
 ## 🚀 كيفية التشغيل (Getting Started)
 
-1. **استنساخ المستودع:**
-   ```bash
-   git clone <repository-url>
-   cd Graduation_Project_Back-End
-   ```
+### 1. استنساخ المستودع
+```bash
+git clone <repository-url>
+cd Graduation_Project_Back-End
+```
 
-2. **تثبيت الحزم (Dependencies):**
-   ```bash
-   composer install
-   npm install
-   npm run build
-   ```
+### 2. تثبيت الحزم
+```bash
+composer install
+npm install
+```
 
-3. **إعداد بيئة العمل:**
-   - انسخ ملف `.env.example` وقم بتسميته `.env`.
-   - قم بتحديث إعدادات قاعدة البيانات في ملف `.env`.
-   - توليد مفتاح التطبيق:
-     ```bash
-     php artisan key:generate
-     ```
+### 3. إعداد ملف البيئة
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+> قم بتحديث إعدادات قاعدة البيانات في ملف `.env` قبل المتابعة.
 
-4. **إنشاء رابط التخزين (Storage Link):**
-   (خطوة هامة جداً لعمل التقارير وعرض الصور والشعارات والملفات المرفوعة)
-   ```bash
-   php artisan storage:link
-   ```
+### 4. تنزيل متصفح Puppeteer (مطلوب لتوليد تقارير PDF)
+```bash
+node node_modules/puppeteer/install.mjs
+```
 
-5. **تشغيل قواعد البيانات والهيكلة:**
-   ```bash
-   php artisan migrate --seed
-   ```
+### 5. بناء ملفات الـ Frontend
+```bash
+npm run build
+```
 
-6. **تشغيل الخادم المحلي:**
-   ```bash
-   php artisan serve
-   ```
+### 6. تشغيل قاعدة البيانات
+```bash
+php artisan migrate --seed
+```
+
+### 7. ربط مجلد التخزين
+```bash
+php artisan storage:link
+```
+
+### 8. تشغيل المشروع
+```bash
+php artisan serve
+```
