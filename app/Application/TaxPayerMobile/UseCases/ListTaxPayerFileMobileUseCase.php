@@ -29,9 +29,9 @@ class ListTaxPayerFileMobileUseCase
 
         if(!$taxPayerFiles)
         {
-            throw new DomainException("لا يوجد ملفات لهذا المكلف.");
+            return null;
         }
-        
+
         return $taxPayerFiles;
     }
 }

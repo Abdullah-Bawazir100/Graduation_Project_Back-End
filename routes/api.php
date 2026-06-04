@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
     Route::apiResource('regions' , RegionController::class);
 
+
     Route::apiResource('districts' , DistrictController::class);
     Route::get('districts/region/{regionId}', [DistrictController::class, 'getByRegion'])->name('districts.getByRegion');
 
@@ -104,6 +105,9 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     ->name('reject-request');
     Route::get('/get-rejected-requests', [RequestController::class , 'getRejectedRequests'])
     ->name('get-rejected-requests');
+
+    Route::get('/exists-request' , [RequestController::class , 'existsRequest'])
+    ->name('exists-request');
 
     Route::apiResource('attachment' , AttachmentController::class);
 

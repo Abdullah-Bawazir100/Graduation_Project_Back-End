@@ -193,6 +193,13 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
         $request->delete();
     }
 
+    public function existsRequest(int $userId)
+    {
+        return RequestModel::where('user_id' , $userId)
+            ->where('status' , enRequestStatus::Pending->value)
+            ->exists();
+    }
+
 
     private function mapToDomain(RequestModel $model): TaxPayerRequest
     {

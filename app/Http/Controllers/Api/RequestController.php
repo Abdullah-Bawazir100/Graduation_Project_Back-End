@@ -12,6 +12,7 @@ use App\Application\Request\DTOs\TaxPayerRequestDTOs;
 use App\Application\Request\UseCases\AcceptRequestUseCase;
 use App\Application\Request\UseCases\ArchiveRequestUseCase;
 use App\Application\Request\UseCases\DeleteRequestUseCase;
+use App\Application\Request\UseCases\ExistsRequestUseCase;
 use App\Application\Request\UseCases\FindRequestByIdUseCase;
 use App\Application\Request\UseCases\ListArchivedRequestsUseCase;
 use App\Application\Request\UseCases\ListConfirmedRequestsUseCase;
@@ -24,6 +25,7 @@ use App\Domain\Request\Enums\enRequestStatus;
 use App\Http\Responses\ApiResponse;
 use App\Application\User\Services\UploadFileService;
 use App\Domain\User\Enums\UserRole;
+use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Http\Requests\File\StoreFileRequest;
 use App\Http\Requests\TaxPayerRequest\AcceptRequestOfTaxPayerRequest;
 use App\Http\Requests\TaxPayerRequest\ArchiveRequestOfTaxPayerRequest;
@@ -34,7 +36,8 @@ use Illuminate\Support\Facades\Auth;
 class RequestController extends Controller
 {
     public function __construct(
-        private UploadFileService $uploadFileService
+        private UploadFileService $uploadFileService,
+        private UserRepositoryInterface $user_repository
     ) {}
 
     public function index(ListRequestsUseCase $useCase)
@@ -131,7 +134,7 @@ class RequestController extends Controller
             $byLawsCopyUrl = $request->hasFile('byLawsCopy')
                 ? $this->uploadFileService->uploadFile($request->file('byLawsCopy'), 'by-laws-copies')
                 : null;
-                
+
             $taxPayerDTO = new TaxPayerRequestDTOs(
                 userId: $authUser->id,
                 tradeName: $request->tradeName,
@@ -248,6 +251,35 @@ class RequestController extends Controller
     //     //
     // }
 
+    public function existsRequest(ExistsRequestUseCase $useCase)
+    {
+        $userId = Auth::id();
+        $user = $this->user_repository->findById($userId);
+        if(!$user)
+        {
+            return ApiResponse::notFound(
+                message: "لا يوجد مستخدم مع ال ID [$userId]."
+            );
+        }
+        if($user->role !== UserRole::Tax_Payer)
+        {
+            throw new DomainException("هذا المستخدم ليس مكلف.");
+        }
+
+        $hasPendingRequest = $useCase->execute($userId);
+
+        if ($hasPendingRequest) {
+            return ApiResponse::ok(
+                data: ['exists' => true],
+                message: "طلبك قيد الانتظار"
+            );
+        }
+
+        return ApiResponse::ok(
+            data: ['exists' => false],
+            message: "لا يوجد طلبات بعد"
+        );
+    }
 
     public function destroy(int $requestId , DeleteRequestUseCase $useCase)
     {

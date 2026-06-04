@@ -366,6 +366,7 @@ class UsersRolesAndAllowedRoutes
             'requests.update',
             'requests.index',
             'requests.show',
+            'exists-request'
         ],
 
         // Collectors Manager Permissions

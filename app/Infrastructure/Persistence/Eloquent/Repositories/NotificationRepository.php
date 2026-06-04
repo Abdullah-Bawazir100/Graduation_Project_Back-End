@@ -72,8 +72,9 @@ class NotificationRepository implements NotificationRepositoryInterface
     {
         $phones = [];
 
+        
         switch ($notification->notificationType) {
-            
+
             case enNotificationType::General:
                 $phones = UserModel::where('role', '!=', UserRole::Admin->value)
                     ->whereNotNull('phone')
