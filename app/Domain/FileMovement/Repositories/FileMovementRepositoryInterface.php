@@ -15,4 +15,5 @@ interface FileMovementRepositoryInterface
     public function getFileMovementCount(): int;
     public function getFileMovementsStatistics(?int $departmentId = null): array;
     public function getTopDepartmentsMovementsPerDay(?int $month = null, ?int $year = null): array;
+    public function countFileMovements(?int $departmentId = null): array;
 }

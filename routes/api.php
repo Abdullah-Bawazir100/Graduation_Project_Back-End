@@ -1,13 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\{
-    ActivityLogController , ActivityTypeController , AddressController ,
-    AttachmentController,
+    ActivityLogController , ActivityTypeController , AddressController , AttachmentController,
     CharitableCompanyController , CompanyController , DepartmentController ,
     DistrictController , FileController, FileStatusController , JobTypeController ,
     TaxCollectorController , TaxPayerController , UserController , AuthController,
-    FileMovementController , NotificationController, PaymentTypeController , RegionController , RequestController,
-    ResetPasswordController, RecyclePinController,
+    FileMovementController , NotificationController, PaymentTypeController ,
+    RegionController , RequestController , ResetPasswordController, RecyclePinController,
     StatisticsController , TaxInformationController , TaxPayerMobileController ,
     TaxTypeController
 };

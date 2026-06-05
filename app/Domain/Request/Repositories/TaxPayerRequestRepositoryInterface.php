@@ -20,4 +20,5 @@ interface TaxPayerRequestRepositoryInterface
     public function findRequestByIdAndUserId(int $requestId, int $userId): ?TaxPayerRequest;
     public function delete(int $requestId): void;
     public function existsRequest(int $userId);
+    public function countRequests(?int $departmentId = null): array;
 }

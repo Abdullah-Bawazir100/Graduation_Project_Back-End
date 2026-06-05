@@ -17,4 +17,5 @@ interface TaxPayerRepositoryInterface
     public function findByTradeName(string $tradeName);
     public function getTaxPayersWithSpecialInfo(?string $search = null, ?int $departmentId = null);
     public function createFileToExistingTaxPayer(TaxPayer $taxPayer , int $userId): ?TaxPayer;
+    public function countTaxPayers(?int $departmentId = null): array;
 }

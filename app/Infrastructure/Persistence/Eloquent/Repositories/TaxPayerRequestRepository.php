@@ -201,6 +201,25 @@ class TaxPayerRequestRepository implements TaxPayerRequestRepositoryInterface
     }
 
 
+    public function countRequests(?int $departmentId = null): array
+    {
+        $query = RequestModel::query();
+
+        if ($departmentId !== null) {
+            $query->whereHas('user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        return [
+            'total_requests' => (clone $query)->count(),
+            'pending_count' => (clone $query)->where('status', enRequestStatus::Pending->value)->count(),
+            'confirmed_count' => (clone $query)->where('status', enRequestStatus::Confirmed->value)->count(),
+            'archived_count' => (clone $query)->where('status', enRequestStatus::Archived->value)->count(),
+            'rejected_count' => (clone $query)->where('status', enRequestStatus::Rejected->value)->count(),
+        ];
+    }
+
     private function mapToDomain(RequestModel $model): TaxPayerRequest
     {
         return new TaxPayerRequest(

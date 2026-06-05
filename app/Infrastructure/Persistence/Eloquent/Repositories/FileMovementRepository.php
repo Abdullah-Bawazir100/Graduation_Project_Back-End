@@ -116,6 +116,22 @@ class FileMovementRepository implements FileMovementRepositoryInterface
         return FileMovementModel::count();
     }
 
+    public function countFileMovements(?int $departmentId = null): array
+    {
+        $query = FileMovementModel::query();
+
+        if ($departmentId !== null) {
+            $query->where('department_id', $departmentId);
+        }
+
+        return [
+            'total_movements' => (clone $query)->count(),
+            'inside_archive_count' => (clone $query)->where('status', \App\Domain\FileMovement\Enums\enFileMovement::InsideArchive->value)->count(),
+            'outside_archive_count' => (clone $query)->where('status', \App\Domain\FileMovement\Enums\enFileMovement::OutsideArchive->value)->count(),
+            'missing_count' => (clone $query)->where('status', \App\Domain\FileMovement\Enums\enFileMovement::Missing->value)->count(),
+        ];
+    }
+
     public function getFileMovementsStatistics(?int $departmentId = null): array
     {
         $sixMonthsAgo = Carbon::now()->subMonths(6)->startOfMonth();

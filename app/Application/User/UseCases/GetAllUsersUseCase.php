@@ -27,7 +27,7 @@ class GetAllUsersUseCase
             });
         }
 
-        return array_map(fn(User $user) => new UserResponseDTO(
+        $mappedUsers = array_map(fn(User $user) => new UserResponseDTO(
             id: $user->id,
             firstName: $user->firstName,
             lastName: $user->lastName,
@@ -40,5 +40,13 @@ class GetAllUsersUseCase
             departmentName: $user->department->name,
             role: $user->role->value
         ), $users);
+
+        $statistics = $this->repository->countUsers($departmentId);
+        unset($statistics['tax_collector_count']);
+
+        return [
+            'statistics' => $statistics,
+            'users' => array_values($mappedUsers),
+        ];
     }
 }

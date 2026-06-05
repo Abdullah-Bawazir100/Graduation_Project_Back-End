@@ -4,6 +4,7 @@ namespace App\Infrastructure\Persistence\Eloquent\Repositories;
 
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\TaxPayer\Entities\TaxPayer;
+use App\Domain\TaxPayer\Enums\enFileType;
 use App\Infrastructure\Persistence\Eloquent\Models\TaxPayerModel;
 use Override;
 
@@ -111,11 +112,11 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
     public function findByUserId(int $userId): ?TaxPayer
     {
         $taxPayerModel = TaxPayerModel::with('user')->where('user_id', $userId)->first();
-        
+
         if (!$taxPayerModel) {
             return null;
         }
-        
+
         return $this->mapToDomain($taxPayerModel);
     }
 
@@ -180,6 +181,24 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         $model->load('user');
 
         return $this->mapToDomain($model);
+    }
+
+    public function countTaxPayers(?int $departmentId = null): array
+    {
+        $query = TaxPayerModel::query();
+
+        if ($departmentId !== null) {
+            $query->whereHas('user', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        return [
+            'total_tax_payers' => (clone $query)->count(),
+            'individual_count' => (clone $query)->where('file_type', enFileType::Individual->value)->count(),
+            'company_count' => (clone $query)->where('file_type', enFileType::Company->value)->count(),
+            'charitable_company_count' => (clone $query)->where('file_type', enFileType::CharitableCompany->value)->count(),
+        ];
     }
 
     private function mapToDomain(TaxPayerModel $model): TaxPayer
