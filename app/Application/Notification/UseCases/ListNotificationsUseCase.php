@@ -3,6 +3,9 @@
 namespace App\Application\Notification\UseCases;
 
 use App\Domain\Notification\Repositories\NotificationRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
+use App\Domain\Notification\Enums\enNotificationType;
+use Illuminate\Support\Facades\Auth;
 
 class ListNotificationsUseCase
 {
@@ -14,7 +17,34 @@ class ListNotificationsUseCase
 
     public function execute()
     {
+        $user = Auth::user();
         $notifications = $this->notification_repository->getAll();
-        return $notifications;
+
+        $notificationsCollection = collect($notifications);
+
+        if ($user && $user->role !== UserRole::Admin) {
+            $notificationsCollection = $notificationsCollection->filter(function ($notification) use ($user) {
+                return $notification->sendBy->department->id === $user->department_id;
+            })->values();
+        }
+
+        $defaultTypeCounts = collect(enNotificationType::cases())
+            ->mapWithKeys(function ($case) {
+                return [$case->value => 0];
+            });
+
+        $typeCounts = $defaultTypeCounts->merge(
+            $notificationsCollection->groupBy(function($notification) {
+                return $notification->notificationType->value;
+            })->map(function($group) {
+                return $group->count();
+            })
+        )->all();
+
+        return [
+            'total_count' => $notificationsCollection->count(),
+            'type_counts' => $typeCounts,
+            'notifications' => $notificationsCollection->all(),
+        ];
     }
 }

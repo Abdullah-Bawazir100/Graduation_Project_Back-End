@@ -15,7 +15,20 @@ class ListAttachmentsUseCase
 
     public function execute()
     {
+        $user = \Illuminate\Support\Facades\Auth::user();
         $attachments = $this->attachment_repository->getAll();
-        return $attachments;
+
+        $attachmentsCollection = collect($attachments);
+
+        if ($user && $user->role !== \App\Domain\User\Enums\UserRole::Admin) {
+            $attachmentsCollection = $attachmentsCollection->filter(function ($attachment) use ($user) {
+                return $attachment->file->department->id === $user->department_id;
+            })->values();
+        }
+
+        return [
+            'attachments' => $attachmentsCollection->all(),
+            'total_count' => $attachmentsCollection->count(),
+        ];
     }
 }
