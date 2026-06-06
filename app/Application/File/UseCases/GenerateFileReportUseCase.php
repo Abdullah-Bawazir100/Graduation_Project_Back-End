@@ -2,6 +2,7 @@
 
 namespace App\Application\File\UseCases;
 
+use App\Application\Services\PdfReportService;
 use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
@@ -14,13 +15,14 @@ class GenerateFileReportUseCase
 {
     public function __construct(
         private FileRepositoryInterface $fileRepository,
-        private UserRepositoryInterface $userRepository
+        private UserRepositoryInterface $userRepository,
+        private PdfReportService $pdf_report_service
     ) {}
 
     public function execute(int $fileId, int $authenticatedUserId): string
     {
         $file = $this->fileRepository->findById($fileId);
-        
+
         if (!$file) {
             throw new DomainException("الملف المطلوب غير موجود.");
         }
@@ -33,7 +35,7 @@ class GenerateFileReportUseCase
                 throw new DomainException("لا تملك صلاحية لإنشاء تقرير لملف يتبع لقسم آخر غير قسمك.");
             }
         }
-        
+
         $taxPayerUser = null;
         if ($file->taxPayer->userId) {
             $taxPayerUser = $this->userRepository->findById($file->taxPayer->userId);
@@ -51,18 +53,11 @@ class GenerateFileReportUseCase
         ];
 
         $fileName = 'file_report_' . $file->id . '_' . Str::uuid() . '.pdf';
-        
-        $directory = 'file-reports';
-        if (!Storage::disk('public')->exists($directory)) {
-            Storage::disk('public')->makeDirectory($directory);
-        }
 
-        $path = storage_path('app/public/' . $directory . '/' . $fileName);
-
-        Pdf::view('reports.file', $data)
-            ->format('a4')
-            ->save($path);
-
-        return asset(Storage::url($directory . '/' . $fileName));
+        return $this->pdf_report_service->generate(
+            'reports.file',
+            $data,
+            $fileName
+        );
     }
 }

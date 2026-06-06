@@ -2,6 +2,7 @@
 
 namespace App\Application\File\UseCases;
 
+use App\Application\Services\PdfReportService;
 use App\Domain\Activity_Type\Repositories\Activity_Type_RepositoryInterface;
 use App\Domain\Region\Repositories\RegionRepositoryInterface;
 use App\Domain\District\Repositories\DistrictRepositoryInterface;
@@ -19,7 +20,8 @@ class GenerateBulkFilesReportUseCase
         private Activity_Type_RepositoryInterface $activityTypeRepository,
         private RegionRepositoryInterface $regionRepository,
         private DistrictRepositoryInterface $districtRepository,
-        private UserRepositoryInterface $userRepository
+        private UserRepositoryInterface $userRepository,
+        private PdfReportService $pdf_report_service
     ) {}
 
     public function execute(int $authenticatedUserId, ?int $activityTypeId = null, ?int $regionId = null, ?int $districtId = null): string
@@ -80,18 +82,11 @@ class GenerateBulkFilesReportUseCase
 
         $fileName = 'files_report_' . time() . '_' . Str::uuid() . '.pdf';
 
-        $directory = 'file-reports';
-        if (!Storage::disk('public')->exists($directory)) {
-            Storage::disk('public')->makeDirectory($directory);
-        }
-
-        $path = storage_path('app/public/' . $directory . '/' . $fileName);
-
-        Pdf::view('reports.files-list', $data)
-            ->format('a4')
-            ->landscape()
-            ->save($path);
-
-        return asset(Storage::url($directory . '/' . $fileName));
+        return $this->pdf_report_service->generate(
+            'reports.files-list',
+            $data,
+            $fileName,
+            true // landscape
+        );
     }
 }

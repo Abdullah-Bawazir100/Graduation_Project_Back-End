@@ -2,6 +2,7 @@
 
 namespace App\Application\FileMovement\UseCases;
 
+use App\Application\Services\PdfReportService;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -10,7 +11,8 @@ use DomainException;
 class GenerateFileMovementsReportUseCase
 {
     public function __construct(
-        private ListFilesMovementsUseCase $listFilesMovementsUseCase
+        private ListFilesMovementsUseCase $listFilesMovementsUseCase,
+        private PdfReportService  $pdf_report_service
     ) {}
 
     public function execute(int $authenticatedUserId): string
@@ -27,19 +29,12 @@ class GenerateFileMovementsReportUseCase
         ];
 
         $fileName = 'file_movements_report_' . time() . '_' . Str::uuid() . '.pdf';
-        
-        $directory = 'file-reports';
-        if (!Storage::disk('public')->exists($directory)) {
-            Storage::disk('public')->makeDirectory($directory);
-        }
 
-        $path = storage_path('app/public/' . $directory . '/' . $fileName);
-
-        Pdf::view('reports.file-movements', $data)
-            ->format('a4')
-            ->landscape()
-            ->save($path);
-
-        return asset(Storage::url($directory . '/' . $fileName));
+        return $this->pdf_report_service->generate(
+            'reports.file-movements',
+            $data,
+            $fileName,
+            true
+        );
     }
 }
