@@ -33,7 +33,7 @@ class ActivityLogService
                 'payment_type', 'region', 'district', 'job_type',
                 'tax_collector', 'tax_payer', 'company', 'charitable_company',
                 'tax_type', 'tax_information', 'file', 'file_movement',
-                'request', 'file_status', 'address', 'attachment', 'notification'
+                'request', 'file_status', 'address', 'attachment', 'notification' , 'recycle_pin'
             ]);
 
         if ($departmentId !== null) {
@@ -89,7 +89,7 @@ class ActivityLogService
                         'payment_type' , 'region' , 'district' , 'job_type',
                         'tax_collector' , 'tax_payer' , 'company' , 'charitable_company'
                         , 'tax_type' , 'tax_information' , 'file' , 'file_movement',
-                        'attachment' , 'notification']);
+                        'attachment' , 'notification' , 'recycle_pin']);
 
         // Filters
         if (!empty($filters['user_id'])) {
@@ -247,5 +247,41 @@ class ActivityLogService
 
             default => $description,
         };
+    }
+
+    public function getActivitySummary(?int $departmentId = null): array
+    {
+        $query = Activity::query()
+            ->whereIn('log_name', [
+                'user', 'department', 'activity_type',
+                'payment_type', 'region', 'district', 'job_type',
+                'tax_collector', 'tax_payer', 'company', 'charitable_company',
+                'tax_type', 'tax_information', 'file', 'file_movement',
+                'request', 'file_status', 'address', 'attachment', 'notification', 'recycle_pin'
+            ]);
+
+        if ($departmentId !== null) {
+            $userIds = \App\Infrastructure\Persistence\Eloquent\Models\UserModel::query()
+                ->where('department_id', $departmentId)
+                ->pluck('id');
+
+            $query->whereIn('causer_id', $userIds);
+        }
+
+        $stats = $query
+            ->select(
+                DB::raw("SUM(CASE WHEN event = 'created' THEN 1 ELSE 0 END) as created_count"),
+                DB::raw("SUM(CASE WHEN event = 'updated' THEN 1 ELSE 0 END) as updated_count"),
+                DB::raw("SUM(CASE WHEN event = 'deleted' THEN 1 ELSE 0 END) as deleted_count"),
+                DB::raw("COUNT(*) as total_count")
+            )
+            ->first();
+
+        return [
+            'total'   => (int) $stats->total_count,
+            'created' => (int) $stats->created_count,
+            'updated' => (int) $stats->updated_count,
+            'deleted' => (int) $stats->deleted_count,
+        ];
     }
 }
