@@ -11,6 +11,7 @@ use App\Domain\User\Enums\UserRole;
 use App\Infrastructure\Persistence\Eloquent\Models\NotificationModel;
 use App\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use App\Infrastructure\Persistence\Eloquent\Models\TaxCollectorModel;
+use App\Jobs\SendWhatsAppMessageJob;
 use Override;
 
 class NotificationRepository implements NotificationRepositoryInterface
@@ -72,7 +73,6 @@ class NotificationRepository implements NotificationRepositoryInterface
     {
         $phones = [];
 
-        
         switch ($notification->notificationType) {
 
             case enNotificationType::General:
@@ -106,10 +106,15 @@ class NotificationRepository implements NotificationRepositoryInterface
 
         $phones = array_unique(array_filter($phones));
 
-        // مثال:
-        // foreach ($phones as $phone) {
-        //     SmsService::send($phone, $notification->title, $notification->description);
-        // }
+        if (empty($phones)) {
+            return;
+        }
+
+        $message = "{$notification->title}\n\n{$notification->description}";
+
+        foreach ($phones as $phone) {
+            SendWhatsAppMessageJob::dispatch($phone, $message);
+        }
     }
 
     private function mapToDomain(NotificationModel $model): Notification

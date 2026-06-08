@@ -6,6 +6,7 @@ use App\Application\ResetPassword\DTOs\ResetPasswordDTOs;
 use App\Domain\ResetPassword\Entities\ResetPassword;
 use App\Domain\ResetPassword\Repositories\ResetPasswordRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Jobs\SendWhatsAppMessageJob;
 use DomainException;
 
 class RequestResetPasswordUseCase
@@ -39,13 +40,11 @@ class RequestResetPasswordUseCase
 
         $this->reset_password_repository->create($resetPassword);
 
-        // TODO: الربط مع خدمة الـ SMS لإرسال رمز التحقق
-        // SmsService::send($user->phone, "رمز التحقق الخاص بك هو: $code");
+        SendWhatsAppMessageJob::dispatch($user->phone, "رمز التحقق الخاص بك هو: {$code}\nلا تشاركه مع أحد.");
 
         return [
-            'message' => 'تم إنشاء رمز التحقق',
-            'user_id' => $user->id,
-            'code' => $code
+            'message' => 'تم إنشاء رمز التحقق وإرساله إلى هاتفك',
+            'user_id' => $user->id
         ];
     }
 }

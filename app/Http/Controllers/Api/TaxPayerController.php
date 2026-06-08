@@ -210,6 +210,7 @@ class TaxPayerController extends Controller
 
     public function findTaxPayerByUserID(int $userID , FindTaxPayerByUserIDUseCase $useCase)
     {
+        
         $authenticatedUserId = Auth::id();
         $taxPayer = $useCase->execute($userID, $authenticatedUserId);
         return ApiResponse::ok($taxPayer , "تم جلب المستخدم المكلف مع ال ID [{$userID}] بنجاح.");

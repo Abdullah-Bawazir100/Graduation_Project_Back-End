@@ -40,10 +40,12 @@ class FindRequestByIdUseCase
         $taxPayerId = null;
         if($request->requestStatus === enRequestStatus::Confirmed)
         {
-            $taxPayer = $this->tax_payer_repository->findByUserId($user->id);
+            $taxPayer = $this->tax_payer_repository->findById($request->userId);
             $taxPayerId = $taxPayer->id;
         }
 
+        var_dump($request->userId);
+        var_dump($taxPayer->id);
         return [
             'taxPayerId' => $taxPayerId,
             'RequestInfo' => $request,

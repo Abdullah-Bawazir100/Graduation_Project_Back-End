@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'inbox' => [
+        'url' => env('INBOX_API_URL'),
+        'token' => env('INBOX_API_TOKEN'),
+    ],
+
 ];
