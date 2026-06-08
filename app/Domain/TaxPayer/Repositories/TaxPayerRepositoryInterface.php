@@ -13,6 +13,7 @@ interface TaxPayerRepositoryInterface
     public function getAll(?int $departmentId);
     public function getAllTaxPayers(?int $departmentId);
     public function findByUserId(int $userId): ?TaxPayer;
+    public function findByUserIdAndTradeName(int $userId , string $tradeName): ?TaxPayer;
     public function findByUserName(string $userName): ?TaxPayer;
     public function findByTradeName(string $tradeName);
     public function getTaxPayersWithSpecialInfo(?string $search = null, ?int $departmentId = null);
