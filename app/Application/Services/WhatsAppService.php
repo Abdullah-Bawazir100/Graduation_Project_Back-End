@@ -22,9 +22,9 @@ class WhatsAppService
 
         try{
 
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-            ])->post($this->apiUrl . '?token=' . $this->token, [
+            $response = Http::withoutVerifying()
+            ->post($this->apiUrl, [
+                'token' => $this->token,
                 'number' => $phone,
                 'message' => $message,
             ]);
