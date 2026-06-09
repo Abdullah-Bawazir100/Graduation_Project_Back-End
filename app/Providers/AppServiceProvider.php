@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -144,6 +145,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // تعطيل التحقق من شهادة SSL في بيئة التطوير المحلية فقط
+        if (app()->environment('local')) {
+            Http::globalOptions(['verify' => false]);
+        }
     }
 }

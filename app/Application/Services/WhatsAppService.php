@@ -13,68 +13,67 @@ class WhatsAppService
     public function __construct()
     {
         $this->apiUrl = config('services.inbox.url', '');
-        $this->token = config('services.inbox.token', '');
+        $this->token  = config('services.inbox.token', '');
     }
 
-    public function sendMessage(string $phone, string $message)
+    public function sendMessage(string $phone, string $message): array
     {
         $phone = $this->formatPhone($phone);
 
-        try{
-
+        try {
             $response = Http::withoutVerifying()
-            ->post($this->apiUrl, [
-                'token' => $this->token,
-                'number' => $phone,
-                'message' => $message,
+                ->post($this->apiUrl . '?token=' . $this->token, [
+                    'number'  => $phone,
+                    'message' => $message,
+                ]);
+
+            Log::info('WhatsApp Request', [
+                'phone' => $phone,
+                'status' => $response->status(),
+                'body' => $response->body(),
             ]);
 
-            Log::info('WhatsApp API Response', ['response' => $response->json()]);
+            if ($response->failed()) {
+                Log::error('WhatsApp Send Failed', [
+                    'status' => $response->status(),
+                    'response' => $response->body(),
+                ]);
 
-            if($response->successful())
-            {
                 return [
-                    'success' => true,
-                    'data' => $response->json(),
+                    'success' => false,
+                    'error' => $response->json('message')
+                        ?? 'Failed to send WhatsApp message',
                 ];
             }
 
-            Log::error('فشل في ارسال الرسالة' , [
-                'status' => $response->status(),
-                'response' => $response->body(),
-            ]);
-
             return [
-                'success' => false,
-                'error' => $response->json('message') ?? 'فشل في ارسال الرسالة',
+                'success' => true,
+                'data' => $response->json(),
             ];
 
-        } catch (\Exception $e){
-            Log::error('فشل في ارسال الرسالة' , [
+        } catch (\Throwable $e) {
+            Log::error('WhatsApp Exception', [
                 'message' => $e->getMessage(),
             ]);
 
             return [
                 'success' => false,
-                'error' => 'Server error connected to WhatsApp Gateway',
+                'error' => 'Server error while sending WhatsApp message',
             ];
         }
     }
 
     private function formatPhone(string $phone): string
     {
-        $phone = preg_replace('/[^\d+]/', '', $phone);
-
+        $phone = preg_replace('/\D+/', '', $phone);
         if (str_starts_with($phone, '0')) {
             $phone = substr($phone, 1);
         }
 
-        if (!str_starts_with($phone, '967') && !str_starts_with($phone, '+967')) {
-            $phone = '+967' . $phone;
-        } elseif (str_starts_with($phone, '967')) {
-            $phone = '+' . $phone;
+        if (!str_starts_with($phone, '967')) {
+            $phone = '967' . $phone;
         }
 
-        return $phone;
+        return '+' . $phone;
     }
 }
