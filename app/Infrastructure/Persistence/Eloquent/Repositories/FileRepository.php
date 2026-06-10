@@ -177,12 +177,13 @@ class FileRepository implements FileRepositoryInterface
         FileModel::findOrFail($id)->delete();
     }
 
-    public function existsTaxPayer(int $taxPayerId , enFileType $fileType)
+    public function existsTaxPayer(int $taxPayerId, enFileType $fileType, string $tradeName): bool
     {
         return FileModel::query()
             ->where('tax_payer_id', $taxPayerId)
-            ->whereHas('taxPayer', function ($query) use ($fileType) {
-                $query->where('file_type', $fileType->value);
+            ->whereHas('taxPayer', function ($query) use ($fileType, $tradeName) {
+                $query->where('file_type', $fileType->value)
+                    ->where('trade_name', $tradeName);
             })
             ->exists();
     }

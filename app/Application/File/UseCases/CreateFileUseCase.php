@@ -85,10 +85,11 @@ class CreateFileUseCase
             );
         }
 
-        if($this->file_repository->existsTaxPayer($taxPayer->id , $taxPayer->fileType))
+        if($this->file_repository->existsTaxPayer($taxPayer->id, $taxPayer->fileType, $taxPayer->tradeName))
         {
             $fileType = $taxPayer->fileType->value;
-            throw new DomainException("يوجد بالفعل ملف لهذا المكلف من نوع [$fileType].");
+            $tradeName = $taxPayer->tradeName;
+            throw new DomainException("يوجد بالفعل ملف لهذا المكلف [$tradeName] من نوع [$fileType].");
         }
 
         // Create the file entity
