@@ -3,6 +3,7 @@
 namespace App\Application\Attachment\UseCases;
 
 use App\Domain\Attachment\Repositories\AttachmentRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class ListAttachmentsUseCase
 {
@@ -15,7 +16,7 @@ class ListAttachmentsUseCase
 
     public function execute()
     {
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
         $attachments = $this->attachment_repository->getAll();
 
         $attachmentsCollection = collect($attachments);
@@ -28,7 +29,6 @@ class ListAttachmentsUseCase
 
         return [
             'attachments' => $attachmentsCollection->all(),
-            'total_count' => $attachmentsCollection->count(),
         ];
     }
 }

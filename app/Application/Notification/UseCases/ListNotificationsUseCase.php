@@ -28,22 +28,7 @@ class ListNotificationsUseCase
             })->values();
         }
 
-        $defaultTypeCounts = collect(enNotificationType::cases())
-            ->mapWithKeys(function ($case) {
-                return [$case->value => 0];
-            });
-
-        $typeCounts = $defaultTypeCounts->merge(
-            $notificationsCollection->groupBy(function($notification) {
-                return $notification->notificationType->value;
-            })->map(function($group) {
-                return $group->count();
-            })
-        )->all();
-
         return [
-            'total_count' => $notificationsCollection->count(),
-            'type_counts' => $typeCounts,
             'notifications' => $notificationsCollection->all(),
         ];
     }

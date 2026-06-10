@@ -25,7 +25,6 @@ class ListFilesMovementsUseCase
 
         $filesMovements = $this->file_movement_repository->getAll($departmentId);
         return [
-            'statistics' => $this->file_movement_repository->countFileMovements($departmentId),
             'filesMovements' => $filesMovements
         ];
     }

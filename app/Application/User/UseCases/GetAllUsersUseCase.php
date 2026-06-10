@@ -41,11 +41,8 @@ class GetAllUsersUseCase
             role: $user->role->value
         ), $users);
 
-        $statistics = $this->repository->countUsers($departmentId);
-        unset($statistics['tax_collector_count']);
 
         return [
-            'statistics' => $statistics,
             'users' => array_values($mappedUsers),
         ];
     }
