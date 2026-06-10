@@ -70,7 +70,6 @@ class FileStatusRepository implements RepositoriesFileStatusRepositoryInterface
             ->toArray();
     }
 
-    #[Override]
     public function delete(int $id): void
     {
         FileStatusModel::findOrFail($id)->delete();

@@ -12,5 +12,6 @@ interface JobTypeRepositoryInterface
     public function findById(int $id);
     public function getAll();
     public function existsByName(string $name);
+    public function countJobTypes();
     public function moveTaxCollectorsToAnotherJobType(int $oldJobTypeId , int $newJobTypeId);
 }
