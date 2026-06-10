@@ -18,8 +18,10 @@ use App\Application\FileMovement\UseCases\GetFileMovementsStatisticsUseCase;
 use App\Application\FileMovement\UseCases\GetTopDepartmentsMovementsStatisticsUseCase;
 use App\Application\ActivityLog\UseCases\GetWeeklyActivityStatisticsUseCase;
 use App\Application\FileStatus\UseCases\CountFileStatusUseCase;
+use App\Application\Statistics\UseCases\GetSomeSectionsStatisticsUseCase;
 use App\Domain\User\Enums\UserRole;
 use App\Http\Responses\ApiResponse;
+use Illuminate\Support\Facades\Auth;
 use MessageFormatter;
 
 class StatisticsController
@@ -38,12 +40,13 @@ class StatisticsController
         private GetFileMovementsStatisticsUseCase $getFileMovementsStatisticsUseCase,
         private GetWeeklyActivityStatisticsUseCase $getWeeklyActivityStatisticsUseCase,
         private CountFileStatusUseCase $countFileStatusUseCase,
-        private GetTopDepartmentsMovementsStatisticsUseCase $getTopDepartmentsMovementsStatisticsUseCase
+        private GetTopDepartmentsMovementsStatisticsUseCase $getTopDepartmentsMovementsStatisticsUseCase,
+        private GetSomeSectionsStatisticsUseCase $getSomeSectionsStatisticsUseCase,
     ) {}
 
     public function getStatistics()
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $departmentId = $user && $user->role !== UserRole::Admin ? $user->department_id : null;
 
         $statistics = [
@@ -75,6 +78,18 @@ class StatisticsController
 
         return ApiResponse::ok(
             data: $statistics,
+            message: 'تم جلب الإحصائيات بنجاح.'
+        );
+    }
+
+    public function getSomeSectionsStatistics()
+    {
+        $userId = Auth::id();
+
+        $data = $this->getSomeSectionsStatisticsUseCase->execute($userId);
+
+        return ApiResponse::ok(
+            data: $data,
             message: 'تم جلب الإحصائيات بنجاح.'
         );
     }

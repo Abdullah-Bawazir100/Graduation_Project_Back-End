@@ -40,7 +40,6 @@ class ListTaxPayersUseCase
         }
 
         return [
-            'statistics' => $this->tax_payer_repository->countTaxPayers($departmentId),
             'taxPayers' => $result
         ];
     }

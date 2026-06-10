@@ -71,6 +71,7 @@ class UsersRolesAndAllowedRoutes
 
             // Statistics
             'statistics.getStatistics',
+            'statistics.getSomeSectionsStatistics',
 
             // Tax Collectors
             'tax-collectors.index',
@@ -251,6 +252,8 @@ class UsersRolesAndAllowedRoutes
 
             // Statistics
             'statistics.getStatistics',
+            'statistics.getSomeSectionsStatistics',
+
 
             // Tax Collectors
             'tax-collectors.index',

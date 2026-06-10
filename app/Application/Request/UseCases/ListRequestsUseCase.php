@@ -32,7 +32,6 @@ class ListRequestsUseCase
         }
 
         return [
-            'statistics' => $this->tax_payer_request_repository->countRequests($departmentId),
             'requests' => $response
         ];
     }
