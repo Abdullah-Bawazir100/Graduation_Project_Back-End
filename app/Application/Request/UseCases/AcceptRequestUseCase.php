@@ -14,6 +14,7 @@ use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
+use App\Jobs\SendWhatsAppMessageJob;
 use DomainException;
 
 class AcceptRequestUseCase
@@ -50,6 +51,19 @@ class AcceptRequestUseCase
         {
             $acceptedRequest = $this->tax_payer_request_repository->acceptRequest($requestId);
             $this->storeRequestToTaxPayerTable($acceptedRequest);
+
+            if ($user->phone) {
+                $fullName = $user->firstName . ' ' . $user->lastName;
+                $fileTypeName = match ($request->fileType) {
+                    enFileType::Individual => 'فرد',
+                    enFileType::Company => 'شركة',
+                    enFileType::CharitableCompany => 'شركة خيرية',
+                    default => 'ملف ضريبي',
+                };
+
+                $message = "أهلاً بك {$fullName}،\nيسعدنا إبلاغك بأنه تم قبول طلبك لفتح ملف ({$fileTypeName}) بالاسم التجاري \"{$request->tradeName}\" بنجاح.";
+                SendWhatsAppMessageJob::dispatch($user->phone, $message);
+            }
 
             return [
                 'RequestInfo' => $acceptedRequest,

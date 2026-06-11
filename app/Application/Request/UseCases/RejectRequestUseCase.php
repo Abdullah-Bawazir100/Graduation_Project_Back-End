@@ -14,6 +14,7 @@ use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
+use App\Jobs\SendWhatsAppMessageJob;
 use DomainException;
 
 class RejectRequestUseCase
@@ -49,6 +50,22 @@ class RejectRequestUseCase
         if($request->requestStatus === EnRequestStatus::Pending)
         {
             $acceptedRequest = $this->tax_payer_request_repository->rejectRequest($requestId , $note);
+
+            if ($user->phone) {
+                $fullName = $user->firstName . ' ' . $user->lastName;
+                $fileTypeName = match ($request->fileType) {
+                    enFileType::Individual => 'فرد',
+                    enFileType::Company => 'شركة',
+                    enFileType::CharitableCompany => 'شركة خيرية',
+                    default => 'ملف ضريبي',
+                };
+
+                $message = "أهلاً بك {$fullName}،\nنعتذر منك، لقد تم رفض طلبك لفتح ملف ({$fileTypeName}) بالاسم التجاري \"{$request->tradeName}\".";
+                if ($note) {
+                    $message .= "\n\nسبب الرفض: " . $note;
+                }
+                SendWhatsAppMessageJob::dispatch($user->phone, $message);
+            }
 
             return [
                 'RequestInfo' => $acceptedRequest,
