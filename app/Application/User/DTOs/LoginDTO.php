@@ -8,7 +8,8 @@ class LoginDTO
 {
     public function __construct(
         public string $userName,
-        public string $password
+        public string $password,
+        public string $loginSource = 'web'
     ) {}
 
 

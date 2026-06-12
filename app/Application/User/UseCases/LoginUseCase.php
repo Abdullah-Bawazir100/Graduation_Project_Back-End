@@ -28,6 +28,16 @@ class LoginUseCase
             throw new \DomainException('بيانات الدخول غير صحيحة : كلمة المرور غير صحيحة.');
         }
 
+        // Validate role against login source
+        $isTaxPayer = $user->role === \App\Domain\User\Enums\UserRole::Tax_Payer;
+        if ($loginDTO->loginSource === 'mobile' && !$isTaxPayer) {
+            throw new \DomainException('غير مصرح لك بتسجيل الدخول من تطبيق الموبايل.');
+        }
+        
+        if ($loginDTO->loginSource === 'web' && $isTaxPayer) {
+            throw new \DomainException('غير مصرح لك بتسجيل الدخول من لوحة تحكم النظام الأساسي.');
+        }
+
         $token = $this->tokenService->generateToken($user);
 
         $mustChangePassword = $user->mustChangePassword || $user->password === '12345678';
