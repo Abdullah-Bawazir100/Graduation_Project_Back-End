@@ -11,11 +11,11 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $phone = '735940751';
+        $phone = '1111111111';
 
         DB::table('app_users')->insert([
-            'first_name' => 'Abdullah',
-            'last_name' => 'Bawazir',
+            'first_name' => 'ادمن',
+            'last_name' => 'النظام',
             'id_card' => null,
             'phone' => $phone,
             'user_name' => $phone,

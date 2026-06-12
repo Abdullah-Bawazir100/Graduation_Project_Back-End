@@ -393,6 +393,7 @@ class UsersRolesAndAllowedRoutes
 
             // Statistics
             'statistics.getStatistics',
+            'statistics.getSomeSectionsStatistics',
 
             // Requests
             'get-confirmed-requests',
@@ -443,6 +444,9 @@ class UsersRolesAndAllowedRoutes
             'files-movements.update',
             'files-movements.index',
             'files-movements.show',
+
+            'statistics.getStatistics',
+            'statistics.getSomeSectionsStatistics',
         ],
     ];
 }
