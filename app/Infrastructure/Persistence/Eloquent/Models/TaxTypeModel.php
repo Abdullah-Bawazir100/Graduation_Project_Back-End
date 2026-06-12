@@ -18,6 +18,17 @@ class TaxTypeModel extends Model
         return $this->hasMany(TaxInformationModel::class , 'tax_type_id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($taxType) {
+            $taxType->taxInformations()->each(function ($taxInfo) {
+                $taxInfo->delete();
+            });
+        });
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

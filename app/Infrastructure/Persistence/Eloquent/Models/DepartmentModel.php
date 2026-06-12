@@ -29,6 +29,31 @@ class DepartmentModel extends Model
         return $this->hasMany(FileMovementModel::class, 'department_id');
     }
 
+    public function taxCollectors()
+    {
+        return $this->hasMany(TaxCollectorModel::class, 'dept_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($department) {
+            $department->users()->each(function ($user) {
+                $user->delete();
+            });
+            $department->taxCollectors()->each(function ($collector) {
+                $collector->delete();
+            });
+            $department->files()->each(function ($file) {
+                $file->delete();
+            });
+            $department->fileMovement()->each(function ($movement) {
+                $movement->delete();
+            });
+        });
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

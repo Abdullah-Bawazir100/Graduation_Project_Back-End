@@ -18,6 +18,17 @@ class JobTypeModel extends Model
         return $this->hasMany(TaxCollectorModel::class , 'job_type_id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($jobType) {
+            $jobType->taxCollectors()->each(function ($collector) {
+                $collector->delete();
+            });
+        });
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

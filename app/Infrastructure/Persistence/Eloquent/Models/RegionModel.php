@@ -29,6 +29,17 @@ class RegionModel extends Model
         );
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($region) {
+            $region->districts()->each(function ($district) {
+                $district->delete();
+            });
+        });
+    }
+
 
     public function getActivitylogOptions(): LogOptions
     {

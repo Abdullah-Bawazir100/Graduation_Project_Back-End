@@ -59,6 +59,26 @@ class TaxPayerModel extends Model
         return $this->hasOne(FileModel::class , 'tax_payer_id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($taxPayer) {
+            $taxPayer->companies()->each(function ($company) {
+                $company->delete();
+            });
+            $taxPayer->charitable_companies()->each(function ($charitableCompany) {
+                $charitableCompany->delete();
+            });
+            $taxPayer->tax_informations()->each(function ($taxInfo) {
+                $taxInfo->delete();
+            });
+            if ($taxPayer->file) {
+                $taxPayer->file->delete();
+            }
+        });
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

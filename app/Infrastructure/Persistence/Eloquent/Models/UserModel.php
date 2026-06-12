@@ -113,4 +113,26 @@ class UserModel extends Authenticatable
                 'deleted' => 'حذف مستخدم',
             });
     }
+
+    public function resetPasswordTokens()
+    {
+        return $this->hasMany(ResetPasswordModel::class, 'user_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            $user->taxPayers()->each(function ($taxPayer) {
+                $taxPayer->delete();
+            });
+            if ($user->request) {
+                $user->request->delete();
+            }
+            $user->resetPasswordTokens()->each(function ($token) {
+                $token->delete();
+            });
+        });
+    }
 }

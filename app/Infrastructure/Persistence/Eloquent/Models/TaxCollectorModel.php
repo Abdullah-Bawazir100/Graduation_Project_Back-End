@@ -39,6 +39,17 @@ class TaxCollectorModel extends Model
         return $this->hasMany(FileMovementModel::class, 'tax_collector_id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($taxCollector) {
+            $taxCollector->fileMovement()->each(function ($movement) {
+                $movement->delete();
+            });
+        });
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
