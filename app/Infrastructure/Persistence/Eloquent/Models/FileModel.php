@@ -79,6 +79,21 @@ class FileModel extends Model
         return $this->hasOne(AttachmentFileModel::class, 'file_id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($file) {
+            $file->fileMovement()->each(function ($movement) {
+                $movement->delete();
+            });
+            
+            if ($file->attachment) {
+                $file->attachment->delete();
+            }
+        });
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

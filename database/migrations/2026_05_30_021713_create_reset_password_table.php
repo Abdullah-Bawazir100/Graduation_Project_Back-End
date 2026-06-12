@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('reset_password', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('app_users');
+            $table->foreignId('user_id')->constrained('app_users')->cascadeOnDelete();
             $table->string('code');
             $table->timestamps();
         });

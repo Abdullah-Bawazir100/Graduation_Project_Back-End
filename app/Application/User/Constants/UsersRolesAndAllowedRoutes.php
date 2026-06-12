@@ -363,6 +363,7 @@ class UsersRolesAndAllowedRoutes
 
             // TaxPayers
             'tax-payers.index',
+            'get-tax-payers-with-special-info',
 
             // Departments
             'departments.index',
@@ -389,6 +390,13 @@ class UsersRolesAndAllowedRoutes
             'attachment.index',
             'attachment.show',
             'attachment.update',
+
+            // Statistics
+            'statistics.getStatistics',
+
+            // Requests
+            'get-confirmed-requests',
+            'get-archived-requests',
         ],
 
         // Tax Payer Permissions
