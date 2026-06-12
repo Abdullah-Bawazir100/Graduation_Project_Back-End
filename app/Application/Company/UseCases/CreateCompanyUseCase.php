@@ -16,6 +16,8 @@ use App\Domain\User\Interfaces\PasswordHashInterface;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use DomainException;
+use Illuminate\Support\Str;
+use App\Jobs\SendWhatsAppMessageJob;
 
 class CreateCompanyUseCase
 {
@@ -44,7 +46,7 @@ class CreateCompanyUseCase
         }
 
         $userName = $userDTO->phone;
-        $defaultPassword = '12345678';
+        $generatedPassword = Str::random(8);
 
         $user = new User(
             id: null,
@@ -54,7 +56,7 @@ class CreateCompanyUseCase
             userName: $userName,
             phone: $userDTO->phone ?? '',
             image: $userDTO->image ?? '',
-            password: $this->password_hash->hashPassword($defaultPassword),
+            password: $this->password_hash->hashPassword($generatedPassword),
             createdBy: $actor->id,
             department: $department,
             role: $userDTO->getRole(),
@@ -87,6 +89,14 @@ class CreateCompanyUseCase
         );
 
         $createdCompany = $this->company_repository->create($company);
+
+        $message = "مرحباً بك في نظام خدمات المكلفين.\n";
+        $message .= "تم إنشاء حسابك بنجاح، بيانات الدخول الخاصة بك:\n\n";
+        $message .= "اسم المستخدم: {$userName}\n";
+        $message .= "كلمة المرور: {$generatedPassword}\n\n";
+        $message .= "يمكنك تغيير إسم المستخدم و كلمة المرور الخاصة بك من حسابك الشخصي عبر تطبيق الموبايل.";
+
+        SendWhatsAppMessageJob::dispatch($userDTO->phone, $message);
 
         return [
             'companyInfo' => CompanyMapper::toArray($createdCompany),
