@@ -13,8 +13,11 @@ use App\Domain\User\Entities\User;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Interfaces\PasswordHashInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Jobs\SendWhatsAppMessageJob;
 use DomainException;
 use Exception;
+use Illuminate\Support\Str;
+
 
 class CreateTaxPayerWithUserUseCase
 {
@@ -40,7 +43,7 @@ class CreateTaxPayerWithUserUseCase
         }
 
         $userName = $userDTO->phone;
-        $defaultPassword = '12345678';
+        $generatedPassword = Str::random(8);
 
         $user = new User(
             id: null,
@@ -50,7 +53,7 @@ class CreateTaxPayerWithUserUseCase
             userName: $userName,
             phone: $userDTO->phone ?? '',
             image: $userDTO->image ?? '',
-            password: $this->password_hash->hashPassword($defaultPassword),
+            password: $this->password_hash->hashPassword($generatedPassword),
             createdBy: $actor->id,
             department: $department,
             role: $userDTO->getRole(),
@@ -73,6 +76,14 @@ class CreateTaxPayerWithUserUseCase
         );
 
         $createdTaxPayer = $this->tax_payer_repository->create($taxPayer);
+
+        $message = "مرحباً بك في نظام خدمات المكلفين.\n";
+        $message .= "تم إنشاء حساب لك بنجاح، بيانات الدخول الخاصة بك:\n\n";
+        $message .= "اسم المستخدم: {$userName}\n";
+        $message .= "كلمة المرور: {$generatedPassword}\n\n";
+        $message .= "يمكنك تغيير كلمة المرور الخاصة بك من حسابك الشخصي عبر تطبيق الموبايل.";
+
+        SendWhatsAppMessageJob::dispatch($userDTO->phone, $message);
 
         return [
             'taxPayerInfo' => $createdTaxPayer,
