@@ -336,6 +336,12 @@ class UsersRolesAndAllowedRoutes
             'reject-request',
             'get-rejected-requests',
 
+            // Notifications
+            'notification.store',
+            'notification.index',
+            'notification.show',
+            'notification.update',
+
             // Attachments
             'attachment.store',
             'attachment.index',
