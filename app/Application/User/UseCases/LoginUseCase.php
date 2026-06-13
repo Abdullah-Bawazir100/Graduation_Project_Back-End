@@ -3,6 +3,7 @@
 namespace App\Application\User\UseCases;
 
 use App\Application\User\DTOs\LoginDTO;
+use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\Interfaces\TokenServiceInterface;
 use App\Domain\User\Interfaces\PasswordHashInterface;
@@ -29,11 +30,11 @@ class LoginUseCase
         }
 
         // Validate role against login source
-        $isTaxPayer = $user->role === \App\Domain\User\Enums\UserRole::Tax_Payer;
+        $isTaxPayer = $user->role === UserRole::Tax_Payer;
         if ($loginDTO->loginSource === 'mobile' && !$isTaxPayer) {
             throw new \DomainException('غير مصرح لك بتسجيل الدخول من تطبيق الموبايل.');
         }
-        
+
         if ($loginDTO->loginSource === 'web' && $isTaxPayer) {
             throw new \DomainException('غير مصرح لك بتسجيل الدخول من لوحة تحكم النظام الأساسي.');
         }

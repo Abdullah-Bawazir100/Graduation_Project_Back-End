@@ -39,6 +39,8 @@ class User {
             'image' => $this->image,
             'createdBy' => $this->createdBy,
             'department' => $this->department,
+            'departmentID' => $this->department->id ?? null,
+            'departmentName' => $this->department->name ?? '',
             'role' => $this->role,
             'mustChangePassword' => $this->mustChangePassword,
         ];
