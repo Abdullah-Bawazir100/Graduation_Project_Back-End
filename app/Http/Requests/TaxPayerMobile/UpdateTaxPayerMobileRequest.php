@@ -46,8 +46,8 @@ class UpdateTaxPayerMobileRequest extends FormRequest
 
             'phone' => [
                 'sometimes',
-                'string',
-                'min:9',
+                'digits:9',
+                'regex:/^7[0-9]{8}$/',
             ],
 
             'userName' => [
@@ -96,8 +96,8 @@ class UpdateTaxPayerMobileRequest extends FormRequest
             'idCard.mimes'    => 'يجب أن يكون الملف بصيغة PDF فقط.',
             'idCard.max'      => 'يجب أن لا يتجاوز حجم الملف 5 MB.',
 
-            'phone.string'   => 'رقم الهاتف يجب أن يكون نصًا.',
-            'phone.min'      => 'رقم الهاتف يجب على الأقل أن يكون 9 أرقام.',
+            'phone.digits'   => 'رقم الهاتف يجب أن يتكون من 9 أرقام فقط.',
+            'phone.regex'    => 'رقم الهاتف يجب أن يبدأ بالرقم 7 ويتكون من 9 أرقام.',
             'phone.unique'   => 'رقم الهاتف موجود بالفعل.',
 
             'userName.string'   => 'اسم المستخدم يجب أن يكون نصًا.',

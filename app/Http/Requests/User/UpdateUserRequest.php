@@ -24,7 +24,7 @@ class UpdateUserRequest extends FormRequest
             'firstName'    => ['sometimes', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'lastName'     => ['sometimes', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'idCard'       => ['sometimes', 'file', 'mimes:pdf'],
-            'phone'         => ['sometimes', 'string', 'min:9' , 'unique:app_users,phone'],
+            'phone'         => ['sometimes', 'digits:9', 'regex:/^7[0-9]{8}$/', 'unique:app_users,phone'],
             'image'         => ['sometimes', 'image', 'mimes:png,jpg,jpeg,gif' , 'max:5012'],
             'role'          => ['sometimes', Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
             'departmentID' => ['sometimes', 'integer', 'exists:departments,id'],
@@ -45,8 +45,8 @@ class UpdateUserRequest extends FormRequest
             'idCard.file'  => 'يجب أن يكون الملف المرفوع صحيحًا.',
             'idCard.mimes' => 'يجب أن يكون الملف بصيغة PDF فقط.',
 
-            'phone.string' => 'رقم الهاتف يجب أن يكون نصًا.',
-            'phone.min'      => 'رقم الهاتف يجب على الأقل أن يكون 9 أرقام.',
+            'phone.digits'   => 'رقم الهاتف يجب أن يتكون من 9 أرقام فقط.',
+            'phone.regex'    => 'رقم الهاتف يجب أن يبدأ بالرقم 7 ويتكون من 9 أرقام.',
             'phone.unique' => 'هذا الرقم موجود بالفعل.',
 
             'image.max' => 'حجم الصورة يجب ألا يتجاوز 5 MB .',

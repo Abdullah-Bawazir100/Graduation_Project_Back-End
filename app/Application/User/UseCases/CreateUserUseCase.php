@@ -27,7 +27,8 @@ class CreateUserUseCase
 
     public function execute(User $actor, UserDTO $userDTO)
     {
-        $isAdmin = $actor->role === UserRole::Admin;
+        $isAdmin = $actor->role === UserRole::Admin->value;
+        $isManager = $actor->role === UserRole::Manager->value;
 
         if (
             !$isAdmin &&
@@ -35,6 +36,15 @@ class CreateUserUseCase
         ) {
             throw new DomainException(
                 'غير مصرح لك بإنشاء مستخدم أدمن.'
+            );
+        }
+
+        if (
+            $isManager &&
+            in_array($userDTO->getRole(), [UserRole::Admin, UserRole::Manager])
+        ) {
+            throw new DomainException(
+                'لا يملك المدير صلاحية إنشاء مستخدم بدور مدير أو مشرف.'
             );
         }
 
