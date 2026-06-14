@@ -38,6 +38,16 @@ class UpdateUserUseCase
         $existingUser = $this->userRepository->findById($userId);
         if (!$existingUser) throw new DomainException(' المستخدم مع ال ID [' . $userId . '] غير موجود.');
 
+        // منع تغيير دور المكلف إذا كان لديه ملفات مرتبطة به
+        $currentRole = $existingUser->role instanceof UserRole ? $existingUser->role : UserRole::from($existingUser->role);
+        $newRole = $dto->role instanceof UserRole ? $dto->role : UserRole::from($dto->role);
+
+        if ($currentRole === UserRole::Tax_Payer && $newRole !== UserRole::Tax_Payer) {
+            if ($this->userRepository->hasAssociatedFiles($userId)) {
+                throw new DomainException('لا يمكن تغيير دور المستخدم من مكلف إلى دور آخر لوجود ملفات مرتبطة به.');
+            }
+        }
+
         $department = $this->departmentRepository->findById($dto->departmentID);
         if (!$department) throw new DomainException('القسم مع ال ID [' . $dto->departmentID . '] غير موجود.');
 
