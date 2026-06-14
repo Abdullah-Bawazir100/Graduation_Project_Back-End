@@ -20,7 +20,7 @@ class StoreUserRequest extends FormRequest
             'firstName'    => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'lastName'     => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'idCard'       => ['required', 'file', 'mimes:pdf' , 'max:5242880'],
-            'phone'         => ['required', 'string', 'min:9' , 'unique:app_users,phone'],
+            'phone'         => ['required', 'digits:9', 'regex:/^7[0-9]{8}$/', 'unique:app_users,phone'],
             'image' => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:5012'],
             'role' => ['required' , Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
             'departmentID' => ['required', 'integer', 'exists:departments,id'],
@@ -46,8 +46,8 @@ class StoreUserRequest extends FormRequest
             'idCard.max'     => 'يجب أن لا يتجاوز حجم الملف 5 MB.',
 
             'phone.required' => 'رقم الهاتف مطلوب.',
-            'phone.string'   => 'رقم الهاتف يجب أن يكون نصًا.',
-            'phone.min'      => 'رقم الهاتف يجب على الأقل أن يكون 9 أرقام.',
+            'phone.digits'   => 'رقم الهاتف يجب أن يتكون من 9 أرقام فقط.',
+            'phone.regex'    => 'رقم الهاتف يجب أن يبدأ بالرقم 7 ويتكون من 9 أرقام.',
             'phone.unique'   => 'رقم الهاتف موجود بالفعل.',
 
             'image.required' => 'صورة الشخص مطلوبة.',

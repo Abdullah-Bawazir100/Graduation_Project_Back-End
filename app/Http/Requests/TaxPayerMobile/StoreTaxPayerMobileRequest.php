@@ -27,7 +27,7 @@ class StoreTaxPayerMobileRequest extends FormRequest
             'firstName' => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'lastName'  => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
             'idCard'    => ['required', 'image', 'mimes:png,jpg,jpeg,gif' , 'max:5012'],
-            'phone'     => ['required', 'string', 'min:9' , 'unique:app_users,phone'],
+            'phone'     => ['required', 'digits:9', 'regex:/^7[0-9]{8}$/', 'unique:app_users,phone'],
             'userName'  => ['required', 'string', 'min:3' , 'unique:app_users,user_name'],
             'password'  => ['required', 'string', 'min:8' , 'confirmed'],
             'image'     => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:5012'],
@@ -54,8 +54,8 @@ class StoreTaxPayerMobileRequest extends FormRequest
             'idCard.max'     => 'يجب أن لا يتجاوز حجم الملف 5 MB.',
 
             'phone.required' => 'رقم الهاتف مطلوب.',
-            'phone.string'   => 'رقم الهاتف يجب أن يكون نصًا.',
-            'phone.min'      => 'رقم الهاتف يجب على الأقل أن يكون 9 أرقام.',
+            'phone.digits'   => 'رقم الهاتف يجب أن يتكون من 9 أرقام فقط.',
+            'phone.regex'    => 'رقم الهاتف يجب أن يبدأ بالرقم 7 ويتكون من 9 أرقام.',
             'phone.unique'   => 'رقم الهاتف موجود بالفعل.',
 
             'userName.required' => 'اسم المستخدم مطلوب.',
