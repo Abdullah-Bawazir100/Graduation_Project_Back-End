@@ -138,8 +138,7 @@ class RecyclePinController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ أثناء استعادة السجل',
-                'error' => $e->getMessage()
+                'message' => 'تعذر استعادة السجل بسبب وجود مراجع أو بيانات مرتبطة محذوفة. يرجى استعادة البيانات المرتبطة أولًا قبل استعادة هذا السجل.',                'error' => $e->getMessage()
             ], 500);
         }
     }

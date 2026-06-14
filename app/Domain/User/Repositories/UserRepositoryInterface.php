@@ -19,4 +19,5 @@ interface UserRepositoryInterface {
     public function countUsers(?int $departmentId = null): array;
     public function hasAdminInDepartment(int $departmentId): bool;
     public function checkUserName(string $userName): bool;
+    public function hasAssociatedFiles(int $userId): bool;
 }

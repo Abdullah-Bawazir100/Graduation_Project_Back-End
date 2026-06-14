@@ -181,6 +181,13 @@ class UserRepository implements UserRepositoryInterface
         return UserModel::where('user_name', $userName)->exists();
     }
 
+    public function hasAssociatedFiles(int $userId): bool
+    {
+        return UserModel::where('id', $userId)
+            ->whereHas('taxPayers')
+            ->exists();
+    }
+
     private function mapToDomain(UserModel $userData): User
     {
         $department = new Department(

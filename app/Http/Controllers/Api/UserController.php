@@ -16,6 +16,7 @@ use App\Http\Responses\ApiResponse;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Domain\Department\Entities\Department;
 use App\Domain\User\Enums\UserRole;
+
 use Illuminate\Auth\AuthenticationException;
 use DomainException;
 use Illuminate\Http\Request;
