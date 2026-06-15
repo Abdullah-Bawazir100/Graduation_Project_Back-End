@@ -6,8 +6,7 @@ use App\Application\Services\PdfReportService;
 use App\Domain\Activity_Type\Repositories\Activity_Type_RepositoryInterface;
 use App\Domain\Region\Repositories\RegionRepositoryInterface;
 use App\Domain\District\Repositories\DistrictRepositoryInterface;
-use App\Domain\User\Repositories\UserRepositoryInterface;
-use App\Domain\User\Enums\UserRole;
+
 use Spatie\LaravelPdf\Facades\Pdf;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +19,6 @@ class GenerateBulkFilesReportUseCase
         private Activity_Type_RepositoryInterface $activityTypeRepository,
         private RegionRepositoryInterface $regionRepository,
         private DistrictRepositoryInterface $districtRepository,
-        private UserRepositoryInterface $userRepository,
         private PdfReportService $pdf_report_service
     ) {}
 
@@ -69,9 +67,8 @@ class GenerateBulkFilesReportUseCase
         // Fetch files using ListFilesUseCase which handles roles natively
         $files = $this->listFilesUseCase->execute(null, $authenticatedUserId, $activityTypeId, $regionId, $districtId);
 
-        $user = $this->userRepository->findById($authenticatedUserId);
-        if ($user && $user->role !== UserRole::Admin && empty($files)) {
-            throw new DomainException("لا يوجد ملفات في القسم الذي تنتمي اليه.");
+        if (empty($files)) {
+            throw new DomainException("لا يوجد ملفات لعمل تقرير لها.");
         }
 
         $data = [

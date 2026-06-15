@@ -49,7 +49,6 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
     Route::apiResource('regions' , RegionController::class);
 
-
     Route::apiResource('districts' , DistrictController::class);
     Route::get('districts/region/{regionId}', [DistrictController::class, 'getByRegion'])->name('districts.getByRegion');
 
