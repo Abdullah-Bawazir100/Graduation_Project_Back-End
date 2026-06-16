@@ -41,7 +41,7 @@ class CreateUserUseCase
 
         if (
             $isManager &&
-            in_array($userDTO->getRole(), [UserRole::Admin, UserRole::Manager])
+            in_array($userDTO->getRole(), [UserRole::Manager])
         ) {
             throw new DomainException(
                 'لا يملك المدير صلاحية إنشاء مستخدم بدور مدير أو مشرف.'
