@@ -49,7 +49,7 @@ class CreateUserUseCase
         }
 
         if (
-            !$isAdmin &&
+            $actor->role !== UserRole::Admin &&
             $actor->department->id !== $userDTO->departmentID
         ) {
             throw new DomainException(
