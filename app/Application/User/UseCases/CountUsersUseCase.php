@@ -12,6 +12,7 @@ class CountUsersUseCase
 
     public function execute(?int $departmentId = null): array
     {
+        echo "hhh";
         return $this->repository->countUsers($departmentId);
     }
 }
