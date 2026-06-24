@@ -46,43 +46,42 @@ class StatisticsController
 
     public function getStatistics()
     {
-        return "تم جلب الاحصائيات بنجاح";
-        // $user = Auth::user();
-        // $departmentId = $user && $user->role !== UserRole::Admin ? $user->department_id : null;
+        $user = Auth::user();
+        $departmentId = $user && $user->role !== UserRole::Admin ? $user->department_id : null;
+        echo "hhh";
+        $statistics = [
+            'overview' => [
+                'departments_count' => $this->countDepartmentsUseCase->execute(),
+                'activities_types_count' => $this->countActivitiesTypesUseCase->execute(),
+                'payments_types_count' => $this->countPaymentsTypesUseCase->execute(),
+                'regions_count' => $this->countRegionsUseCase->execute(),
+                'districts_count' => $this->countDistrictsUseCase->execute(),
+                'file_status_count' => $this->countFileStatusUseCase->execute()
+            ],
+            'files_statistics' => [
+                'total_files_count' => $this->countFilesUseCase->execute($departmentId),
+                'individual_files_count' => $this->countFilesByTypeUseCase->execute(enFileType::Individual, $departmentId),
+                'company_files_count' => $this->countFilesByTypeUseCase->execute(enFileType::Company, $departmentId),
+                'charitable_company_files_count' => $this->countFilesByTypeUseCase->execute(enFileType::CharitableCompany, $departmentId),
+            ],
+            'users_statistics' => [
+                'total_users_count' => $this->countUsersUseCase->execute($departmentId),
+            ],
+            'file_movements_statistics' => [
+                'file_movement_count' => $this->countFileMovementsUseCase->execute(),
+                'last_6_months_statistics' => $this->getFileMovementsStatisticsUseCase->execute($departmentId),
+                'top_departments_statistics' => $this->getTopDepartmentsMovementsStatisticsUseCase->execute(),
+            ],
+            'weekly_activity_statistics' => $this->getWeeklyActivityStatisticsUseCase->execute($departmentId),
+            'departments_statistics' => $this->getDepartmentsStatisticsUseCase->execute(),
+        ];
 
-        // $statistics = [
-        //     'overview' => [
-        //         'departments_count' => $this->countDepartmentsUseCase->execute(),
-        //         'activities_types_count' => $this->countActivitiesTypesUseCase->execute(),
-        //         'payments_types_count' => $this->countPaymentsTypesUseCase->execute(),
-        //         'regions_count' => $this->countRegionsUseCase->execute(),
-        //         'districts_count' => $this->countDistrictsUseCase->execute(),
-        //         'file_status_count' => $this->countFileStatusUseCase->execute()
-        //     ],
-        //     'files_statistics' => [
-        //         'total_files_count' => $this->countFilesUseCase->execute($departmentId),
-        //         'individual_files_count' => $this->countFilesByTypeUseCase->execute(enFileType::Individual, $departmentId),
-        //         'company_files_count' => $this->countFilesByTypeUseCase->execute(enFileType::Company, $departmentId),
-        //         'charitable_company_files_count' => $this->countFilesByTypeUseCase->execute(enFileType::CharitableCompany, $departmentId),
-        //     ],
-        //     'users_statistics' => [
-        //         'total_users_count' => $this->countUsersUseCase->execute($departmentId),
-        //     ],
-        //     'file_movements_statistics' => [
-        //         'file_movement_count' => $this->countFileMovementsUseCase->execute(),
-        //         'last_6_months_statistics' => $this->getFileMovementsStatisticsUseCase->execute($departmentId),
-        //         'top_departments_statistics' => $this->getTopDepartmentsMovementsStatisticsUseCase->execute(),
-        //     ],
-        //     'weekly_activity_statistics' => $this->getWeeklyActivityStatisticsUseCase->execute($departmentId),
-        //     'departments_statistics' => $this->getDepartmentsStatisticsUseCase->execute(),
-        // ];
+        $statistics = $this->replaceNullsWithZero($statistics);
 
-        // $statistics = $this->replaceNullsWithZero($statistics);
-
-        // return ApiResponse::ok(
-        //     data: $statistics,
-        //     message: 'تم جلب الإحصائيات بنجاح.'
-        // );
+        return ApiResponse::ok(
+            data: $statistics,
+            message: 'تم جلب الإحصائيات بنجاح.'
+        );
     }
 
     public function getSomeSectionsStatistics()
