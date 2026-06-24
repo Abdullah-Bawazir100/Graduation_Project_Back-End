@@ -48,7 +48,6 @@ class StatisticsController
     {
         $user = Auth::user();
         $departmentId = $user && $user->role !== UserRole::Admin ? $user->department_id : null;
-        echo "hhh";
         $statistics = [
             'overview' => [
                 'departments_count' => $this->countDepartmentsUseCase->execute(),
@@ -75,6 +74,9 @@ class StatisticsController
             'weekly_activity_statistics' => $this->getWeeklyActivityStatisticsUseCase->execute($departmentId),
             'departments_statistics' => $this->getDepartmentsStatisticsUseCase->execute(),
         ];
+
+        echo "hhh";
+
 
         $statistics = $this->replaceNullsWithZero($statistics);
 
