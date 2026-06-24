@@ -46,7 +46,8 @@ class StatisticsController
 
     public function getStatistics()
     {
-        $user = Auth::user();
+        try {
+            $user = Auth::user();
         $departmentId = $user && $user->role !== UserRole::Admin ? $user->department_id : null;
         $statistics = [
             'overview' => [
@@ -81,6 +82,14 @@ class StatisticsController
             data: $statistics,
             message: 'تم جلب الإحصائيات بنجاح.'
         );
+        } catch(\Throwable $e) {
+
+            return response()->json([
+                'error_message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ], 500);
+        }
     }
 
     public function getSomeSectionsStatistics()

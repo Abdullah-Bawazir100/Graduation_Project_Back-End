@@ -152,39 +152,21 @@ class UserRepository implements UserRepositoryInterface
             $taxCollectorQuery->where('dept_id', $departmentId);
         }
 
-        try {
-            return [
-            'total_users' => (clone $userQuery)->count() ?? 0,
+        return [
+            'total_users' => (clone $userQuery)->count(),
 
-            'admin_count' => (clone $userQuery)->where('role', UserRole::Admin->value)->count() ?? 0,
+            'admin_count' => (clone $userQuery)->where('role', UserRole::Admin->value)->count(),
 
-            'manager_count' => (clone $userQuery)->where('role', UserRole::Manager->value)->count() ?? 0,
+            'manager_count' => (clone $userQuery)->where('role', UserRole::Manager->value)->count(),
 
-            'employee_count' => (clone $userQuery)->where('role', UserRole::Employee->value)->count() ?? 0,
+            'employee_count' => (clone $userQuery)->where('role', UserRole::Employee->value)->count(),
 
-            'tax_payer_count' => (clone $userQuery)->where('role', UserRole::Tax_Payer->value)->count() ?? 0,
+            'tax_payer_count' => (clone $userQuery)->where('role', UserRole::Tax_Payer->value)->count(),
 
-            'collectors_manager_count' => (clone $userQuery)->where('role', UserRole::Collectors_Manager->value)->count() ?? 0,
+            'collectors_manager_count' => (clone $userQuery)->where('role', UserRole::Collectors_Manager->value)->count(),
 
-            'tax_collector_count' => $taxCollectorQuery->count() ?? 0,
+            'tax_collector_count' => $taxCollectorQuery->count(),
         ];
-        } catch(\Exception $e) {
-            return [
-            'total_users' => 0,
-
-            'admin_count' => 0,
-
-            'manager_count' => 0,
-
-            'employee_count' => 0,
-
-            'tax_payer_count' =>  0,
-
-            'collectors_manager_count' => 0,
-
-            'tax_collector_count' => 0,
-        ];
-        }
     }
 
     public function hasAdminInDepartment(int $departmentId): bool
