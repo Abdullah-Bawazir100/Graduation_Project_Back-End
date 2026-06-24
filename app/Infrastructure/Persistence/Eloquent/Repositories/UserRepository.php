@@ -152,7 +152,8 @@ class UserRepository implements UserRepositoryInterface
             $taxCollectorQuery->where('dept_id', $departmentId);
         }
 
-        return [
+        try {
+            return [
             'total_users' => (clone $userQuery)->count() ?? 0,
 
             'admin_count' => (clone $userQuery)->where('role', UserRole::Admin->value)->count() ?? 0,
@@ -167,6 +168,23 @@ class UserRepository implements UserRepositoryInterface
 
             'tax_collector_count' => $taxCollectorQuery->count() ?? 0,
         ];
+        } catch(\Exception $e) {
+            return [
+            'total_users' => 0,
+
+            'admin_count' => 0,
+
+            'manager_count' => 0,
+
+            'employee_count' => 0,
+
+            'tax_payer_count' =>  0,
+
+            'collectors_manager_count' => 0,
+
+            'tax_collector_count' => 0,
+        ];
+        }
     }
 
     public function hasAdminInDepartment(int $departmentId): bool
