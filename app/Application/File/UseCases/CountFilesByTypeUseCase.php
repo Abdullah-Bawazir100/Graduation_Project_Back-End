@@ -13,6 +13,8 @@ class CountFilesByTypeUseCase
 
     public function execute(enFileType $type, ?int $departmentId = null): int
     {
+                echo "hhh";
+
         return $this->repository->countFilesByType($type, $departmentId);
     }
 }

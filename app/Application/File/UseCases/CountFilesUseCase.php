@@ -12,7 +12,6 @@ class CountFilesUseCase
 
     public function execute(?int $departmentId = null): int
     {
-        echo "hhh";
         return $this->repository->countFiles($departmentId);
     }
 }
