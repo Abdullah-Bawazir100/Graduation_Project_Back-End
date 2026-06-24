@@ -153,19 +153,19 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return [
-            'total_users' => (clone $userQuery)->count(),
+            'total_users' => (clone $userQuery)->count() ?? 0,
 
-            'admin_count' => (clone $userQuery)->where('role', UserRole::Admin->value)->count(),
+            'admin_count' => (clone $userQuery)->where('role', UserRole::Admin->value)->count() ?? 0,
 
-            'manager_count' => (clone $userQuery)->where('role', UserRole::Manager->value)->count(),
+            'manager_count' => (clone $userQuery)->where('role', UserRole::Manager->value)->count() ?? 0,
 
-            'employee_count' => (clone $userQuery)->where('role', UserRole::Employee->value)->count(),
+            'employee_count' => (clone $userQuery)->where('role', UserRole::Employee->value)->count() ?? 0,
 
-            'tax_payer_count' => (clone $userQuery)->where('role', UserRole::Tax_Payer->value)->count(),
+            'tax_payer_count' => (clone $userQuery)->where('role', UserRole::Tax_Payer->value)->count() ?? 0,
 
-            'collectors_manager_count' => (clone $userQuery)->where('role', UserRole::Collectors_Manager->value)->count(),
+            'collectors_manager_count' => (clone $userQuery)->where('role', UserRole::Collectors_Manager->value)->count() ?? 0,
 
-            'tax_collector_count' => $taxCollectorQuery->count(),
+            'tax_collector_count' => $taxCollectorQuery->count() ?? 0,
         ];
     }
 
