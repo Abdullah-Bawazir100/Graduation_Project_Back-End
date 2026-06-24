@@ -8,14 +8,24 @@ Route::get('/', function () {
 });
 
 Route::get('/run-link', function () {
-    $target = storage_path('app/public');
     $shortcut = public_path('storage');
+    $target = base_path('storage/app/public');
 
-    if(file_exists($shortcut))
+    if(file_exists($shortcut) || is_link($shortcut))
     {
-        return 'The "public/storage" directory already exists.';
+        if(is_dir($shortcut) && !is_link($shortcut)) {
+            rmdir($shortcut);
+        }
+        else {
+            @unlink($shortcut);
+        }
     }
 
-    symlink($target, $shortcut);
-    return 'The "public/storage" directory has been created successfully.';
+    if(symlink($target, $shortcut))
+    {
+        return 'The "public/storage" directory has been created successfully.';
+    }
+
+    return 'Failed to create storage link. please check folder permissions.';
+
 });
