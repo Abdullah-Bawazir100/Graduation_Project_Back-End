@@ -194,7 +194,7 @@ class FileRepository implements FileRepositoryInterface
         if ($departmentId !== null) {
             $query->where('department_id', $departmentId);
         }
-        return $query->count();
+        return $query->count() ?? 0;
     }
 
     public function countFilesByType(enFileType $type, ?int $departmentId = null): int
@@ -207,7 +207,7 @@ class FileRepository implements FileRepositoryInterface
             $query->where('department_id', $departmentId);
         }
 
-        return $query->count();
+        return $query->count() ?? 0;
     }
 
     private function mapToDomain(FileModel $model): File

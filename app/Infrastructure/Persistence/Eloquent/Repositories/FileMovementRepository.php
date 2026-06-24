@@ -113,7 +113,7 @@ class FileMovementRepository implements FileMovementRepositoryInterface
 
     public function getFileMovementCount(): int
     {
-        return FileMovementModel::count();
+        return FileMovementModel::count() ?? 0;
     }
 
     public function countFileMovements(?int $departmentId = null): array
@@ -125,10 +125,10 @@ class FileMovementRepository implements FileMovementRepositoryInterface
         }
 
         return [
-            'total_movements' => (clone $query)->count(),
-            'inside_archive_count' => (clone $query)->where('status', \App\Domain\FileMovement\Enums\enFileMovement::InsideArchive->value)->count(),
-            'outside_archive_count' => (clone $query)->where('status', \App\Domain\FileMovement\Enums\enFileMovement::OutsideArchive->value)->count(),
-            'missing_count' => (clone $query)->where('status', \App\Domain\FileMovement\Enums\enFileMovement::Missing->value)->count(),
+            'total_movements' => (clone $query)->count() ?? 0,
+            'inside_archive_count' => (clone $query)->where('status', \App\Domain\FileMovement\Enums\enFileMovement::InsideArchive->value)->count() ?? 0,
+            'outside_archive_count' => (clone $query)->where('status', \App\Domain\FileMovement\Enums\enFileMovement::OutsideArchive->value)->count() ?? 0,
+            'missing_count' => (clone $query)->where('status', \App\Domain\FileMovement\Enums\enFileMovement::Missing->value)->count() ?? 0,
         ];
     }
 
@@ -137,7 +137,7 @@ class FileMovementRepository implements FileMovementRepositoryInterface
         $sixMonthsAgo = Carbon::now()->subMonths(6)->startOfMonth();
 
         $query = FileMovementModel::where('date', '>=', $sixMonthsAgo);
-        
+
         if ($departmentId !== null) {
             $query->where('department_id', $departmentId);
         }
