@@ -12,6 +12,8 @@ class CountDepartmentsUseCase
 
     public function execute(): int
     {
+                echo "hhh";
+
         return $this->repository->countDepartments();
     }
 }

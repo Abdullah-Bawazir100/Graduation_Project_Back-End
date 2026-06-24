@@ -75,9 +75,6 @@ class StatisticsController
             'departments_statistics' => $this->getDepartmentsStatisticsUseCase->execute(),
         ];
 
-        echo "hhh";
-
-
         $statistics = $this->replaceNullsWithZero($statistics);
 
         return ApiResponse::ok(
