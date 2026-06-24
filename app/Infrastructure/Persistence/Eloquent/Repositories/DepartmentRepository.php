@@ -28,8 +28,10 @@ class DepartmentRepository implements DepartmentRepositoryInterface
     {
         $departmentModel = DepartmentModel::find($department->id);
 
-        $departmentModel->name = $department->name;
-        $departmentModel->save();
+        //$departmentModel->name = $department->name;
+        $departmentModel->update([
+            'name' => $department->name,
+        ]);
 
         return new Department(
             $departmentModel->id,
@@ -113,7 +115,7 @@ class DepartmentRepository implements DepartmentRepositoryInterface
             return [
                 'department_id' => $department->id,
                 'department_name' => $department->name,
-                
+
                 'users_statistics' => [
                     'total_users' => $department->users_count,
                     'admin_count' => $department->admin_count ?? 0,
