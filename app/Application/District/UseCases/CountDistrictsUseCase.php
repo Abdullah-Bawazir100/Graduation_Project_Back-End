@@ -11,8 +11,7 @@ class CountDistrictsUseCase
     ) {}
 
     public function execute(): int
-    {                echo "hhh";
-
+    {                
         return $this->repository->countDistricts();
     }
 }
