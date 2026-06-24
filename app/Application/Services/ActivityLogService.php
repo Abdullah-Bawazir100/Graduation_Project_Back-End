@@ -278,10 +278,10 @@ class ActivityLogService
             ->first();
 
         return [
-            'total'   => (int) $stats->total_count,
-            'created' => (int) $stats->created_count,
-            'updated' => (int) $stats->updated_count,
-            'deleted' => (int) $stats->deleted_count,
+            'total'   => (int) ($stats->total_count ?? 0),
+            'created' => (int) ($stats->created_count ?? 0),
+            'updated' => (int) ($stats->updated_count ?? 0),
+            'deleted' => (int) ($stats->deleted_count ?? 0),
         ];
     }
 }

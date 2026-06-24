@@ -76,6 +76,8 @@ class StatisticsController
             'departments_statistics' => $this->getDepartmentsStatisticsUseCase->execute(),
         ];
 
+        $statistics = $this->replaceNullsWithZero($statistics);
+
         return ApiResponse::ok(
             data: $statistics,
             message: 'تم جلب الإحصائيات بنجاح.'
@@ -88,9 +90,23 @@ class StatisticsController
 
         $data = $this->getSomeSectionsStatisticsUseCase->execute($userId);
 
+        $data = $this->replaceNullsWithZero($data);
+
         return ApiResponse::ok(
             data: $data,
             message: 'تم جلب الإحصائيات بنجاح.'
         );
+    }
+
+    private function replaceNullsWithZero(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $data[$key] = $this->replaceNullsWithZero($value);
+            } elseif (is_null($value)) {
+                $data[$key] = 0;
+            }
+        }
+        return $data;
     }
 }
