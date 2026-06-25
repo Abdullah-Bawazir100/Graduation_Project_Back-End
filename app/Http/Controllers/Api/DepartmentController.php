@@ -63,6 +63,7 @@ class DepartmentController extends Controller
         UpdateDepartmentRequest $request,
         UpdateDepartmentUseCase $useCase
     ) {
+        dd($request->all());
         $actor = $this->getActor();
 
         $dto = new DepartmentDTO(
