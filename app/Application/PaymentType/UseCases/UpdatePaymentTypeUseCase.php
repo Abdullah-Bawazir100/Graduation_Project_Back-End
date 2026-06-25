@@ -22,8 +22,8 @@ class UpdatePaymentTypeUseCase
             throw new DomainException("نوع الدفع مع ال ID [$id] غير موجود.");
         }
 
-        $name = trim($paymentTypeDTOs->name);
-        $note = trim($paymentTypeDTOs->note);
+        $name = $paymentTypeDTOs->name ??  $paymentType->name;
+        $note = $paymentTypeDTOs->note ?? $paymentType->note;
 
         return $this->payment_type_repository_interface->update(
             new PaymentType($id , $name , $note)
