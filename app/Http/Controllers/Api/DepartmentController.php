@@ -63,13 +63,6 @@ class DepartmentController extends Controller
         UpdateDepartmentRequest $request,
         UpdateDepartmentUseCase $useCase
     ) {
-        return response()->json([
-                'all_inputs'       => $request->all(),
-                'validated_inputs' => $request->validated(),
-                'request_method'   => $request->method(),
-                'content_type'     => $request->header('Content-Type')
-            ]);
-
         $actor = $this->getActor();
 
         $dto = new DepartmentDTO(
