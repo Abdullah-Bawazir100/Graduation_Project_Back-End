@@ -5,6 +5,7 @@ namespace App\Application\Activity_Type\UseCases;
 use App\Application\Activity_Type\DTOs\ActivityTypeDTOs;
 use App\Domain\Activity_Type\Entities\Activity_Type;
 use App\Domain\Activity_Type\Repositories\Activity_Type_RepositoryInterface;
+use DomainException;
 
 class UpdateActivityTypeUseCase
 {
@@ -18,7 +19,7 @@ class UpdateActivityTypeUseCase
         $activityType = $this->activity_Type_RepositoryInterface->findById($id);
         if(!$activityType)
         {
-            throw new \Exception("Activity Type with ID [$id] not found.");
+            throw new DomainException("لا يوجد نوع نشاط مع ال ID [$id].");
         }
 
         $name = $activityTypeDTOs->name ?? $activityType->name;
