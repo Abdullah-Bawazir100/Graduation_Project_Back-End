@@ -5,6 +5,7 @@ namespace App\Application\Region\UseCases;
 use App\Application\Region\DTOs\RegionDTOs;
 use App\Domain\Region\Entities\Region;
 use App\Domain\Region\Repositories\RegionRepositoryInterface;
+use DomainException;
 
 class UpdateRegionUseCase
 {
@@ -18,7 +19,7 @@ class UpdateRegionUseCase
         $regionData = $this->region_repository_interface->findById($id);
         if(!$regionData)
         {
-            throw new \Exception('المنطقة مع ال ID [' . $id . '] غير موجودة.');
+            throw new DomainException('المنطقة مع ال ID [' . $id . '] غير موجودة.');
         }
 
         $name = $regionDTOs->name ?? $regionData->name;

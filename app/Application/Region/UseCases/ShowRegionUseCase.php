@@ -3,6 +3,7 @@
 namespace App\Application\Region\UseCases;
 
 use App\Domain\Region\Repositories\RegionRepositoryInterface;
+use DomainException;
 
 class ShowRegionUseCase
 {
@@ -17,7 +18,7 @@ class ShowRegionUseCase
 
         if(!$region)
         {
-            throw new \Exception("المنطقة مع ال ID [{$id}] غير موجودة.");
+            throw new DomainException("المنطقة مع ال ID [{$id}] غير موجودة.");
         }
 
         return $region;
