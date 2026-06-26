@@ -3,6 +3,7 @@
 namespace App\Application\Activity_Type\UseCases;
 
 use App\Domain\Activity_Type\Repositories\Activity_Type_RepositoryInterface;
+use DomainException;
 
 class ShowActivityTypeUseCase
 {
@@ -17,7 +18,7 @@ class ShowActivityTypeUseCase
 
         if(!$activityType)
         {
-            throw new \Exception("Activity Type with ID [$id] not found.");
+            throw new DomainException("لا يوجد نوع نشاط مع ال ID [$id].");
         }
 
         return $activityType;

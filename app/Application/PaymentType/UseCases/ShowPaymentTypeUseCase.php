@@ -3,6 +3,7 @@
 namespace App\Application\PaymentType\UseCases;
 
 use App\Domain\PaymentType\Repositories\PaymentTypeRepositoryInterface;
+use DomainException;
 
 class ShowPaymentTypeUseCase
 {
@@ -17,7 +18,7 @@ class ShowPaymentTypeUseCase
 
         if(!$paymentType)
         {
-            throw new \Exception("Payment Type with ID [$id] not found.");
+            throw new DomainException("لا يوجد نوع دفع مع ال ID [$id].");
         }
 
         return $paymentType;
