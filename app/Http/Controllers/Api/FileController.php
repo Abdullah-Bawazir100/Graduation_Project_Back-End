@@ -142,7 +142,7 @@ class FileController extends Controller
     {
         $useCase->execute($id);
         return ApiResponse::ok(
-            message: "تم حذف الملف مع ال ID $id بنجاح."
+            message: "تم حذف الملف مع ال ID [$id] بنجاح."
         );
     }
 

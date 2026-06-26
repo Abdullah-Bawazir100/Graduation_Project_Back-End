@@ -6,6 +6,7 @@ use App\Application\District\DTOs\DistrictDTOs;
 use App\Domain\District\Entities\District;
 use App\Domain\District\Repositories\DistrictRepositoryInterface;
 use App\Domain\Region\Repositories\RegionRepositoryInterface;
+use DomainException;
 
 class UpdateDistrictUseCase
 {
@@ -20,7 +21,7 @@ class UpdateDistrictUseCase
         $districtData = $this->districtRepositoryInterface->findById($id);
         if(!$districtData)
         {
-            throw new \Exception('الحي مع ال ID [' . $id . '] غير موجود.');
+            throw new DomainException('الحي مع ال ID [' . $id . '] غير موجود.');
         }
 
         if ($districtDTOs->regionID !== null) {

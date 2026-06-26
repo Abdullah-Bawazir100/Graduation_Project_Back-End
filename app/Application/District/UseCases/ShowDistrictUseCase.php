@@ -3,6 +3,7 @@
 namespace App\Application\District\UseCases;
 
 use App\Domain\District\Repositories\DistrictRepositoryInterface;
+use DomainException;
 
 class ShowDistrictUseCase
 {
@@ -15,7 +16,7 @@ class ShowDistrictUseCase
     {
         $districtData = $this->district_repository_interface->findById($id);
         if(!$districtData){
-            throw new \Exception("الحي مع ال ID [{$id}] غير موجود.");
+            throw new DomainException("الحي مع ال ID [{$id}] غير موجود.");
         }
         return $districtData;
     }
