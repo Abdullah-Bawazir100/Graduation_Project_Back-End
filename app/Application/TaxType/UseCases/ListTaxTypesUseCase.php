@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\TaxTYpe\UseCases;
+namespace App\Application\TaxType\UseCases;
 
 use App\Domain\TaxType\Repositories\TaxTypeRepositoryInterface;
 
@@ -12,7 +12,6 @@ class ListTaxTypesUseCase
 
     public function execute()
     {
-        echo "hhh";
         return $this->tax_type_repository->getAll();
     }
 }
