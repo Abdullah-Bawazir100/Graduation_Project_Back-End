@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Application\TaxType\DTOs\TaxTypeDTOs;
 use App\Application\TaxType\UseCases\CreateTaxTypeUseCase;
 use App\Application\TaxType\UseCases\DeleteTaxTypeUseCase;
-use App\Application\TaxTYpe\UseCases\ListTaxTypesUseCase;
+use App\Application\TaxType\UseCases\ListTaxTypesUseCase;
 use App\Application\TaxType\UseCases\ShowTaxTypeUseCase;
 use App\Application\TaxType\UseCases\UpdateTaxTypeUseCase;
 use App\Http\Controllers\Controller;
