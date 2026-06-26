@@ -12,17 +12,27 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TaxType\StoreTaxTypeRequest;
 use App\Http\Requests\TaxType\UpdateTaxTypeRequest;
 use App\Http\Responses\ApiResponse;
+use Throwable;
 
 class TaxTypeController extends Controller
 {
 
     public function index(ListTaxTypesUseCase $useCase)
     {
-        $taxTypes = $useCase->execute();
-        return ApiResponse::created(
-            data: $taxTypes,
-            message: 'تم جلب أنواع الضرائب بنجاح.'
-        );
+        try{
+            $taxTypes = $useCase->execute();
+                return ApiResponse::created(
+                    data: $taxTypes,
+                    message: 'تم جلب أنواع الضرائب بنجاح.'
+                );
+        } catch(Throwable $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+                'code'    => $e->getCode()
+            ], 500);
+        };
     }
 
 
