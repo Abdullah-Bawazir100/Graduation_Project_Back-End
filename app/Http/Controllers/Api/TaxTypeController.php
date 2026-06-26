@@ -12,7 +12,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TaxType\StoreTaxTypeRequest;
 use App\Http\Requests\TaxType\UpdateTaxTypeRequest;
 use App\Http\Responses\ApiResponse;
-use Throwable;
 
 class TaxTypeController extends Controller
 {
@@ -25,7 +24,7 @@ class TaxTypeController extends Controller
                     data: $taxTypes,
                     message: 'تم جلب أنواع الضرائب بنجاح.'
                 );
-        } catch(Throwable $e) {
+        } catch(\Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage(),
                 'file'    => $e->getFile(),

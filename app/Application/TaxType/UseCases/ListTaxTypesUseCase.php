@@ -12,6 +12,7 @@ class ListTaxTypesUseCase
 
     public function execute()
     {
+        echo "hhh";
         return $this->tax_type_repository->getAll();
     }
 }
