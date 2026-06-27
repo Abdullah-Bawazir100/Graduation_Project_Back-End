@@ -139,6 +139,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
 });
 
+// This route for check if the  queue is working or not
 Route::get('/run-queue-now', function() {
     Artisan::call('queue:work --stop-when-empty');
     return response()->json([
