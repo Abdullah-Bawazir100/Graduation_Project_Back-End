@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\{
 };
 
 use App\Http\Middleware\appUsersMiddleware;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login' , [AuthController::class, 'login'])->name('auth.login');
@@ -136,4 +137,11 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
     Route::get('get-tax-payer-mobile-file_By_Id/{id}' , [TaxPayerMobileController::class , 'getTaxPayerFileById'])
     ->name('get-tax-payer-mobile-file_By_Id');
 
+});
+
+Route::get('/run-queue-now', function() {
+    Artisan::call('queue:work --stop-when-empty');
+    return response()->json([
+        'output' => Artisan::output()
+    ]);
 });
