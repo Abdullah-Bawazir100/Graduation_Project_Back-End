@@ -139,9 +139,9 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function 
 
 });
 
-// Route::get('/run-queue-now', function() {
-//     Artisan::call('queue:work --stop-when-empty');
-//     return response()->json([
-//         'output' => Artisan::output()
-//     ]);
-// });
+Route::get('/run-queue-now', function() {
+    Artisan::call('queue:work --stop-when-empty');
+    return response()->json([
+        'output' => Artisan::output()
+    ]);
+});
