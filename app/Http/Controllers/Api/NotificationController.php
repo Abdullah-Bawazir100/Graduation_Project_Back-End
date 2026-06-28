@@ -27,11 +27,20 @@ class NotificationController extends Controller
 
     public function index(ListNotificationsUseCase $useCase)
     {
-        $notifications = $useCase->execute();
-        return ApiResponse::ok(
-            data: $notifications,
-            message: 'تم جلب الإشعارات بنجاح.'
-        );
+        try{
+            $notifications = $useCase->execute();
+            return ApiResponse::ok(
+                data: $notifications,
+                message: 'تم جلب الإشعارات بنجاح.'
+            );
+        } catch(\Throwable $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTrace()
+            ]);
+        }
     }
 
 
