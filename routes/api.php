@@ -146,3 +146,9 @@ Route::get('/run-queue-now', function() {
         'output' => Artisan::output()
     ]);
 });
+
+    
+Route::get('/clear-config', function () {
+    Artisan::call('config:clear');
+    return response()->json(['message' => 'Config cache cleared successfully!']);
+});
