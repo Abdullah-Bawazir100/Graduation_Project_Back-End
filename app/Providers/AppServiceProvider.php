@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
+use \Spatie\ResponseCache\Facades\ResponseCache;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -148,6 +149,47 @@ class AppServiceProvider extends ServiceProvider
         // تعطيل التحقق من شهادة SSL في بيئة التطوير المحلية فقط
         if (app()->environment('local')) {
             Http::globalOptions(['verify' => false]);
+        }
+
+        $models = [
+            \App\Infrastructure\Persistence\Eloquent\Models\ActivityTypeModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\AddressModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\AttachmentFileModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\CharitableCompanyModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\CompanyModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\DepartmentModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\DistrictModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\FileModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\FileMovementModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\FileStatusModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\JobTypeModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\NotificationModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\PaymentTypeModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\RecyclePinModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\RegionModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\RequestModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\TaxCollectorModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\TaxInformationModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\TaxPayerModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\TaxTypeModel::class,
+            \App\Infrastructure\Persistence\Eloquent\Models\UserModel::class,
+        ];
+
+        foreach ($models as $model) {
+            // تصفير الكاش عند الإضافة
+            $model::created(function () {
+                ResponseCache::clear();
+            });
+
+            // تصفير الكاش عند التعديل
+            $model::updated(function () {
+                ResponseCache::clear();
+            });
+
+            // تصفير الكاش عند الحذف
+            $model::deleted(function () {
+                ResponseCache::clear();
+            });
         }
     }
 }

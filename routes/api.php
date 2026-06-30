@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\{
 use App\Http\Middleware\appUsersMiddleware;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use Spatie\ResponseCache\Facades\ResponseCache;
 
 Route::post('login' , [AuthController::class, 'login'])->name('auth.login');
 Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name('auth.forget-password');
@@ -26,7 +27,7 @@ Route::post('resend' , [ResetPasswordController::class , 'resend'])->name('resen
 Route::post('create-tax-payer-mobile', [TaxPayerMobileController::class, 'store']);
 Route::post('tax-payer-mobile-login', [TaxPayerMobileController::class, 'TaxPayerMobileLogin']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum' , 'cacheResponse'])->group(function () {
 
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('auth.reset-password');
     Route::post('complete-profile', [AuthController::class, 'completeProfile'])->name('auth.complete-profile');
@@ -36,7 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-Route::middleware(['auth:sanctum' , appUsersMiddleware::class])->group(function () {
+Route::middleware(['auth:sanctum' , appUsersMiddleware::class , 'cacheResponse'])->group(function () {
 
     Route::post('create-user' , [AuthController::class, 'createUser'])->name('auth.create-user');
     Route::apiResource('app_users', UserController::class);
@@ -147,8 +148,9 @@ Route::get('/run-queue-now', function() {
     ]);
 });
 
-    
+
 Route::get('/clear-config', function () {
     Artisan::call('config:clear');
+    ResponseCache::clear();
     return response()->json(['message' => 'Config cache cleared successfully!']);
 });
