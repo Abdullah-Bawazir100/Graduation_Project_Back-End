@@ -2,7 +2,7 @@
 
 namespace App\Domain\TaxInformation\Entities;
 
-use App\Domain\TaxPayer\Entities\TaxPayer;
+use App\Domain\File\Entities\File;
 use App\Domain\TaxType\Entities\TaxType;
 
 class TaxInformation
@@ -10,13 +10,12 @@ class TaxInformation
     public function __construct(
         public ?int $id,
         public ?int $taxTypeId,
-        public ?int $taxPayerId,
+        public ?int $fileId,
         public string $taxAmount,
         public string $lastPayment,
         public ?string $attachment,
         public TaxType $taxType,
-        public TaxPayer $taxPayer,
-
+        public ?File $file,
     )
     {}
 }

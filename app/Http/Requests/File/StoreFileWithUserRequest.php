@@ -2,9 +2,13 @@
 
 namespace App\Http\Requests\File;
 
+use App\Domain\User\Enums\UserRole;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Override;
 
-class StoreFileRequest extends FormRequest
+class StoreFileWithUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,17 +21,27 @@ class StoreFileRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
+            // User fields
+            'firstName'    => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
+            'lastName'     => ['required', 'string', 'max:255' , 'not_regex:/^\d+$/'],
+            'idCard'       => ['required', 'file', 'mimes:pdf' , 'max:5242880'],
+            'phone'         => ['required', 'digits:9', 'regex:/^7[0-9]{8}$/', 'unique:app_users,phone'],
+            'image' => ['required' , 'image' , 'mimes:png,jpg,jpeg,gif' , 'max:5242880'],
+            'role' => ['required' , Rule::in(array_map(fn($r) => $r->value, UserRole::cases()))],
+            'departmentID' => ['required', 'integer', 'exists:departments,id'],
+
+
+            // File fields
             'taxNumber' => ['nullable', 'string', 'max:255'],
             'inventoryNumber' => ['required', 'string', 'max:255' , 'unique:files,inventory_number'],
             'activityStartDate' => ['nullable', 'string'],
             'docsCount' => ['required', 'integer', 'min:0'],
             'note' => ['nullable', 'string'],
-            'userId' => ['required', 'integer', 'exists:app_users,id'],
             'departmentId' => ['required', 'integer', 'exists:departments,id'],
             'fileStatusId' => ['required', 'integer', 'exists:file_status,id'],
             'activityTypeId' => ['required', 'integer', 'exists:activity_types,id'],
@@ -36,9 +50,41 @@ class StoreFileRequest extends FormRequest
         ];
     }
 
+    #[Override]
     public function messages()
     {
         return [
+
+            'firstName.required' => 'الأسم الأول مطلوب.',
+            'firstName.string'   => 'الأسم الأول يجب أن يكون نص.',
+            'firstName.max'      => 'الأسم الأول يجب ألا يتجاوز 255 حرفًا.',
+            'firstName.not_regex' => 'لا يمكن أن يكون الأسم الأول أرقام فقط.',
+
+            'lastName.required' => 'الأسم الأخير مطلوب.',
+            'lastName.string'   => 'الأسم الأخير يجب أن يكون نص.',
+            'lastName.max'      => 'الأسم الأخير يجب ألا يتجاوز 255 حرفًا.',
+            'lastName.not_regex' => 'لا يمكن أن يكون الأسم الأخير أرقام فقط.',
+
+            'idCard.required' => 'ملف البطاقة الشخصية مطلوب.',
+            'idCard.file'     => 'يجب أن يكون الملف المرفوع صحيحًا.',
+            'idCard.mimes'    => 'يجب أن يكون الملف بصيغة PDF فقط.',
+            'idCard.max'     => 'يجب أن لا يتجاوز حجم الملف 5 MB.',
+
+            'phone.required' => 'رقم الهاتف مطلوب.',
+            'phone.digits'   => 'رقم الهاتف يجب أن يتكون من 9 أرقام فقط.',
+            'phone.regex'    => 'رقم الهاتف يجب أن يبدأ بالرقم 7 ويتكون من 9 أرقام.',
+            'phone.unique'   => 'رقم الهاتف موجود بالفعل.',
+
+            'image.required' => 'صورة الشخص مطلوبة.',
+            'image.max' => 'حجم الصورة يجب ألا يتجاوز 5 MB .',
+
+            'role.required' => 'الدور مطلوب.',
+            'role.in' => 'الدور المحدد غير صالح.',
+
+            'departmentID.required' => 'القسم مطلوب.',
+            'departmentID.integer'  => 'القسم يجب أن يكون رقمًا صحيحًا.',
+            'departmentID.exists'   => 'القسم المحدد غير موجود.',
+
             'taxNumber.string' => 'الرقم الضريبي يجب أن يكون نصاً.',
             'taxNumber.max' => 'الرقم الضريبي يجب أن لا يتجاوز 255 حرف.',
 
@@ -55,9 +101,9 @@ class StoreFileRequest extends FormRequest
 
             'note.string' => 'الملاحظة يجب أن تكون نصاً.',
 
-            'userId.required' => 'معرف المستخدم مطلوب.',
-            'userId.integer' => 'معرف المستخدم يجب أن يكون رقماً صحيحاً.',
-            'userId.exists' => 'المستخدم المحدد غير موجود.',
+            // 'userId.required' => 'معرف المستخدم مطلوب.',
+            // 'userId.integer' => 'معرف المستخدم يجب أن يكون رقماً صحيحاً.',
+            // 'userId.exists' => 'المستخدم المحدد غير موجود.',
 
             'departmentId.required' => 'معرف القسم مطلوب.',
             'departmentId.integer' => 'معرف القسم يجب أن يكون رقماً صحيحاً.',

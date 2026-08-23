@@ -89,7 +89,7 @@ class UsersRolesAndAllowedRoutes
             'tax-payer-by-userId',
             'get-tax-payers-with-special-info',
             'get-tax-payers-with-source',
-            'tax-payers.create-file-to-existing',
+            'tax-payers.create-file-to-existing-taxPayer',
 
             // Companies
             'companies.index',
@@ -137,6 +137,7 @@ class UsersRolesAndAllowedRoutes
             'files.destroy',
             'files.report',
             'files.bulk-report',
+            'files.create-file-with-user',
 
 
             // File Movement
@@ -270,7 +271,7 @@ class UsersRolesAndAllowedRoutes
             'tax-payer-by-userId',
             'get-tax-payers-with-special-info',
             'get-tax-payers-with-source',
-            'tax-payers.create-file-to-existing',
+            'tax-payers.create-file-to-existing-taxPayer',
             // Note: No destroy permission for managers
 
             // Companies

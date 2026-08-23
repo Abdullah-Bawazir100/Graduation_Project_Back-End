@@ -21,10 +21,10 @@ class DistrictModel extends Model
         );
     }
 
-    public function files()
+    public function taxPayers()
     {
         return $this->hasMany(
-            FileModel::class,
+            TaxPayerModel::class,
             'district_id'
         );
     }

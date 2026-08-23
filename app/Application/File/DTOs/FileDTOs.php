@@ -10,13 +10,11 @@ class FileDTOs
         public ?string $activityStartDate,
         public ?int $docsCount,
         public ?string $note,
-        public ?int $taxPayerId,
+        public ?int $userId,
         public ?int $departmentId,
         public ?int $fileStatusId,
         public ?int $activityTypeId,
         public ?int $paymentTypeId,
-        public ?int $regionId,
-        public ?int $districtId,
         public ?int $requestId = null,
     ) {}
 

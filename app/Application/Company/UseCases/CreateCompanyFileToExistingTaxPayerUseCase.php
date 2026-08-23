@@ -11,6 +11,9 @@ use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\TaxPayerMobile\Repositories\TaxPayerMobileRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\File\Repositories\FileRepositoryInterface;
+use App\Domain\Region\Repositories\RegionRepositoryInterface;
+use App\Domain\District\Repositories\DistrictRepositoryInterface;
 use DomainException;
 
 class CreateCompanyFileToExistingTaxPayerUseCase
@@ -18,21 +21,25 @@ class CreateCompanyFileToExistingTaxPayerUseCase
     public function __construct(
         private TaxPayerRepositoryInterface $tax_payer_repository,
         private CompanyRepositoryInterface $company_repository,
-        private UserRepositoryInterface $user_repository
+        private UserRepositoryInterface $user_repository,
+        private FileRepositoryInterface $file_repository,
+        private RegionRepositoryInterface $region_repository,
+        private DistrictRepositoryInterface $district_repository
     )
     {
     }
 
-    public function execute(CompanyDTOs $companyDTOs , TaxPayerDTOs $taxPayerDTOs , int $userId, ?int $authenticatedUserId = null)
+    public function execute(CompanyDTOs $companyDTOs , TaxPayerDTOs $taxPayerDTOs , int $fileId, ?int $authenticatedUserId = null)
     {
-        $existingUser = $this->user_repository->findById($userId);
-        if(!$existingUser)
+        $file = $this->file_repository->findById($fileId);
+        if(!$file)
         {
-            throw new DomainException("المستخدم المكلف مع ال ID [$userId] غير موجود.");
+            throw new DomainException("الملف مع ال ID [$fileId] غير موجود.");
         }
+        $existingUser = $file->user;
         if($existingUser->role !== UserRole::Tax_Payer)
         {
-            throw new DomainException("المستخدم المكلف مع ال ID [$userId] ليس مكلف.");
+            throw new DomainException("المستخدم المرتبط بالملف ليس مكلف.");
         }
 
         if ($authenticatedUserId !== null) {
@@ -44,9 +51,21 @@ class CreateCompanyFileToExistingTaxPayerUseCase
             }
         }
 
+        $region = null;
+        $district = null;
+
+        if ($taxPayerDTOs->regionId && $taxPayerDTOs->districtId) {
+            $region = $this->region_repository->findById($taxPayerDTOs->regionId);
+            $district = $this->district_repository->findById($taxPayerDTOs->districtId);
+
+            if ($district && $region && $district->region->id != $region->id) {
+                throw new DomainException("الحي المحدد غير مربوط بالمنطقة المحددة.");
+            }
+        }
+
         $taxPayer = new TaxPayer(
             id: null,
-            userId: $userId,
+            fileId: $fileId,
             tradeName: $taxPayerDTOs->tradeName,
             commercialRecord: $taxPayerDTOs->commercialRecord,
             activityLicense: $taxPayerDTOs->activityLicense,
@@ -54,7 +73,9 @@ class CreateCompanyFileToExistingTaxPayerUseCase
             insuranceCard: $taxPayerDTOs->insuranceCard,
             propertyDocPict: $taxPayerDTOs->propertyDocPict,
             fileType: $taxPayerDTOs->getFileType(),
-            source: $taxPayerDTOs->source
+            source: $taxPayerDTOs->source,
+            region: $region,
+            district: $district
         );
 
         $createdTaxPayer = $this->tax_payer_repository->create($taxPayer);
@@ -70,6 +91,7 @@ class CreateCompanyFileToExistingTaxPayerUseCase
         $createdCompany = $this->company_repository->create($company);
 
         return [
+            'fileInfo' => $file,
             'taxPayerInfo' => $createdTaxPayer,
             'companyInfo' => $createdCompany
         ];

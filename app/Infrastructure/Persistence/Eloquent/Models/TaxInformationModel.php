@@ -15,7 +15,7 @@ class TaxInformationModel extends Model
         'tax_amount',
         'last_payment',
         'attachment',
-        'tax_payer_id',
+        'file_id',
         'tax_type_id'
     ];
 
@@ -24,17 +24,16 @@ class TaxInformationModel extends Model
         return $this->belongsTo(TaxTypeModel::class , 'tax_type_id');
     }
 
-    public function taxPayer()
+    public function MainFile()
     {
-        return $this->belongsTo(TaxPayerModel::class , 'tax_payer_id');
+        return $this->belongsTo(FileModel::class , 'file_id');
     }
-
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->useLogName('tax_information')
-            ->logOnly(['tax_amount', 'last_payment', 'attachment' , 'tax_payer_id', 'tax_type_id'])
+            ->logOnly(['tax_amount', 'last_payment', 'attachment' , 'file_id', 'tax_type_id'])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {
                 'created' => 'إنشاء معلومة ضريبية',

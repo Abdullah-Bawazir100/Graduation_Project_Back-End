@@ -15,20 +15,19 @@ use App\Domain\User\Entities\User;
 class File
 {
     public function __construct(
-
         public readonly ?int $id,
         public ?string $taxNumber,
         public string $inventoryNumber,
         public ?string $activityStartDate,
         public int $docsCount,
         public ?string $note,
-        public TaxPayer $taxPayer,
+        public User $user,
         public Department $department,
         public FileStatus $fileStatus,
         public Activity_Type $activityType,
         public PaymentType $paymentType,
-        public Region $region,
-        public District $district,
         public ?User $creator,
+
+        public array $taxPayers = []
     ) {}
 }

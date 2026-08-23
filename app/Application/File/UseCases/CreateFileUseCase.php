@@ -27,8 +27,6 @@ class CreateFileUseCase
         private FileStatusRepositoryInterface $file_status_repository,
         private Activity_Type_RepositoryInterface $activity_type_repository,
         private PaymentTypeRepositoryInterface $payment_type_repository,
-        private RegionRepositoryInterface $region_repository,
-        private DistrictRepositoryInterface $district_repository,
         private UserRepositoryInterface $user_repository,
         private TaxPayerRequestRepositoryInterface $tax_payer_request_repository
     ) {}
@@ -41,9 +39,13 @@ class CreateFileUseCase
         }
 
         // Retrieve related entities
-        $taxPayer = $this->tax_payer_repository->findById($dto->taxPayerId);
-        if (!$taxPayer) {
-            throw new DomainException("المكلف المحدد غير موجود.");
+        $targetUser = $this->user_repository->findById($dto->userId);
+        if (!$targetUser) {
+            throw new DomainException("المستخدم المحدد لفتح الملف له غير موجود.");
+        }
+
+        if ($targetUser->role !== UserRole::Tax_Payer) {
+            throw new DomainException("المستخدم المحدد ليس مكلفاً، لا يمكن فتح ملف إلا للمستخدمين من نوع مكلف (Tax_Payer).");
         }
 
         $department = $this->department_repository->findById($dto->departmentId);
@@ -66,16 +68,6 @@ class CreateFileUseCase
             throw new DomainException("نوع الدفع المحدد غير موجود.");
         }
 
-        $region = $this->region_repository->findById($dto->regionId);
-        if (!$region) {
-            throw new DomainException("المنطقة المحددة غير موجودة.");
-        }
-
-        $district = $this->district_repository->findById($dto->districtId);
-        if (!$district) {
-            throw new DomainException("الحي المحدد غير موجود.");
-        }
-
         if (
             $creator->role !== UserRole::Admin &&
             (!$creator->department || $creator->department->id !== $department->id)
@@ -85,11 +77,9 @@ class CreateFileUseCase
             );
         }
 
-        if($this->file_repository->existsTaxPayer($taxPayer->id, $taxPayer->fileType, $taxPayer->tradeName))
+        if($this->file_repository->existsUserFile($targetUser->id))
         {
-            $fileType = $taxPayer->fileType->value;
-            $tradeName = $taxPayer->tradeName;
-            throw new DomainException("يوجد بالفعل ملف لهذا المكلف [$tradeName] من نوع [$fileType].");
+            throw new DomainException("يوجد بالفعل ملف مفتوح لهذا المستخدم.");
         }
 
         // Create the file entity
@@ -100,26 +90,20 @@ class CreateFileUseCase
             activityStartDate: $dto->activityStartDate,
             docsCount: $dto->docsCount,
             note: $dto->note,
-            taxPayer: $taxPayer,
+            user: $targetUser,
             department: $department,
             fileStatus: $fileStatus,
             activityType: $activityType,
             paymentType: $paymentType,
-            region: $region,
-            district: $district,
             creator: $creator
         );
 
-        if($taxPayer->source === 'Requests')
+        if ($dto->requestId)
         {
-            if (!$dto->requestId) {
-                throw new DomainException("معرف الطلب (requestId) مطلوب عندما يكون مصدر المكلف هو الطلبات.");
-            }
-
-            $request = $this->tax_payer_request_repository->findRequestByIdAndUserId($dto->requestId, $taxPayer->userId);
+            $request = $this->tax_payer_request_repository->findRequestByIdAndUserId($dto->requestId, $targetUser->id);
             if(!$request)
             {
-                throw new DomainException("لا يوجد طلب مربوط بهذا المكلف.");
+                throw new DomainException("لا يوجد طلب مربوط بهذا المستخدم.");
             }
 
             if($request->requestStatus === enRequestStatus::Archived)
@@ -133,7 +117,7 @@ class CreateFileUseCase
                 'fileInfo' => $createdFile
             ];
         }
-        else{
+        else {
             // Persist the file
             $createdFile = $this->file_repository->create($file);
 

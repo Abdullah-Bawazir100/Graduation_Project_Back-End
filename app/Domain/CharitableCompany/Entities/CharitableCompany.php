@@ -6,7 +6,7 @@ class CharitableCompany
 {
     public function __construct(
         public readonly ?int $id,
-        public readonly ?int $tax_payer_id,
+        public readonly ?int $taxPayerId,
         public string $byLawsCopy
     )
     {}

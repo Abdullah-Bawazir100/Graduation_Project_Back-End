@@ -4,6 +4,7 @@ namespace App\Application\TaxInformation\UseCases;
 
 use App\Application\TaxInformation\DTOs\TaxInformationDTO;
 use App\Application\TaxInformation\DTOs\TaxInformationDTOs;
+use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Domain\TaxInformation\Entities\TaxInformation;
 use App\Domain\TaxInformation\Repositories\TaxInformationRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
@@ -16,7 +17,7 @@ class CreateTaxInformationUseCase
     public function __construct(
         private TaxInformationRepositoryInterface $tax_information_repository,
         private TaxTypeRepositoryInterface $tax_type_repository,
-        private TaxPayerRepositoryInterface $tax_payer_repository
+        private FileRepositoryInterface $file_repository
     )
     {}
 
@@ -28,21 +29,26 @@ class CreateTaxInformationUseCase
             throw new DomainException("لا يوجد نوع ضريبة مع ال ID [{$taxInformationDTOs->taxTypeId}].");
         }
 
-        $taxPayer = $this->tax_payer_repository->findById($taxInformationDTOs->taxPayerId);
-        if(!$taxType)
+        $file = $this->file_repository->findById($taxInformationDTOs->fileId);
+        if(!$file)
         {
-            throw new DomainException("لا يوجد نوع ضريبة مع ال ID [{$taxInformationDTOs->taxPayerId}].");
+            throw new DomainException("لا يوجد ملف مع ال ID [{$taxInformationDTOs->fileId}].");
+        }
+
+        $existingTaxInfo = $this->tax_information_repository->getTaxInformationByFileId($file->id);
+        if (!empty($existingTaxInfo)) {
+            throw new DomainException("عذراً، هذا الملف يمتلك معلومات ضريبية مسبقاً. لا يمكنك إضافة معلومات ضريبية جديدة لنفس الملف.");
         }
 
         $taxInformation = new TaxInformation(
             id: null,
             taxTypeId: $taxType->id,
-            taxPayerId: $taxPayer->id,
+            fileId: $file->id,
             taxAmount: $taxInformationDTOs->taxAmount,
             lastPayment: $taxInformationDTOs->lastPayment,
             attachment: $taxInformationDTOs->attachment,
             taxType: $taxType,
-            taxPayer: $taxPayer
+            file: $file
         );
 
         $createdTaxInfo = $this->tax_information_repository->create($taxInformation);

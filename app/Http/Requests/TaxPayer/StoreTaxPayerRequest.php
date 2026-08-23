@@ -43,6 +43,8 @@ class StoreTaxPayerRequest extends FormRequest
             'propertyDocPict' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240',
             'fileType' => ['required' , Rule::in(array_map(fn($r) => $r->value, enFileType::cases()))],
 
+            'fileId' => ['required' , 'integer' , 'exists:files,id'],
+
             // Company fields
             'articlesOfIncorporation' => [
                 Rule::requiredIf(fn() => $this->fileType === enFileType::Company->value),
@@ -107,6 +109,10 @@ class StoreTaxPayerRequest extends FormRequest
             'departmentID.required' => 'القسم مطلوب.',
             'departmentID.integer'  => 'القسم يجب أن يكون رقمًا صحيحًا.',
             'departmentID.exists'   => 'القسم المحدد غير موجود.',
+
+            'fileId.required' => 'الملف مطلوب.',
+            'fileId.integer' => 'الملف يجب أن يكون رقمًا صحيحًا.',
+            'fileId.exists' => 'الملف المحدد غير موجود.',
 
             'tradeName.required' => 'السجل التجاري مطلوب.',
             'tradeName.string' => 'السجل التجاري يجب أن يكون نصا',

@@ -37,7 +37,7 @@ class UpdateFileRequest extends FormRequest
 
             'note' => ['sometimes', 'nullable', 'string'],
 
-            'taxPayerId' => ['sometimes', 'integer', 'exists:tax_payers,id'],
+            'userId' => ['sometimes', 'integer', 'exists:app_users,id'],
 
             'departmentId' => ['sometimes', 'integer', 'exists:departments,id'],
 
@@ -46,10 +46,6 @@ class UpdateFileRequest extends FormRequest
             'activityTypeId' => ['sometimes', 'integer', 'exists:activity_types,id'],
 
             'paymentTypeId' => ['sometimes', 'integer', 'exists:payment_types,id'],
-
-            'regionId' => ['sometimes', 'integer', 'exists:regions,id'],
-
-            'districtId' => ['sometimes', 'integer', 'exists:districts,id'],
         ];
     }
     public function messages(): array
@@ -67,8 +63,8 @@ class UpdateFileRequest extends FormRequest
 
             'note.string' => 'الملاحظة يجب أن تكون نصاً.',
 
-            'taxPayerId.integer' => 'معرف المكلف يجب أن يكون رقماً صحيحاً.',
-            'taxPayerId.exists' => 'المكلف المحدد غير موجود.',
+            'userId.integer' => 'معرف المستخدم يجب أن يكون رقماً صحيحاً.',
+            'userId.exists' => 'المستخدم المحدد غير موجود.',
 
             'departmentId.integer' => 'معرف القسم يجب أن يكون رقماً صحيحاً.',
             'departmentId.exists' => 'القسم المحدد غير موجود.',
@@ -81,12 +77,6 @@ class UpdateFileRequest extends FormRequest
 
             'paymentTypeId.integer' => 'معرف نوع الدفع يجب أن يكون رقماً صحيحاً.',
             'paymentTypeId.exists' => 'نوع الدفع المحدد غير موجود.',
-
-            'regionId.integer' => 'معرف المنطقة يجب أن يكون رقماً صحيحاً.',
-            'regionId.exists' => 'المنطقة المحددة غير موجودة.',
-
-            'districtId.integer' => 'معرف الحي يجب أن يكون رقماً صحيحاً.',
-            'districtId.exists' => 'الحي المحدد غير موجود.',
         ];
     }
 }

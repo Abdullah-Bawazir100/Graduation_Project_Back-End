@@ -6,6 +6,7 @@ use App\Domain\CharitableCompany\Repositories\CharitableCompanyRepositoryInterfa
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\File\Repositories\FileRepositoryInterface;
 use DomainException;
 
 class FindCharitableCompanyByIdUseCase
@@ -13,7 +14,8 @@ class FindCharitableCompanyByIdUseCase
     public function __construct(
         private CharitableCompanyRepositoryInterface $charitable_company_repository,
         private TaxPayerRepositoryInterface $tax_payer_repository,
-        private UserRepositoryInterface $user_repository
+        private UserRepositoryInterface $user_repository,
+        private FileRepositoryInterface $file_repository
     ) {}
 
     public function execute(int $id , ?int $authenticatedUserId)
@@ -26,13 +28,14 @@ class FindCharitableCompanyByIdUseCase
         $taxPayer = null;
         $taxPayerUserInfo = null;
 
-        if ($charitableCompany->tax_payer_id) {
-            $taxPayer = $this->tax_payer_repository->findById($charitableCompany->tax_payer_id);
+        $file = null;
+        if ($charitableCompany->taxPayerId) {
+            $taxPayer = $this->tax_payer_repository->findById($charitableCompany->taxPayerId);
 
-            if ($taxPayer && $taxPayer->userId) {
-                $user = $this->user_repository->findById($taxPayer->userId);
-                if ($user) {
-                    $taxPayerUserInfo = $user;
+            if ($taxPayer && $taxPayer->fileId) {
+                $file = $this->file_repository->findById($taxPayer->fileId);
+                if ($file && $file->user) {
+                    $taxPayerUserInfo = $file->user;
                 }
             }
         }
@@ -49,7 +52,7 @@ class FindCharitableCompanyByIdUseCase
         return [
             'charitableCompanyInfo' => $charitableCompany,
             'taxPayerInfo' => $taxPayer,
-            'userInfo' => $taxPayerUserInfo
+            'fileInfo' => $file,
         ];
     }
 }

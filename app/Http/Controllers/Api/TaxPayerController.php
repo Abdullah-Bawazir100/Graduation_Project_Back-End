@@ -82,7 +82,7 @@ class TaxPayerController extends Controller
             );
             // Map Arabic label back to enum value
             $taxPayerDTO = new TaxPayerDTOs(
-                userId: null,
+                fileId: $request->fileId,
                 tradeName: $request->tradeName,
                 commercialRecord: $commercialRecordUrl,
                 activityLicense: $activityLicenseUrl,
@@ -90,7 +90,9 @@ class TaxPayerController extends Controller
                 insuranceCard: $insuranceCardUrl,
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
-                source: 'Manually'
+                source: 'Manually',
+                regionId: $request->regionId,
+                districtId: $request->districtId,
             );
 
             $result = $useCase->execute($taxPayerDTO , $userDTO , $actor);
@@ -120,7 +122,7 @@ class TaxPayerController extends Controller
             $propertyDocPictUrl = $this->uploadFileService->uploadFile($request->file('propertyDocPict') , 'property-docs-picts');
 
             $taxPayerDTO = new TaxPayerDTOs(
-                userId: $request->userId,
+                fileId: $request->fileId,
                 tradeName: $request->tradeName,
                 commercialRecord: $commercialRecordUrl,
                 activityLicense: $activityLicenseUrl,
@@ -128,9 +130,11 @@ class TaxPayerController extends Controller
                 insuranceCard: $insuranceCardUrl,
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
-                source: 'Manually'
+                source: 'Manually',
+                regionId: $request->regionId,
+                districtId: $request->districtId,
             );
-            $result = $useCase->execute($taxPayerDTO, $request->userId, $authUser->id);
+            $result = $useCase->execute($taxPayerDTO, $request->fileId, $authUser->id);
 
             return ApiResponse::created($result, 'تم إنشاء ملف فرد جديد للمكلف الحالي بنجاح.');
 
@@ -178,7 +182,7 @@ class TaxPayerController extends Controller
             }
 
             $taxPayerDTO = new TaxPayerDTOs(
-                userId: $existingTaxPayer->userId,
+                fileId: $existingTaxPayer->fileId,
                 tradeName:  $request->tradeName ?? $existingTaxPayer->tradeName,
                 commercialRecord: $commercialRecordUrl ?? $existingTaxPayer->commercialRecord,
                 activityLicense: $activityLicenseUrl ?? $existingTaxPayer->activityLicense,
@@ -186,7 +190,9 @@ class TaxPayerController extends Controller
                 insuranceCard: $insuranceCardUrl ?? $existingTaxPayer->insuranceCard,
                 propertyDocPict: $propertyDocPictUrl ?? $existingTaxPayer->propertyDocPict,
                 fileType: $existingTaxPayer->fileType,
-                source: 'Manually'
+                source: 'Manually',
+                regionId: $request->regionId,
+                districtId: $request->districtId,
             );
 
             $updatedTaxPayer = $useCase->execute($taxPayerDTO, $existingTaxPayer->id , $authenticatedUser->id);
@@ -210,7 +216,7 @@ class TaxPayerController extends Controller
 
     public function findTaxPayerByUserID(int $userID , FindTaxPayerByUserIDUseCase $useCase)
     {
-        
+
         $authenticatedUserId = Auth::id();
         $taxPayer = $useCase->execute($userID, $authenticatedUserId);
         return ApiResponse::ok($taxPayer , "تم جلب المستخدم المكلف مع ال ID [{$userID}] بنجاح.");

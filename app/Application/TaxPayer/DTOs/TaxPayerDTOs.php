@@ -8,7 +8,7 @@ use App\Domain\User\Entities\User;
 class TaxPayerDTOs
 {
     public function __construct(
-        public ?int $userId,
+        public ?int $fileId,
         public ?string $tradeName,
         public ?string $commercialRecord,
         public ?string $activityLicense,
@@ -16,7 +16,9 @@ class TaxPayerDTOs
         public ?string $insuranceCard,
         public ?string $propertyDocPict,
         public enFileType $fileType,
-        public ?string $source
+        public ?string $source,
+        public ?int $regionId,
+        public ?int $districtId,
     )
     {}
 

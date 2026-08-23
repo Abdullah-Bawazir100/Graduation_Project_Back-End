@@ -68,7 +68,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class , 'cacheResponse']
     Route::get('tax-payer-by-userId/{id}', [TaxPayerController::class , 'findTaxPayerByUserID'])->name('tax-payer-by-userId');
     Route::get('get-tax-payers-with-special-info', [TaxPayerController::class , 'getTaxPayersWithSpecialInfo'])->name('get-tax-payers-with-special-info');
     Route::get('get-tax-payers-with-source', [TaxPayerController::class , 'getAllTaxPayersWithSource'])->name('get-tax-payers-with-source');
-    Route::post('tax-payers/create-file-to-existing', [TaxPayerController::class, 'createFileToExistingTaxPayer'])->name('tax-payers.create-file-to-existing');
+    Route::post('tax-payers/create-file-to-existing-taxPayer', [TaxPayerController::class, 'createFileToExistingTaxPayer'])->name('tax-payers.create-file-to-existing-taxPayer');
 
     Route::apiResource('companies', CompanyController::class);
     Route::post('companies/create-file-to-existing', [CompanyController::class, 'createCompanyFileToExistingTaxPayer'])->name('companies.create-file-to-existing');
@@ -85,6 +85,7 @@ Route::middleware(['auth:sanctum' , appUsersMiddleware::class , 'cacheResponse']
 
     Route::get('/files/report', [FileController::class, 'generateBulkFilesReport'])->name('files.bulk-report');
     Route::apiResource('/files', FileController::class);
+    Route::post('/files/create-file-with-user' , [FileController::class , 'createFileWithUser'])->name('files.create-file-with-user');
     Route::get('/files/{id}/report', [FileController::class, 'generateReport'])->name('files.report');
 
     Route::apiResource('/files-movements', FileMovementController::class);

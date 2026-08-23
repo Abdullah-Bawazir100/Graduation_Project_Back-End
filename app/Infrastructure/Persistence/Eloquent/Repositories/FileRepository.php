@@ -10,12 +10,10 @@ use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Domain\FileStatus\Entities\FileStatus;
 use App\Domain\PaymentType\Entities\PaymentType;
 use App\Domain\Region\Entities\Region;
-use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Enums\UserRole;
 use App\Infrastructure\Persistence\Eloquent\Models\FileModel;
-use App\Infrastructure\Persistence\Eloquent\Models\TaxPayerModel;
 use Override;
 
 class FileRepository implements FileRepositoryInterface
@@ -28,21 +26,17 @@ class FileRepository implements FileRepositoryInterface
             'activity_start_date' => $file->activityStartDate,
             'docs_count' => $file->docsCount,
             'note' => $file->note,
-            'tax_payer_id' => $file->taxPayer->id,
+            'user_id' => $file->user->id,
             'department_id' => $file->department->id,
             'file_status_id' => $file->fileStatus->id,
             'activity_type_id' => $file->activityType->id,
             'payment_type_id' => $file->paymentType->id,
-            'region_id' => $file->region->id,
-            'district_id' => $file->district->id,
             'created_by' => $file->creator?->id,
         ]);
 
-        $fileModel->load('taxPayer' , 'department' , 'fileStatus' ,
-        'activityType' , 'paymentType' , 'region' , 'district' , 'creator');
 
-        $fileModel->save();
-
+        $fileModel->load('user', 'department', 'fileStatus',
+            'activityType', 'paymentType', 'creator');
 
         return new File(
             id: $fileModel->id,
@@ -51,13 +45,11 @@ class FileRepository implements FileRepositoryInterface
             activityStartDate: $fileModel->activity_start_date,
             docsCount: $fileModel->docs_count,
             note: $fileModel->note,
-            taxPayer: $file->taxPayer,
+            user: $file->user,
             department: $file->department,
             fileStatus: $file->fileStatus,
             activityType: $file->activityType,
             paymentType: $file->paymentType,
-            region: $file->region,
-            district: $file->district,
             creator: $file->creator,
         );
     }
@@ -65,13 +57,11 @@ class FileRepository implements FileRepositoryInterface
     public function update(File $file, int $id): ?File
     {
         $fileModel = FileModel::with(
-            'taxPayer',
+            'user',
             'department',
             'fileStatus',
             'activityType',
             'paymentType',
-            'region',
-            'district',
             'creator'
         )->find($id);
 
@@ -85,26 +75,22 @@ class FileRepository implements FileRepositoryInterface
             'activity_start_date' => $file->activityStartDate,
             'docs_count' => $file->docsCount,
             'note' => $file->note,
-            'tax_payer_id' => $file->taxPayer->id,
+            'user_id' => $file->user->id,
             'department_id' => $file->department->id,
             'file_status_id' => $file->fileStatus->id,
             'activity_type_id' => $file->activityType->id,
             'payment_type_id' => $file->paymentType->id,
-            'region_id' => $file->region->id,
-            'district_id' => $file->district->id,
             'created_by' => $file->creator?->id,
         ]);
 
         $fileModel->refresh();
 
         $fileModel->load(
-            'taxPayer',
+            'user',
             'department',
             'fileStatus',
             'activityType',
             'paymentType',
-            'region',
-            'district',
             'creator'
         );
 
@@ -114,19 +100,23 @@ class FileRepository implements FileRepositoryInterface
     public function getAll(?string $search = null, ?int $departmentId = null, ?int $activityTypeId = null, ?int $regionId = null, ?int $districtId = null)
     {
         $query = FileModel::with(
-            'taxPayer',
+            'user',
+            'taxPayers.region',
+            'taxPayers.district',
+            'taxPayers.companies',
+            'taxPayers.charitable_companies',
             'department',
             'fileStatus',
             'activityType',
             'paymentType',
-            'region',
-            'district',
             'creator'
         );
 
         if ($search) {
-            $query->whereHas('taxPayer', function ($q) use ($search) {
-                $q->where('trade_name', 'LIKE', '%' . $search . '%');
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('first_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('user_name', 'LIKE', '%' . $search . '%');
             });
         }
 
@@ -139,11 +129,15 @@ class FileRepository implements FileRepositoryInterface
         }
 
         if ($regionId !== null) {
-            $query->where('region_id', $regionId);
+            $query->whereHas('taxPayers', function ($q) use ($regionId) {
+                $q->where('region_id', $regionId);
+            });
         }
 
         if ($districtId !== null) {
-            $query->where('district_id', $districtId);
+            $query->whereHas('taxPayers', function ($q) use ($districtId) {
+                $q->where('district_id', $districtId);
+            });
         }
 
         $files = $query->get();
@@ -152,7 +146,19 @@ class FileRepository implements FileRepositoryInterface
 
     public function findById(int $id): ?File
     {
-        $file = FileModel::find($id);
+        $file = FileModel::with(
+            'user',
+            'taxPayers.region',
+            'taxPayers.district',
+            'taxPayers.companies',
+            'taxPayers.charitable_companies',
+            'department',
+            'fileStatus',
+            'activityType',
+            'paymentType',
+            'creator'
+        )->find($id);
+
         if(!$file)
         {
             return null;
@@ -160,14 +166,16 @@ class FileRepository implements FileRepositoryInterface
         return $this->mapToDomain($file);
     }
 
-    public function getFileByTaxPayerId(int $taxPayerId , enFileType $fileType)
+    public function getFileByUserId(int $userId): ?File
     {
-        $file = FileModel::with('taxPayer')
-            ->whereHas('taxPayer', function ($query) use ($fileType, $taxPayerId) {
-                $query->where('tax_payer_id', $taxPayerId);
-                $query->where('file_type', $fileType);
-            })
-            ->first();
+        $file = FileModel::with(
+            'user',
+            'department',
+            'fileStatus',
+            'activityType',
+            'paymentType',
+            'creator'
+        )->where('user_id', $userId)->first();
 
         return $file ? $this->mapToDomain($file) : null;
     }
@@ -177,15 +185,9 @@ class FileRepository implements FileRepositoryInterface
         FileModel::findOrFail($id)->delete();
     }
 
-    public function existsTaxPayer(int $taxPayerId, enFileType $fileType, string $tradeName): bool
+    public function existsUserFile(int $userId): bool
     {
-        return FileModel::query()
-            ->where('tax_payer_id', $taxPayerId)
-            ->whereHas('taxPayer', function ($query) use ($fileType, $tradeName) {
-                $query->where('file_type', $fileType->value)
-                    ->where('trade_name', $tradeName);
-            })
-            ->exists();
+        return FileModel::query()->where('user_id', $userId)->exists();
     }
 
     public function countFiles(?int $departmentId = null): int
@@ -199,10 +201,7 @@ class FileRepository implements FileRepositoryInterface
 
     public function countFilesByType(enFileType $type, ?int $departmentId = null): int
     {
-        $query = FileModel::whereHas('taxPayer', function ($query) use ($type) {
-            $query->where('file_type', $type->value);
-        });
-
+        $query = FileModel::query();
         if ($departmentId !== null) {
             $query->where('department_id', $departmentId);
         }
@@ -212,15 +211,15 @@ class FileRepository implements FileRepositoryInterface
 
     private function mapToDomain(FileModel $model): File
     {
-        $region = new Region(
-            id: $model->region->id,
-            name: $model->region->name,
-        );
 
         $department = new Department(
             id: $model->department->id,
             name: $model->department->name,
         );
+
+        $userDept = $model->user->department
+            ? new Department(id: $model->user->department->id, name: $model->user->department->name)
+            : $department;
 
         return new File(
             id: $model->id,
@@ -230,17 +229,19 @@ class FileRepository implements FileRepositoryInterface
             docsCount: $model->docs_count,
             note: $model->note,
 
-            taxPayer: new TaxPayer(
-                id: $model->taxPayer->id,
-                userId: $model->taxPayer->user_id,
-                tradeName: $model->taxPayer->trade_name,
-                commercialRecord: $model->taxPayer->commercial_record,
-                activityLicense: $model->taxPayer->activity_license,
-                tradePict: $model->taxPayer->trade_pict,
-                insuranceCard: $model->taxPayer->insurance_card,
-                propertyDocPict: $model->taxPayer->property_doc_pict,
-                fileType: $model->taxPayer->file_type,
-                source: $model->taxPayer->source,
+            user: new User(
+                id: $model->user->id,
+                firstName: $model->user->first_name,
+                lastName: $model->user->last_name,
+                idCard: $model->user->id_card,
+                userName: $model->user->user_name,
+                phone: $model->user->phone,
+                image: $model->user->image,
+                password: $model->user->password,
+                createdBy: $model->user->created_by,
+                department: $userDept,
+                role: $model->user->role,
+                mustChangePassword: $model->user->must_change_password,
             ),
 
             department: $department,
@@ -262,14 +263,6 @@ class FileRepository implements FileRepositoryInterface
                 note: $model->paymentType->note,
             ),
 
-            region: $region,
-
-            district: new District(
-                id: $model->district->id,
-                name: $model->district->name,
-                region: $region
-            ),
-
             creator: $model->creator
                 ? new User(
                     id: $model->creator->id,
@@ -286,6 +279,30 @@ class FileRepository implements FileRepositoryInterface
                     mustChangePassword: $model->creator->must_change_password,
                 )
                 : null,
+            taxPayers: $model->relationLoaded('taxPayers') ? $model->taxPayers->map(function ($tp) {
+                $region = $tp->relationLoaded('region') && $tp->region ? new Region($tp->region->id, $tp->region->name) : null;
+                $district = $tp->relationLoaded('district') && $tp->district && $region ? new District($tp->district->id, $tp->district->name, $region) : null;
+
+                $companies = $tp->relationLoaded('companies') && $tp->companies ? $tp->companies->map(fn($c) => $c->toArray())->toArray() : [];
+                $charitableCompanies = $tp->relationLoaded('charitable_companies') && $tp->charitable_companies ? $tp->charitable_companies->map(fn($c) => $c->toArray())->toArray() : [];
+
+                return new \App\Domain\TaxPayer\Entities\TaxPayer(
+                    id: $tp->id,
+                    fileId: $tp->file_id,
+                    tradeName: $tp->trade_name,
+                    commercialRecord: $tp->commercial_record,
+                    activityLicense: $tp->activity_license,
+                    tradePict: $tp->trade_pict,
+                    insuranceCard: $tp->insurance_card,
+                    propertyDocPict: $tp->property_doc_pict,
+                    fileType: $tp->file_type,
+                    source: $tp->source,
+                    region: $region,
+                    district: $district,
+                    companies: $companies,
+                    charitableCompanies: $charitableCompanies,
+                );
+            })->toArray() : [],
         );
     }
 }

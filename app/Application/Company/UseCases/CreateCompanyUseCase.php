@@ -9,12 +9,15 @@ use App\Application\User\DTOs\UserDTO;
 use App\Domain\Company\Entities\Company;
 use App\Domain\Company\Repositories\CompanyRepositoryInterface;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
+use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Interfaces\PasswordHashInterface;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\Region\Repositories\RegionRepositoryInterface;
+use App\Domain\District\Repositories\DistrictRepositoryInterface;
 use DomainException;
 use Illuminate\Support\Str;
 use App\Jobs\SendWhatsAppMessageJob;
@@ -26,13 +29,25 @@ class CreateCompanyUseCase
         private TaxPayerRepositoryInterface $tax_payer_repository,
         private DepartmentRepositoryInterface $department_repository,
         private PasswordHashInterface $password_hash,
-        private UserRepositoryInterface $user_repository
+        private UserRepositoryInterface $user_repository,
+        private FileRepositoryInterface $file_repository,
+        private RegionRepositoryInterface $region_repository,
+        private DistrictRepositoryInterface $district_repository
     )
     {}
 
     public function execute(CompanyDTOs $companyDTOs , TaxPayerDTOs $taxPayerDTOs ,
                             UserDTO $userDTO , User $actor)
     {
+        if (!$taxPayerDTOs->fileId) {
+            throw new DomainException("عذراً، يجب فتح ملف للمكلف أولاً قبل إضافة بياناته.");
+        }
+
+        $file = $this->file_repository->findById($taxPayerDTOs->fileId);
+        if (!$file) {
+            throw new DomainException("عذراً، لم يتم العثور على ملف لهذا المكلف. يجب فتح ملف أولاً.");
+        }
+
         $department = $this->department_repository->findById($userDTO->departmentID);
         if(!$department)
         {
@@ -65,9 +80,21 @@ class CreateCompanyUseCase
 
         $createdUser = $this->user_repository->create($user);
 
+        $region = null;
+        $district = null;
+
+        if ($taxPayerDTOs->regionId && $taxPayerDTOs->districtId) {
+            $region = $this->region_repository->findById($taxPayerDTOs->regionId);
+            $district = $this->district_repository->findById($taxPayerDTOs->districtId);
+
+            if ($district && $region && $district->region->id != $region->id) {
+                throw new DomainException("الحي المحدد غير مربوط بالمنطقة المحددة.");
+            }
+        }
+
         $taxPayer = new TaxPayer(
             id: null,
-            userId: $createdUser->id,
+            fileId: $taxPayerDTOs->fileId,
             tradeName: $taxPayerDTOs->tradeName,
             commercialRecord: $taxPayerDTOs->commercialRecord,
             activityLicense: $taxPayerDTOs->activityLicense,
@@ -75,7 +102,9 @@ class CreateCompanyUseCase
             insuranceCard: $taxPayerDTOs->insuranceCard,
             propertyDocPict: $taxPayerDTOs->propertyDocPict,
             fileType: $taxPayerDTOs->getFileType(),
-            source: $taxPayerDTOs->source
+            source: $taxPayerDTOs->source,
+            region: $region,
+            district: $district
         );
 
         $createdTaxPayer = $this->tax_payer_repository->create($taxPayer);
@@ -99,6 +128,7 @@ class CreateCompanyUseCase
         SendWhatsAppMessageJob::dispatch($userDTO->phone, $message);
 
         return [
+            'fileInfo' => $file,
             'companyInfo' => CompanyMapper::toArray($createdCompany),
             'taxPayerInfo' => $createdTaxPayer,
             'userInfo' => $createdUser,

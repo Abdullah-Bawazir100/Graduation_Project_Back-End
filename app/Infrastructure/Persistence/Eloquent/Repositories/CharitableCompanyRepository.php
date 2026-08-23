@@ -12,9 +12,10 @@ class CharitableCompanyRepository implements CharitableCompanyRepositoryInterfac
     public function create(CharitableCompany $charitableCompany): CharitableCompany
     {
         $charitableCompanyModel = CharitableCompanyModel::create([
-            'tax_payer_id' => $charitableCompany->tax_payer_id,
+            'tax_payer_id' => $charitableCompany->taxPayerId,
             'by_laws_copy' => $charitableCompany->byLawsCopy
         ]);
+
         $charitableCompanyModel->load('taxPayer');
         return $this->mapToDomain($charitableCompanyModel);
     }
@@ -37,7 +38,7 @@ class CharitableCompanyRepository implements CharitableCompanyRepositoryInterfac
             return null;
         }
         $charitableCompanyModel->update([
-            'tax_payer_id' => $charitableCompany->tax_payer_id,
+            'tax_payer_id' => $charitableCompany->taxPayerId,
             'by_laws_copy' => $charitableCompany->byLawsCopy
         ]);
         $charitableCompanyModel->load('taxPayer');
@@ -85,7 +86,7 @@ class CharitableCompanyRepository implements CharitableCompanyRepositoryInterfac
     {
         return new CharitableCompany(
             id: $model->id,
-            tax_payer_id: $model->tax_payer_id,
+            taxPayerId: $model->tax_payer_id,
             byLawsCopy: $model->by_laws_copy,
         );
     }

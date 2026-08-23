@@ -44,15 +44,15 @@ class UserModel extends Authenticatable
         );
     }
 
-    public function taxPayers()
-    {
-        return $this->hasMany(TaxPayerModel::class , 'user_id');
-    }
+    // public function taxPayers()
+    // {
+    //     return $this->hasMany(TaxPayerModel::class , 'user_id');
+    // }
 
-    public function companies()
-    {
-        return $this->hasMany(CompanyModel::class , 'tax_payer_id');
-    }
+    // public function companies()
+    // {
+    //     return $this->hasMany(CompanyModel::class , 'tax_payer_id');
+    // }
 
     public function creator()
     {
@@ -60,6 +60,11 @@ class UserModel extends Authenticatable
             UserModel::class,
             'created_by'
         );
+    }
+
+    public function MainFile()
+    {
+        return $this->hasOne(FileModel::class , 'user_id');
     }
 
     public function files()
@@ -124,9 +129,9 @@ class UserModel extends Authenticatable
         parent::boot();
 
         static::deleting(function ($user) {
-            $user->taxPayers()->each(function ($taxPayer) {
-                $taxPayer->delete();
-            });
+            if ($user->MainFile) {
+                $user->MainFile->delete();
+            }
             if ($user->request) {
                 $user->request->delete();
             }

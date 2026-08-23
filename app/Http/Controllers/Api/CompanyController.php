@@ -80,7 +80,7 @@ class CompanyController extends Controller
             );
             // Map Arabic label back to enum value
             $taxPayerDTO = new TaxPayerDTOs(
-                userId: null,
+                fileId: $request->fileId,
                 tradeName: $request->tradeName,
                 commercialRecord: $commercialRecordUrl,
                 activityLicense: $activityLicenseUrl,
@@ -88,7 +88,9 @@ class CompanyController extends Controller
                 insuranceCard: $insuranceCardUrl,
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
-                source: 'Manually'
+                source: 'Manually',
+                regionId: $request->regionId,
+                districtId: $request->districtId,
             );
 
             $companyDTO = new CompanyDTOs(
@@ -128,7 +130,7 @@ class CompanyController extends Controller
 
             // Map Arabic label back to enum value
             $taxPayerDTO = new TaxPayerDTOs(
-                userId: $request->userId,
+                fileId: $request->fileId,
                 tradeName: $request->tradeName,
                 commercialRecord: $commercialRecordUrl,
                 activityLicense: $activityLicenseUrl,
@@ -136,7 +138,9 @@ class CompanyController extends Controller
                 insuranceCard: $insuranceCardUrl,
                 propertyDocPict: $propertyDocPictUrl,
                 fileType: enFileType::from($request->fileType),
-                source: 'Manually'
+                source: 'Manually',
+                regionId: $request->regionId,
+                districtId: $request->districtId,
             );
 
             $companyDTO = new CompanyDTOs(
@@ -145,12 +149,18 @@ class CompanyController extends Controller
                 partnersIDCards: $partnersIDCardsUrl,
             );
 
-            $result = $useCase->execute($companyDTO , $taxPayerDTO , $request->userId, Auth::id());
+            $result = $useCase->execute($companyDTO , $taxPayerDTO , $request->fileId, Auth::id());
 
             return ApiResponse::created($result , 'تم إنشاء ملف شركة لمكلف موجود بنجاح.');
 
+        } catch (DomainException $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 400);
         } catch (Exception $e) {
-            return ApiResponse::serverError($e->getMessage());
+            return response()->json([
+                'error' => 'حدث خطأ في الخادم، يرجى المحاولة لاحقاً.'
+            ], 500);
         }
     }
 

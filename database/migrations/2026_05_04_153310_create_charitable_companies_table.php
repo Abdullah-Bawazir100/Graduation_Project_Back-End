@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('charitable_companies', function (Blueprint $table) {
             $table->id();
+
             $table->string('by_laws_copy');
+
             $table->foreignId('tax_payer_id')->constrained('tax_payers')->cascadeOnDelete();
             $table->timestamps();
         });

@@ -26,7 +26,7 @@ class UpdateTaxInformationRequest extends FormRequest
             'lastPayment' => ['sometimes', 'string'],
             'attachment' => ['sometimes' , 'file' , 'mimes:jpeg,png,jpg,pdf' , 'max:10240',],
             'taxTypeId' => ['sometimes', 'integer', 'exists:tax_types,id'],
-            'taxPayerId' => ['sometimes', 'integer', 'exists:tax_payers,id'],
+            'fileId' => ['sometimes', 'integer', 'exists:files,id'],
         ];
     }
     public function messages(): array
@@ -45,8 +45,8 @@ class UpdateTaxInformationRequest extends FormRequest
             'taxTypeId.exists' => 'نوع الضريبة المحدد غير موجود.',
 
             // tax_payer_id
-            'taxPayerId.integer' => 'معرف المكلف يجب أن يكون رقمًا صحيحًا.',
-            'taxPayerId.exists' => 'المكلف المحدد غير موجود.',
+            'fileId.integer' => 'معرف الملف يجب أن يكون رقمًا صحيحًا.',
+            'fileId.exists' => 'الملف المحدد غير موجود.',
         ];
     }
 }

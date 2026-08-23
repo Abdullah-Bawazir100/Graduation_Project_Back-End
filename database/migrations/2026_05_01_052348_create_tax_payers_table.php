@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('tax_payers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('app_users')->cascadeOnDelete();
+            $table->foreignId('file_id')->constrained('files')->cascadeOnDelete();
+
             $table->string('trade_name')->unique();
             $table->string('commercial_record')->nullable();
             $table->string('activity_license')->nullable();
@@ -22,6 +23,10 @@ return new class extends Migration
             $table->string('property_doc_pict')->nullable();
             $table->enum('file_type' , ['Individual', 'Company', 'CharitableCompany'])->default('Individual');
             $table->string('source')->nullable();
+
+            $table->foreignId('district_id')->constrained('districts');
+            $table->foreignId('region_id')->constrained('regions');
+
             $table->timestamps();
         });
     }

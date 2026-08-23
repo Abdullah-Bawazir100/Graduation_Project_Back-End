@@ -21,6 +21,9 @@ return [
 
     'allowed_origins' => [
         'https://hadhramaut-tax-office.vercel.app',
+        'http://localhost:8000',
+        'http://localhost:5173', // <-- أضف هذا الرابط
+        'http://localhost:3000',
     ],
 
     'allowed_origins_patterns' => [],

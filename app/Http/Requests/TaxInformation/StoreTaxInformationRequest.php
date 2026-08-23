@@ -26,7 +26,7 @@ class StoreTaxInformationRequest extends FormRequest
             'lastPayment' => ['required', 'string'],
             'attachment' => ['nullable' , 'file' , 'mimes:jpeg,png,jpg,pdf' , 'max:10240',],
             'taxTypeId' => ['required', 'integer', 'exists:tax_types,id'],
-            'taxPayerId' => ['required', 'integer', 'exists:tax_payers,id'],
+            'fileId' => ['required', 'integer', 'exists:files,id'],
         ];
     }
 
@@ -51,10 +51,10 @@ class StoreTaxInformationRequest extends FormRequest
             'taxTypeId.integer' => 'نوع الضريبة يجب أن يكون رقمًا صحيحًا.',
             'taxTypeId.exists' => 'نوع الضريبة المحدد غير موجود.',
 
-            // tax_payer_id
-            'taxPayerId.required' => 'المكلف مطلوب.',
-            'taxPayerId.integer' => 'معرف المكلف يجب أن يكون رقمًا صحيحًا.',
-            'taxPayerId.exists' => 'المكلف المحدد غير موجود.',
+            // fileId
+            'fileId.required' => 'الملف مطلوب.',
+            'fileId.integer' => 'معرف الملف يجب أن يكون رقمًا صحيحًا.',
+            'fileId.exists' => 'الملف المحدد غير موجود.',
         ];
     }
 }

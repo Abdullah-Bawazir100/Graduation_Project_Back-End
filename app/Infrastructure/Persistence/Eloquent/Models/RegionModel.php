@@ -21,10 +21,10 @@ class RegionModel extends Model
         );
     }
 
-    public function files()
+    public function taxPayers()
     {
         return $this->hasMany(
-            FileModel::class,
+            TaxPayerModel::class,
             'region_id',
         );
     }

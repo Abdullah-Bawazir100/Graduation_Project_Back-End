@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
+
             $table->string('articles_of_incorporation');
             $table->string('govemor_license');
             $table->string('partners_id_cards');
+
             $table->foreignId('tax_payer_id')->constrained('tax_payers')->cascadeOnDelete();
             $table->timestamps();
         });

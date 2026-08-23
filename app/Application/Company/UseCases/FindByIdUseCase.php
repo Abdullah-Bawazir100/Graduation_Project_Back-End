@@ -6,6 +6,7 @@ use App\Domain\Company\Repositories\CompanyRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\File\Repositories\FileRepositoryInterface;
 use DomainException;
 
 class FindByIdUseCase
@@ -13,7 +14,8 @@ class FindByIdUseCase
     public function __construct(
         private CompanyRepositoryInterface $company_repository,
         private TaxPayerRepositoryInterface $tax_payer_repository,
-        private UserRepositoryInterface $user_repository
+        private UserRepositoryInterface $user_repository,
+        private FileRepositoryInterface $file_repository
     )
     {}
 
@@ -28,13 +30,14 @@ class FindByIdUseCase
         $taxPayer = null;
         $taxPayerUserInfo = null;
 
+        $file = null;
         if ($company->tax_payer_id) {
             $taxPayer = $this->tax_payer_repository->findById($company->tax_payer_id);
 
-            if ($taxPayer && $taxPayer->userId) {
-                $user = $this->user_repository->findById($taxPayer->userId);
-                if ($user) {
-                    $taxPayerUserInfo = $user;
+            if ($taxPayer && $taxPayer->fileId) {
+                $file = $this->file_repository->findById($taxPayer->fileId);
+                if ($file && $file->user) {
+                    $taxPayerUserInfo = $file->user;
                 }
             }
         }
@@ -51,7 +54,7 @@ class FindByIdUseCase
         return [
             'companyInfo' => $company,
             'taxPayerInfo' => $taxPayer,
-            'userInfo' => $taxPayerUserInfo->toArray()
+            'fileInfo' => $file,
         ];
     }
 }
