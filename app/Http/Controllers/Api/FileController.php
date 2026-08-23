@@ -4,15 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Application\File\DTOs\FileDTOs;
 use App\Application\File\UseCases\CreateFileUseCase;
+use App\Application\File\UseCases\CreateFileWithUserUseCase;
 use App\Application\File\UseCases\DeleteFileUseCase;
 use App\Application\File\UseCases\FindFileByIdUseCase;
 use App\Application\File\UseCases\ListFilesUseCase;
 use App\Application\File\UseCases\UpdateFileUseCase;
 use App\Application\File\UseCases\GenerateFileReportUseCase;
 use App\Application\File\UseCases\GenerateBulkFilesReportUseCase;
+use App\Application\User\DTOs\UserDTO;
+use App\Application\User\Services\UploadFileService;
 use App\Domain\File\Repositories\FileRepositoryInterface;
+use App\Domain\User\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\File\StoreFileRequest;
+use App\Http\Requests\File\StoreFileWithUserRequest;
 use App\Http\Requests\File\UpdateFileRequest;
 use App\Http\Responses\ApiResponse;
 use DomainException;
@@ -25,7 +30,8 @@ use Illuminate\Support\Facades\Log;
 class FileController extends Controller
 {
     public function __construct(
-        private FileRepositoryInterface $file_repository
+        private FileRepositoryInterface $file_repository,
+        private UploadFileService $uploadFileService
     ) {}
 
 
@@ -55,13 +61,11 @@ class FileController extends Controller
                 activityStartDate: $request->activityStartDate,
                 docsCount: $request->docsCount,
                 note: $request->note,
-                taxPayerId: $request->taxPayerId,
+                userId: $request->userId,
                 departmentId:  $request->departmentId,
                 fileStatusId:  $request->fileStatusId,
                 activityTypeId: $request->activityTypeId,
                 paymentTypeId: $request->paymentTypeId,
-                regionId: $request->regionId,
-                districtId:  $request->districtId,
                 requestId: $request->requestId
             );
             // Execute the use case
@@ -112,13 +116,11 @@ class FileController extends Controller
                 activityStartDate: $request->activityStartDate,
                 docsCount: $request->docsCount,
                 note: $request->note,
-                taxPayerId: $request->taxPayerId,
+                userId: $request->userId,
                 departmentId: $request->departmentId,
                 fileStatusId: $request->fileStatusId,
                 activityTypeId: $request->activityTypeId,
                 paymentTypeId: $request->paymentTypeId,
-                regionId: $request->regionId,
-                districtId: $request->districtId,
             );
 
             $result = $useCase->execute($dto , $id, Auth::id());
@@ -132,8 +134,11 @@ class FileController extends Controller
         } catch (DomainException $e) {
             return ApiResponse::notFound([], $e->getMessage());
         } catch (Exception $e) {
-            Log::error('File update error: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
-            return ApiResponse::serverError($e->getMessage());
+            // Log::error('File update error: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
+            // return ApiResponse::serverError($e->getMessage());
+            return response()->json([
+                'error' => 'حدث خطأ في الخادم، يرجى المحاولة لاحقاً.'
+            ], 500);
         }
     }
 
@@ -144,6 +149,61 @@ class FileController extends Controller
         return ApiResponse::ok(
             message: "تم حذف الملف مع ال ID [$id] بنجاح."
         );
+    }
+
+    public function createFileWithUser(StoreFileWithUserRequest $request, CreateFileWithUserUseCase $useCase)
+    {
+        try {
+            $authUser = Auth::user();
+
+            $idCardUrl = $this->uploadFileService->uploadFile($request->file('idCard') , 'id-cards');
+            $imageUrl = $this->uploadFileService->uploadFile($request->file('image') , 'profile-images');
+
+            $userDto = new UserDTO(
+                id: null,
+                firstName: $request->firstName,
+                lastName: $request->lastName,
+                idCard: $idCardUrl,
+                userName: null,
+                password: null,
+                phone: $request->phone,
+                image: $imageUrl,
+                departmentID: $request->departmentID,
+                createdBy: $authUser->id,
+                role: UserRole::from($request->role),
+            );
+
+            $fileDto = new FileDTOs(
+                taxNumber: $request->taxNumber,
+                inventoryNumber: $request->inventoryNumber,
+                activityStartDate: $request->activityStartDate,
+                docsCount: $request->docsCount,
+                note: $request->note,
+                userId: null,
+                departmentId:  $request->departmentId,
+                fileStatusId:  $request->fileStatusId,
+                activityTypeId: $request->activityTypeId,
+                paymentTypeId: $request->paymentTypeId,
+                requestId: $request->requestId
+            );
+
+            $result = $useCase->execute($userDto , $fileDto , $authUser->id);
+
+            return ApiResponse::created(
+                data: $result,
+                message: 'تم إنشاء المستخدم وفتح الملف بنجاح.'
+            );
+
+
+        } catch (DomainException $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 400);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'حدث خطأ في الخادم، يرجى المحاولة لاحقاً.'
+            ], 500);
+        }
     }
 
     public function generateReport(int $id, GenerateFileReportUseCase $useCase)

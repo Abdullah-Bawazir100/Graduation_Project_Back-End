@@ -8,6 +8,7 @@ use App\Domain\TaxPayer\Enums\enFileType;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\File\Repositories\FileRepositoryInterface;
 
 class ListTaxPayersWithSpecialInfoUseCase
 {
@@ -15,7 +16,8 @@ class ListTaxPayersWithSpecialInfoUseCase
         private TaxPayerRepositoryInterface $tax_payer_repository,
         private UserRepositoryInterface $user_repository,
         private CompanyRepositoryInterface $company_repository,
-        private CharitableCompanyRepositoryInterface $charitable_company_repository
+        private CharitableCompanyRepositoryInterface $charitable_company_repository,
+        private FileRepositoryInterface $file_repository
     )
     {}
 
@@ -39,11 +41,11 @@ class ListTaxPayersWithSpecialInfoUseCase
             $companyId = null;
             $charitableCompanyId = null;
 
-            if ($taxPayer->userId) {
-                $user = $this->user_repository->findById($taxPayer->userId);
+            if ($taxPayer->fileId) {
+                $file = $this->file_repository->findById($taxPayer->fileId);
 
-                if ($user) {
-                    $userInfo = $user;
+                if ($file && $file->user) {
+                    $userInfo = $file->user;
                 }
             }
 
@@ -61,7 +63,7 @@ class ListTaxPayersWithSpecialInfoUseCase
             }
 
             $result[] = [
-                'userId' => $userInfo?->id,
+                'fileId' => $taxPayer->fileId,
                 'taxPayerId' => $taxPayer->id,
                 'taxPayerName' => $userInfo
                     ? $userInfo->firstName . ' ' . $userInfo->lastName : null,

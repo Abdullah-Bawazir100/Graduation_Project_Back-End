@@ -14,7 +14,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
     public function create(TaxPayer $taxPayer): TaxPayer
     {
         $model = TaxPayerModel::create([
-            'user_id' => $taxPayer->userId,
+            'file_id' => $taxPayer->fileId,
             'trade_name' => $taxPayer->tradeName,
             'commercial_record' => $taxPayer->commercialRecord,
             'activity_license' => $taxPayer->activityLicense,
@@ -22,10 +22,12 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             'insurance_card' => $taxPayer->insuranceCard,
             'property_doc_pict' => $taxPayer->propertyDocPict,
             'file_type' => $taxPayer->fileType->value,
-            'source' => $taxPayer->source
+            'source' => $taxPayer->source,
+            'region_id' => $taxPayer->region?->id,
+            'district_id' => $taxPayer->district?->id,
         ]);
 
-        $model->load('user');
+        $model->load('file.user', 'region', 'district');
 
         return $this->mapToDomain($model);
     }
@@ -38,7 +40,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         }
 
         $taxPayerModel->update([
-            'user_id' => $taxPayer->userId,
+            'file_id' => $taxPayer->fileId,
             'trade_name' => $taxPayer->tradeName,
             'commercial_record' => $taxPayer->commercialRecord,
             'activity_license' => $taxPayer->activityLicense,
@@ -46,10 +48,12 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             'insurance_card' => $taxPayer->insuranceCard,
             'property_doc_pict' => $taxPayer->propertyDocPict,
             'file_type' => $taxPayer->fileType->value,
-            'source' => $taxPayer->source
+            'source' => $taxPayer->source,
+            'region_id' => $taxPayer->region?->id,
+            'district_id' => $taxPayer->district?->id,
         ]);
 
-        $taxPayerModel->load('user');
+        $taxPayerModel->load('file.user', 'region', 'district');
 
         return $this->mapToDomain($taxPayerModel);
     }
@@ -63,7 +67,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
     public function findById(int $id): ?TaxPayer
     {
 
-        $taxPayerModel = TaxPayerModel::with('user')->find($id);
+        $taxPayerModel = TaxPayerModel::with('file.user', 'region', 'district')->find($id);
 
         if (!$taxPayerModel) {
             return null;
@@ -74,17 +78,11 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     public function getAll(?int $departmentId = null)
     {
-        // $taxPayers = TaxPayerModel::with('user')
-        //         ->where('file_type', 'Individual')
-        //         ->get();
-
-        // return $taxPayers->map(fn(TaxPayerModel $model) => $this->mapToDomain($model))->toArray();
-
-        $query = TaxPayerModel::with('user')
+        $query = TaxPayerModel::with('file.user', 'region', 'district')
         ->where('file_type', 'Individual');
 
         if ($departmentId !== null) {
-            $query->whereHas('user', function ($q) use ($departmentId) {
+            $query->whereHas('file.user', function ($q) use ($departmentId) {
                 $q->where('department_id', $departmentId);
             });
         }
@@ -96,10 +94,10 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     public function getAllTaxPayers(?int $departmentId)
     {
-        $query = TaxPayerModel::with('user');
+        $query = TaxPayerModel::with('file.user', 'region', 'district');
 
         if ($departmentId !== null) {
-            $query->whereHas('user', function ($q) use ($departmentId) {
+            $query->whereHas('file.user', function ($q) use ($departmentId) {
                 $q->where('department_id', $departmentId);
             });
         }
@@ -111,7 +109,10 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     public function findByUserId(int $userId): ?TaxPayer
     {
-        $taxPayerModel = TaxPayerModel::with('user')->where('user_id', $userId)->first();
+        $taxPayerModel = TaxPayerModel::with('file.user', 'region', 'district')
+            ->whereHas('file', function($q) use ($userId) {
+                $q->where('user_id', $userId);
+            })->first();
 
         if (!$taxPayerModel) {
             return null;
@@ -121,8 +122,10 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
     }
     public function findByUserIdAndTradeName(int $userId , string $tradeName): ?TaxPayer
     {
-        $taxPayerModel = TaxPayerModel::with('user')
-        ->where('user_id', $userId)
+        $taxPayerModel = TaxPayerModel::with('file.user', 'region', 'district')
+        ->whereHas('file', function($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })
         ->where('trade_name', $tradeName)
         ->first();
 
@@ -136,7 +139,10 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     public function findByUserName(string $userName): ?TaxPayer
     {
-        $taxPayerModel = TaxPayerModel::with('user')->where('user_name', $userName)->first();
+        $taxPayerModel = TaxPayerModel::with('file.user', 'region', 'district')
+            ->whereHas('file.user', function($q) use ($userName) {
+                $q->where('user_name', $userName);
+            })->first();
         if(!$taxPayerModel)
         {
             return null;
@@ -146,7 +152,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     public function findByTradeName(string $tradeName): ?TaxPayer
     {
-        $taxPayerModel = TaxPayerModel::with('user')->where('trade_name', $tradeName)->first();
+        $taxPayerModel = TaxPayerModel::with('file.user', 'region', 'district')->where('trade_name', $tradeName)->first();
         if(!$taxPayerModel)
         {
             return null;
@@ -156,7 +162,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     public function getTaxPayersWithSpecialInfo(?string $search = null, ?int $departmentId = null)
     {
-        $query = TaxPayerModel::with('user', 'companies', 'charitable_companies');
+        $query = TaxPayerModel::with('file.user', 'region', 'district', 'companies', 'charitable_companies');
 
         // اذا يوجد بحث
         if ($search !== null) {
@@ -164,7 +170,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         }
 
         if ($departmentId !== null) {
-            $query->whereHas('user', function ($q) use ($departmentId) {
+            $query->whereHas('file.user', function ($q) use ($departmentId) {
                 $q->where('department_id', $departmentId);
             });
         }
@@ -177,11 +183,14 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     }
 
-    public function createFileToExistingTaxPayer(TaxPayer $taxPayer , int $userId): ?TaxPayer
+    public function createFileToExistingTaxPayer(TaxPayer $taxPayer): ?TaxPayer
     {
 
         $model = TaxPayerModel::create([
-            'user_id' => $userId,
+            // We can't use user_id directly on TaxPayerModel anymore.
+            // The file should be passed properly, but we will fallback to a dummy or error if not.
+            // Actually, we should use $taxPayer->fileId
+            'file_id' => $taxPayer->fileId,
             'trade_name' => $taxPayer->tradeName,
             'commercial_record' => $taxPayer->commercialRecord,
             'activity_license' => $taxPayer->activityLicense,
@@ -189,10 +198,12 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             'insurance_card' => $taxPayer->insuranceCard,
             'property_doc_pict' => $taxPayer->propertyDocPict,
             'file_type' => $taxPayer->fileType->value,
-            'source' => $taxPayer->source
+            'source' => $taxPayer->source,
+            'region_id' => $taxPayer->region?->id,
+            'district_id' => $taxPayer->district?->id,
         ]);
 
-        $model->load('user');
+        $model->load('file.user', 'region', 'district');
 
         return $this->mapToDomain($model);
     }
@@ -202,7 +213,7 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
         $query = TaxPayerModel::query();
 
         if ($departmentId !== null) {
-            $query->whereHas('user', function ($q) use ($departmentId) {
+            $query->whereHas('file.user', function ($q) use ($departmentId) {
                 $q->where('department_id', $departmentId);
             });
         }
@@ -217,9 +228,12 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
 
     private function mapToDomain(TaxPayerModel $model): TaxPayer
     {
+        $region = $model->region ? new \App\Domain\Region\Entities\Region(id: $model->region->id, name: $model->region->name) : null;
+        $district = $model->district ? new \App\Domain\District\Entities\District(id: $model->district->id, name: $model->district->name, region: $region) : null;
+
         return new TaxPayer(
             id: $model->id,
-            userId: $model->user_id,
+            fileId: $model->file_id,
             tradeName: $model->trade_name,
             commercialRecord: $model->commercial_record,
             activityLicense: $model->activity_license,
@@ -227,7 +241,9 @@ class TaxPayerRepository implements TaxPayerRepositoryInterface
             insuranceCard: $model->insurance_card,
             propertyDocPict: $model->property_doc_pict,
             fileType: $model->file_type,
-            source: $model->source
+            source: $model->source,
+            region: $region,
+            district: $district,
         );
     }
 }

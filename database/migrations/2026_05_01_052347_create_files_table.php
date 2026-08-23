@@ -19,17 +19,17 @@ return new class extends Migration
             $table->integer('docs_count');
             $table->string('note')->nullable();
 
-            $table->foreignId('tax_payer_id')->constrained('tax_payers')->cascadeOnDelete();
             $table->foreignId('department_id')->constrained('departments')->cascadeOnDelete();
             $table->foreignId('file_status_id')->constrained('file_status');
             $table->foreignId('activity_type_id')->constrained('activity_types');
             $table->foreignId('payment_type_id')->constrained('payment_types');
-            $table->foreignId('region_id')->constrained('regions');
-            $table->foreignId('district_id')->constrained('districts');
+            
             $table->foreignId('created_by')
                 ->nullable()
                 ->constrained('app_users')
                 ->nullOnDelete();
+
+            $table->foreignId('user_id')->unique()->constrained('app_users')->cascadeOnDelete();
 
             $table->timestamps();
         });

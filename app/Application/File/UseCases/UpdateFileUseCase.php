@@ -54,12 +54,16 @@ class UpdateFileUseCase
             }
         }
 
-        $newTaxPayer = $existingFile->taxPayer;
-        if ($dto->taxPayerId !== null) {
-            $newTaxPayer = $this->tax_payer_repository->findById($dto->taxPayerId);
+        $targetUser = $existingFile->user;
+        if ($dto->userId !== null) {
+            $targetUser = $this->user_repository->findById($dto->userId);
 
-            if (!$newTaxPayer) {
-                throw new DomainException("لا يوجد مكلف مع ال ID [$dto->taxPayerId].");
+            if (!$targetUser) {
+                throw new DomainException("لا يوجد مستخدم مع ال ID [$dto->userId].");
+            }
+
+            if ($targetUser->role !== UserRole::Tax_Payer) {
+                throw new DomainException("المستخدم المحدد ليس مكلفاً، لا يمكن ربط الملف إلا بمستخدم من نوع مكلف (Tax_Payer).");
             }
         }
 
@@ -99,24 +103,6 @@ class UpdateFileUseCase
             }
         }
 
-        $newRegion = $existingFile->region;
-        if ($dto->regionId !== null) {
-            $newRegion = $this->region_repository->findById($dto->regionId);
-
-            if (!$newRegion) {
-                throw new DomainException("لا توجد منطقة مع ال ID [$dto->regionId].");
-            }
-        }
-
-        $newDistrict = $existingFile->district;
-        if ($dto->districtId !== null) {
-            $newDistrict = $this->district_repository->findById($dto->districtId);
-
-            if (!$newDistrict) {
-                throw new DomainException("لا يوجد حي مع ال ID [$dto->districtId].");
-            }
-        }
-
         $file = new File(
             id: $id,
             taxNumber: $dto->taxNumber ?? $existingFile->taxNumber,
@@ -124,14 +110,11 @@ class UpdateFileUseCase
             activityStartDate: $dto->activityStartDate ?? $existingFile->activityStartDate,
             docsCount: $dto->docsCount ?? $existingFile->docsCount,
             note: $dto->note ?? $existingFile->note,
-
-            taxPayer: $newTaxPayer,
+            user: $targetUser,
             department: $newDepartment,
             fileStatus: $newFileStatus,
             activityType: $newActivityType,
             paymentType: $newPaymentType,
-            region: $newRegion,
-            district: $newDistrict,
 
             creator: $existingFile->creator,
         );

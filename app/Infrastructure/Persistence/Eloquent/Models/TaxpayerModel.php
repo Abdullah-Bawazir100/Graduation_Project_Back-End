@@ -17,7 +17,7 @@ class TaxPayerModel extends Model
     protected $table = 'tax_payers';
 
     protected $fillable = [
-        'user_id',
+        'file_id',
         'trade_name',
         'commercial_record',
         'activity_license',
@@ -25,19 +25,33 @@ class TaxPayerModel extends Model
         'insurance_card',
         'property_doc_pict',
         'file_type',
-        'source'
+        'source',
+        'region_id',
+        'district_id',
     ];
 
     protected $casts = [
-        'user_id' => 'integer',
-        'file_type' => enFileType::class
+        'file_id' => 'integer',
+        'file_type' => enFileType::class,
+        'region_id' => 'integer',
+        'district_id' => 'integer',
     ];
 
-
-    public function user(): BelongsTo
+    public function region(): BelongsTo
     {
-        return $this->belongsTo(UserModel::class , 'user_id');
+        return $this->belongsTo(RegionModel::class, 'region_id');
     }
+
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(DistrictModel::class, 'district_id');
+    }
+
+
+    // public function user(): BelongsTo
+    // {
+    //     return $this->belongsTo(UserModel::class , 'user_id');
+    // }
 
     public function companies()
     {
@@ -49,14 +63,9 @@ class TaxPayerModel extends Model
         return $this->hasMany(CharitableCompanyModel::class , 'tax_payer_id');
     }
 
-    public function tax_informations()
-    {
-        return $this->hasMany(TaxInformationModel::class , 'tax_payer_id');
-    }
-
     public function file()
     {
-        return $this->hasOne(FileModel::class , 'tax_payer_id');
+        return $this->belongsTo(FileModel::class , 'file_id');
     }
 
     protected static function boot()
@@ -70,12 +79,6 @@ class TaxPayerModel extends Model
             $taxPayer->charitable_companies()->each(function ($charitableCompany) {
                 $charitableCompany->delete();
             });
-            $taxPayer->tax_informations()->each(function ($taxInfo) {
-                $taxInfo->delete();
-            });
-            if ($taxPayer->file) {
-                $taxPayer->file->delete();
-            }
         });
     }
 
@@ -84,7 +87,7 @@ class TaxPayerModel extends Model
         return LogOptions::defaults()
             ->useLogName('tax_payer')
             ->logOnly([
-                'user_id',
+                'file_id',
                 'trade_name',
                 'commercial_record',
                 'activity_license',

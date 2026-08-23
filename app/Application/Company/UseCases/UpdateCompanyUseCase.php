@@ -8,6 +8,7 @@ use App\Domain\Company\Repositories\CompanyRepositoryInterface;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\File\Repositories\FileRepositoryInterface;
 use DomainException;
 
 class UpdateCompanyUseCase
@@ -15,7 +16,8 @@ class UpdateCompanyUseCase
     public function __construct(
         private CompanyRepositoryInterface $company_repository,
         private TaxPayerRepositoryInterface $tax_payer_repository,
-        private UserRepositoryInterface $user_repository
+        private UserRepositoryInterface $user_repository,
+        private FileRepositoryInterface $file_repository
     )
     {}
 
@@ -28,7 +30,12 @@ class UpdateCompanyUseCase
         }
 
         $existingTaxPayer = $this->tax_payer_repository->findById($existingCompany->tax_payer_id);
-        $existingUser = $this->user_repository->findById($existingTaxPayer->userId);
+        
+        $file = $this->file_repository->findById($existingTaxPayer->fileId);
+        if (!$file) {
+            throw new DomainException("عذراً، لم يتم العثور على ملف لهذه الشركة.");
+        }
+        $existingUser = $file->user;
 
         if ($authenticatedUserId !== null) {
             $actor = $this->user_repository->findById($authenticatedUserId);
@@ -48,9 +55,9 @@ class UpdateCompanyUseCase
         );
         $updatedCompany = $this->company_repository->update($company , $id);
         return [
-            'companyInfo' => $updatedCompany,
+            'fileInfo' => $file,
             'taxPayerInfo' => $existingTaxPayer,
-            'userInfo' => $existingUser
+            'companyInfo' => $updatedCompany
         ];
 
     }

@@ -47,7 +47,7 @@ class TaxInformationController extends Controller
             lastPayment: $request->lastPayment,
             attachment: $attachmentUrl,
             taxTypeId:  $request->taxTypeId,
-            taxPayerId: $request->taxPayerId,
+            fileId: $request->fileId,
         );
         $result = $useCase->execute($dto);
         return ApiResponse::created($result , "تم انشاء معلومات الضريبة بنجاح.");
@@ -77,7 +77,7 @@ class TaxInformationController extends Controller
         $dto = new TaxInformationDTOs(
             id: $existingTaxInfo->id,
             taxTypeId: $request->taxTypeId ??  $existingTaxInfo->taxTypeId,
-            taxPayerId: $request->taxPayerId ?? $existingTaxInfo->taxPayerId,
+            fileId: $request->fileId ?? $existingTaxInfo->fileId,
             taxAmount: $request->taxAmount ?? $existingTaxInfo->taxAmount,
             lastPayment: $request->lastPayment ?? $existingTaxInfo->lastPayment,
             attachment: $attachmentUrl ?? $existingTaxInfo->attachment

@@ -24,7 +24,7 @@ class StoreFileToExistingTaxPayerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'userId' => 'required|integer|exists:app_users,id',
+            'fileId' => 'required|integer|exists:files,id',
 
             // Taxpayer fields
             'tradeName' => 'required|string|max:255|unique:tax_payers,trade_name|not_regex:/^\d+$/',
@@ -34,6 +34,8 @@ class StoreFileToExistingTaxPayerRequest extends FormRequest
             'insuranceCard' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240',
             'propertyDocPict' => 'required|file|mimes:jpeg,png,jpg,pdf|max:10240',
             'fileType' => ['required', Rule::in(array_map(fn($r) => $r->value, enFileType::cases()))],
+            'regionId' => ['required' , 'integer' , 'exists:regions,id'],
+            'districtId' => ['required' , 'integer' , 'exists:districts,id'],
 
             // Company fields (only required when fileType is Company)
             'articlesOfIncorporation' => [
@@ -70,9 +72,9 @@ class StoreFileToExistingTaxPayerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'userId.required' => ' المستخدم المكلف مطلوب.',
-            'userId.integer' => 'المستخدم يجب أن يكون رقما صحيحا.',
-            'userId.exists' => 'المستخدم المحدد غير موجود.',
+            'fileId.required' => 'الملف مطلوب.',
+            'fileId.integer' => 'رقم الملف يجب أن يكون رقما صحيحا.',
+            'fileId.exists' => 'الملف المحدد غير موجود.',
 
             'tradeName.required' => 'السجل التجاري مطلوب.',
             'tradeName.string' => 'السجل التجاري يجب أن يكون نصاً.',
@@ -132,6 +134,14 @@ class StoreFileToExistingTaxPayerRequest extends FormRequest
             'byLawsCopy.file' => 'الصورة من النظام الأساسي يجب أن تكون ملفًا صحيحًا.',
             'byLawsCopy.mimes' => 'الصورة من النظام الأساسي يجب أن تكون من نوع jpeg,png,jpg,pdf.',
             'byLawsCopy.max' => 'الصورة من النظام الأساسي يجب ألا تتجاوز 10MB.',
+
+            'regionId.required' => 'المنطقة مطلوبة.',
+            'regionId.integer' => 'المنطقة يجب أن تكون رقما صحيحا.',
+            'regionId.exists' => 'المنطقة المحددة غير موجودة.',
+
+            'districtId.required' => 'الحي مطلوب.',
+            'districtId.integer' => 'الحي يجب أن يكون رقما صحيحا.',
+            'districtId.exists' => 'الحي المحدد غير موجود.',
         ];
     }
 }

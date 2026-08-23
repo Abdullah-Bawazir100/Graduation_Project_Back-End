@@ -18,20 +18,27 @@ class FileModel extends Model
         'docs_count',
         'note',
 
-        'tax_payer_id',
         'department_id',
         'file_status_id',
         'activity_type_id',
         'payment_type_id',
-        'region_id',
-        'district_id',
         'created_by',
+        'user_id',
     ];
 
-    public function taxPayer()
+    public function user()
     {
-        return $this->belongsTo(TaxPayerModel::class, 'tax_payer_id');
+        return $this->belongsTo(UserModel::class, 'user_id');
+    }
 
+    public function taxPayers()
+    {
+        return $this->hasMany(TaxPayerModel::class, 'file_id');
+    }
+
+    public function tax_informations()
+    {
+        return $this->hasOne(TaxInformationModel::class , 'file_id');
     }
 
     public function department()
@@ -59,16 +66,6 @@ class FileModel extends Model
         return $this->belongsTo(UserModel::class, 'created_by');
     }
 
-    public function region()
-    {
-        return $this->belongsTo(RegionModel::class, 'region_id');
-    }
-
-    public function district()
-    {
-        return $this->belongsTo(DistrictModel::class, 'district_id');
-    }
-
     public function fileMovement()
     {
         return $this->hasMany(FileMovementModel::class, 'file_id');
@@ -87,7 +84,7 @@ class FileModel extends Model
             $file->fileMovement()->each(function ($movement) {
                 $movement->delete();
             });
-            
+
             if ($file->attachment) {
                 $file->attachment->delete();
             }
@@ -104,14 +101,12 @@ class FileModel extends Model
                 'activity_start_date',
                 'docs_count',
                 'note',
-                'tax_payer_id',
                 'department_id',
                 'file_status_id',
                 'activity_type_id',
                 'payment_type_id',
-                'region_id',
-                'district_id',
                 'created_by',
+                'user_id',
             ])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => match($eventName) {

@@ -8,6 +8,7 @@ use App\Domain\CharitableCompany\Repositories\CharitableCompanyRepositoryInterfa
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\File\Repositories\FileRepositoryInterface;
 use DomainException;
 
 class UpdateCharitableCompanyUseCase
@@ -15,7 +16,8 @@ class UpdateCharitableCompanyUseCase
     public function __construct(
         private CharitableCompanyRepositoryInterface $charitable_company_repository,
         private TaxPayerRepositoryInterface $tax_payer_repository,
-        private UserRepositoryInterface $user_repository
+        private UserRepositoryInterface $user_repository,
+        private FileRepositoryInterface $file_repository
     )
     {}
 
@@ -26,11 +28,16 @@ class UpdateCharitableCompanyUseCase
         {
             throw new DomainException("لا يوجد ملف شركة خيرية مع ال ID [{$id}].");
         }
-        $taxPayer = $this->tax_payer_repository->findById($existingCharitableCompany->tax_payer_id);
-        $existingUser = $this->user_repository->findById($taxPayer->userId);
+        $taxPayer = $this->tax_payer_repository->findById($existingCharitableCompany->taxPayerId);
+
+        $file = $this->file_repository->findById($taxPayer->fileId);
+        if (!$file) {
+            throw new DomainException("عذراً، لم يتم العثور على ملف لهذه الشركة الخيرية.");
+        }
+        $existingUser = $file->user;
         $charitableCompany = new CharitableCompany(
             id: $id,
-            tax_payer_id: $taxPayer->id,
+            taxPayerId: $taxPayer->id,
             byLawsCopy: $charitableCompanyDTOs->byLawsCopy,
         );
 
@@ -47,8 +54,8 @@ class UpdateCharitableCompanyUseCase
 
         return [
             'charitableCompanyInfo' => $updatedCharitableCompany,
+            //'fileInfo' => $file,
             'taxPayerInfo' => $taxPayer,
-            'userInfo' => $existingUser->toArray(),
         ];
     }
 }

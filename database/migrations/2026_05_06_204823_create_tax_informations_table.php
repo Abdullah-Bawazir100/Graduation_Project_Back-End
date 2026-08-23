@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('last_payment');
             $table->string('attachment')->nullable();
 
-            $table->foreignId('tax_payer_id')->constrained('tax_payers')->cascadeOnDelete();
+            $table->foreignId('file_id')->unique()->constrained('files')->cascadeOnDelete();
             $table->foreignId('tax_type_id')->constrained('tax_types')->cascadeOnDelete();
             $table->timestamps();
         });

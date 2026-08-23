@@ -36,19 +36,11 @@ class GenerateFileReportUseCase
             }
         }
 
-        $taxPayerUser = null;
-        if ($file->taxPayer->userId) {
-            $taxPayerUser = $this->userRepository->findById($file->taxPayer->userId);
-        }
-
-        if (!$taxPayerUser) {
-            throw new DomainException("المستخدم الخاص بالمكلف غير موجود");
-        }
+        $taxPayerUser = $file->user;
 
         $data = [
             'file' => $file,
             'taxPayerUser' => $taxPayerUser,
-            'taxPayer' => $file->taxPayer,
             'fileStatus' => $file->fileStatus,
         ];
 

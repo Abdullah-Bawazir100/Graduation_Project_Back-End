@@ -5,12 +5,14 @@ namespace App\Application\TaxPayer\UseCases;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Enums\UserRole;
 use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Domain\File\Repositories\FileRepositoryInterface;
 
 class ListTaxPayersUseCase
 {
     public function __construct(
         private TaxPayerRepositoryInterface $tax_payer_repository,
-        private UserRepositoryInterface $user_repository
+        private UserRepositoryInterface $user_repository,
+        private FileRepositoryInterface $file_repository
     )
     {}
 
@@ -26,10 +28,10 @@ class ListTaxPayersUseCase
         foreach ($taxPayers as $taxPayer) {
             $userInfo = null;
 
-            if ($taxPayer->userId) {
-                $user = $this->user_repository->findById($taxPayer->userId);
-                if ($user) {
-                    $userInfo = $user->toArray(); // Return the full user object/array instead of selected fields
+            if ($taxPayer->fileId) {
+                $file = $this->file_repository->findById($taxPayer->fileId);
+                if ($file && $file->user) {
+                    $userInfo = $file->user->toArray(); // Return the full user object/array instead of selected fields
                 }
             }
 

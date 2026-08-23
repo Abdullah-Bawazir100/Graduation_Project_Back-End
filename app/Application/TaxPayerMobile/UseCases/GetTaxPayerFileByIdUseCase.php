@@ -41,7 +41,7 @@ class GetTaxPayerFileByIdUseCase
 
         $taxInfo = $this->tax_information_repository->getTaxInformationByTaxPayerId($taxPayer->id);
         $taxPayerFile = $this->tax_payer_mobile_repository->getTaxPayerFileById($taxPayerId);
-        $file = $this->file_repository->getFileByTaxPayerId($taxPayer->id , $taxPayer->fileType);
+        $file = $this->file_repository->getFileByUserId($taxPayer->userId);
         return [
             TaxPayerInfoMapper::map(
                 $taxPayerFile,

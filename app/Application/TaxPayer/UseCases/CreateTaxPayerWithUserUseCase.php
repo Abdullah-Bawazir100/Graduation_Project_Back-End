@@ -6,11 +6,14 @@ use App\Application\TaxPayer\DTOs\TaxPayerDTOs;
 use App\Application\User\DTOs\UserDTO;
 use App\Application\User\Services\UploadFileService;
 use App\Domain\Department\Repositories\DepartmentRepositoryInterface;
+use App\Domain\File\Repositories\FileRepositoryInterface;
 use App\Domain\TaxInformation\Repositories\TaxInformationRepositoryInterface;
 use App\Domain\TaxPayer\Entities\TaxPayer;
 use App\Domain\TaxPayer\Repositories\TaxPayerRepositoryInterface;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Enums\UserRole;
+use App\Domain\Region\Repositories\RegionRepositoryInterface;
+use App\Domain\District\Repositories\DistrictRepositoryInterface;
 use App\Domain\User\Interfaces\PasswordHashInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Jobs\SendWhatsAppMessageJob;
@@ -26,11 +29,23 @@ class CreateTaxPayerWithUserUseCase
         private TaxPayerRepositoryInterface $tax_payer_repository,
         private DepartmentRepositoryInterface $department_repository,
         private PasswordHashInterface $password_hash,
+        private FileRepositoryInterface $file_repository,
+        private RegionRepositoryInterface $region_repository,
+        private DistrictRepositoryInterface $district_repository,
     )
     {}
 
     public function execute(TaxPayerDTOs $taxPayerDTO , UserDTO $userDTO , User $actor)
     {
+        if (!$taxPayerDTO->fileId) {
+            throw new DomainException("عذراً، يجب فتح ملف للمكلف أولاً قبل إضافة بياناته.");
+        }
+
+        $file = $this->file_repository->findById($taxPayerDTO->fileId);
+        if (!$file) {
+            throw new DomainException("عذراً، لم يتم العثور على ملف لهذا المكلف. يجب فتح ملف أولاً.");
+        }
+
         $department = $this->department_repository->findById($userDTO->departmentID);
         if (!$department) {
             throw new DomainException("القسم مع ال ID [{$userDTO->departmentID}] غير موجود.");
@@ -62,9 +77,20 @@ class CreateTaxPayerWithUserUseCase
 
         $createdUser = $this->user_repository->create($user);
 
+        $region = null;
+        $district = null;
+        if ($taxPayerDTO->regionId && $taxPayerDTO->districtId) {
+            $region = $this->region_repository->findById($taxPayerDTO->regionId);
+            $district = $this->district_repository->findById($taxPayerDTO->districtId);
+
+            if ($district && $region && $district->region->id != $region->id) {
+                throw new DomainException("الحي المحدد غير مربوط بالمنطقة المحددة.");
+            }
+        }
+
         $taxPayer = new TaxPayer(
             id: null,
-            userId: $createdUser->id,
+            fileId: $taxPayerDTO->fileId,
             tradeName: $taxPayerDTO->tradeName,
             commercialRecord: $taxPayerDTO->commercialRecord,
             activityLicense: $taxPayerDTO->activityLicense,
@@ -72,7 +98,9 @@ class CreateTaxPayerWithUserUseCase
             insuranceCard: $taxPayerDTO->insuranceCard,
             propertyDocPict: $taxPayerDTO->propertyDocPict,
             fileType: $taxPayerDTO->getFileType(),
-            source: $taxPayerDTO->source
+            source: $taxPayerDTO->source,
+            region: $region,
+            district: $district
         );
 
         $createdTaxPayer = $this->tax_payer_repository->create($taxPayer);
